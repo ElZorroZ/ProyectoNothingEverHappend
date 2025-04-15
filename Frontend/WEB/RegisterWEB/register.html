@@ -9,13 +9,12 @@
 <body>
   <div class="register-container">
     <h2>Crear una cuenta</h2>
-    <form action="procesar_registro.jsp" method="POST">
-      <input type="text" name="nombre" placeholder="Nombre completo" required>
-      <input type="email" name="correo" placeholder="Correo electrónico" required>
-      <input type="password" name="contraseña" placeholder="Contraseña" required>
-      <input type="password" name="confirmar" placeholder="Confirmar contraseña" required>
-      <button type="submit">Registrarse</button>
-    </form>
+    <form action="RegistroServlet" method="POST">
+        <input type="text" name="nombre" placeholder="Nombre completo" required>
+        <input type="email" name="correo" placeholder="Correo electrónico" required>
+        <input type="password" name="contraseña" placeholder="Contraseña" required>
+        <button type="submit">Registrarse</button>
+      </form>      
     <p>¿Ya tenés una cuenta? <a href="login.html">Iniciar sesión</a></p>
   </div>
 </body>
