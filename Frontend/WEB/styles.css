@@ -1,0 +1,44 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #6a0dad; /* Violeta */
+    font-family: Arial, sans-serif;
+    color: white;
+  }
+  
+  .top-right {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+  }
+  
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+  }
+  
+  h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+  }
+  
+  a.button {
+    background-color: white;
+    color: #6a0dad;
+    padding: 12px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    margin: 10px;
+  }
+  
+  a.button:hover {
+    background-color: #ddd;
+  }
+  
+  
