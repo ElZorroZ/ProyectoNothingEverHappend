@@ -1,0 +1,93 @@
+/* Fondo general con degradado suave */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #8e44ad, #e056fd);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+  }
+  
+  /* Contenedor principal del login */
+  .register-container {
+    background-color: #ffffffdd;
+    padding: 2.5rem;
+    border-radius: 15px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  /* Título */
+  h2 {
+    margin-bottom: 0.5rem;
+    color: #5a2d82;
+    text-align: center;
+  }
+  
+  /* Texto descriptivo */
+  p {
+    margin-bottom: 1.5rem;
+    color: #444;
+    text-align: center;
+  }
+  
+  /* Agrupación de inputs */
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  
+  /* Etiquetas */
+  label {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  /* Inputs */
+  input {
+    width: 100%;
+    padding: 0.6rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+  }
+  
+  /* Botón de enviar */
+  .btn-submit {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #9b59b6;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn-submit:hover {
+    background-color: #7d3c98;
+  }
+  
+  /* Enlace de registro */
+  .register-link {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    text-align: center;
+  }
+  
+  .register-link a {
+    color: #6c3483;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .register-link a:hover {
+    text-decoration: underline;
+  }
+  

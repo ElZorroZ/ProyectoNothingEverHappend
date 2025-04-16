@@ -1,16 +1,22 @@
 body {
-    margin: 0;
-    padding: 0;
-    background-color: #6a0dad;
-    font-family: Arial, sans-serif;
-    color: white;
-  }
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  color: white;
+  background: linear-gradient(to bottom, #6a0dad 0%, #b266ff 100%);
+
+}
+
+
+
   
   .top-right {
     position: absolute;
     top: 20px;
     right: 20px;
+    z-index: 10;
   }
+  
   
   .container {
     display: flex;
@@ -41,25 +47,48 @@ body {
     background-color: #ddd;
   }
 
-  /* Barra superior gris */
-body::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 60px; /* altura de la barra */
-  background-color: #444; /* gris oscuro, podés cambiarlo por otro gris (#888, #999, etc) */
-  z-index: -1;
-}
-
-/* Ajuste del botón para que quede encima de la barra */
-.top-right {
-  position: absolute;
-  top: 10px;
-  right: 20px;
-  z-index: 10;
-}
-
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background: linear-gradient(to right, #353535, #888); /* gris oscuro a gris claro */
+    z-index: -1;
+  }
+  
+  body::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100px; /* altura del bloque blanco */
+    background-color: white;
+    border-top: 6px solid #000; /* linea negra separadora */
+    z-index: 1;
+  }
+  
+  
+  .footer-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px 40px;
+    background-color: white;
+    color: #000;
+    font-family: 'Georgia', serif; /* Fuente formal y clara */
+    font-size: 1rem;
+    line-height: 1.6;
+    z-index: 2;
+    box-sizing: border-box;
+  }
+  .footer-info p {
+    margin: 5px 0;
+  }
+  
+  
   
   
