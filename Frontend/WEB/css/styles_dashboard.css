@@ -10,9 +10,27 @@ html, body {
 
 body {
   font-family: 'Segoe UI', sans-serif;
-  background-color: #f4f4f4;
-  color: #333;
+  background: linear-gradient(to bottom, #6a0dad 0%, #b266ff 100%);
+  color: white;
+  margin: 0;
 }
+
+.dashboard-panel {
+  max-width: 600px;
+  width: 100%;
+  background-color: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  color: #2c3e50;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+
 
 /* Contenedor principal */
 .page-container {
@@ -96,9 +114,10 @@ body {
   padding: 2rem;
   display: flex;
   justify-content: center;
-  margin-top: 1rem;
-  flex: 1; /* Empuja el footer hacia abajo */
+  align-items: center;
+  flex: 1; /* Hace que ocupe el espacio disponible y empuje el footer */
 }
+
 
 .dashboard-options {
   display: flex;
@@ -117,6 +136,13 @@ body {
   font-size: 1rem;
   cursor: pointer;
 }
+a.dash-btn {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  font-size: 1rem;
+}
+
 
 .dash-btn:hover {
   background-color: #1c5983;
@@ -131,6 +157,7 @@ body {
   justify-content: center;
   align-items: center;
   margin-top: auto;
+  color: black;
 }
 
 .footer-right {
@@ -159,3 +186,4 @@ body {
 .footer-info a:hover {
   text-decoration: underline;
 }
+
