@@ -7,28 +7,44 @@
   <link rel="stylesheet" href="../css/styles_login.css" />
 </head>
 <body>
-  <main class="register-container">
-    <section class="form-box">
-      <h2>Iniciar sesión</h2>
-      <p>Accede a tu cuenta para gestionar tus proyectos y tareas.</p>
+  <div class="page-container"> <!-- Envuelvo todo el contenido -->
+    <main class="register-container">
+      <section class="form-box">
+        <h2>Iniciar sesión</h2>
+        <p>Accede a tu cuenta para gestionar tus proyectos y tareas.</p>
 
-      <form id="loginForm" class="login-form">
-        <div class="form-group">
-          <label for="correo">Correo electrónico</label>
-          <input type="email" id="correo" name="correo" placeholder="ejemplo@correo.com" required />
+        <form id="loginForm" class="login-form">
+          <div class="form-group">
+            <label for="correo">Correo electrónico</label>
+            <input type="email" id="correo" name="correo" placeholder="ejemplo@correo.com" required />
+          </div>
+
+          <div class="form-group">
+            <label for="contraseña">Contraseña</label>
+            <input type="password" id="contraseña" name="contraseña" placeholder="Tu contraseña" required />
+          </div>
+
+          <button type="submit" class="btn-submit">Iniciar Sesión</button>
+        </form>
+
+        <p class="register-link">¿No tienes una cuenta? <a href="../RegisterWEB/register.html">Regístrate aquí</a></p>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer-info">
+      <div class="footer-right">
+        <img src="../images/Logo.png" alt="Logo" class="footer-logo">
+        <span>© 2025 NothingEverHappend, Inc.</span>
+        <div class="footer-links">
+          <a href="#">Términos</a>
+          <a href="#">Privacidad</a>
+          <a href="#">Seguridad</a>
+          <a href="#">Contacto</a>
         </div>
-
-        <div class="form-group">
-          <label for="contraseña">Contraseña</label>
-          <input type="password" id="contraseña" name="contraseña" placeholder="Tu contraseña" required />
-        </div>
-
-        <button type="submit" class="btn-submit">Iniciar Sesión</button>
-      </form>
-
-      <p class="register-link">¿No tienes una cuenta? <a href="../RegisterWEB/register.html">Regístrate aquí</a></p>
-    </section>
-  </main>
+      </div>
+    </footer>
+  </div>
 
   <script src="../js/login.js"></script> 
 </body>

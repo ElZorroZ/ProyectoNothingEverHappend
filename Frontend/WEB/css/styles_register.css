@@ -1,44 +1,89 @@
+/* Aseguramos que la página ocupe el 100% de la altura */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.page-container {
+  min-height: 100vh; /* Hace que el contenedor principal ocupe toda la altura de la ventana */
+  display: flex;
+  flex-direction: column;
+}
+
 .register-container {
-    max-width: 400px;
-    margin: 100px auto;
-    padding: 40px;
-    background-color: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    text-align: center;
-    color: #6a0dad;
-  }
-  
-  .register-container h2 {
-    margin-bottom: 20px;
-  }
-  
-  .register-container form input {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-  }
-  
-  .register-container button {
-    width: 100%;
-    padding: 12px;
-    background-color: #6a0dad;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .register-container button:hover {
-    background-color: #5800a3;
-  }
-  
-  .register-container a {
-    color: #6a0dad;
-    text-decoration: underline;
-  }
-  
+  flex: 1; /* Esto asegura que el contenedor principal ocupe el espacio restante */
+  max-width: 400px;
+  margin: 100px auto;
+  padding: 40px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  color: #6a0dad;
+}
+
+.register-container form input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.register-container button {
+  width: 100%;
+  padding: 12px;
+  background-color: #6a0dad;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.register-container button:hover {
+  background-color: #5800a3;
+}
+
+.register-container a {
+  color: #6a0dad;
+  text-decoration: underline;
+}
+
+/* Aseguramos que el footer siempre esté al final */
+.footer-info {
+  background-color: white;
+  border-top: 4px solid #000;
+  padding: 20px 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: auto; /* Asegura que el footer siempre esté abajo */
+}
+
+.footer-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  font-family: 'Georgia', serif;
+  font-size: 0.9rem;
+}
+
+.footer-logo {
+  height: 40px;
+  width: auto;
+}
+
+/* Ajustamos específicamente los enlaces del footer para que no se vean en violeta */
+.footer-info a {
+  color: #000000; /* Cambié el color a negro para los enlaces del footer */
+  text-decoration: none;
+  font-weight: normal; /* Asegura que no sea negrita */
+}
+
+.footer-info a:hover {
+  text-decoration: underline; /* Subrayado en hover */
+}

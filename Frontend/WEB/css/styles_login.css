@@ -1,93 +1,93 @@
-/* Fondo general con degradado suave */
-body {
-    font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, #8e44ad, #e056fd);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    margin: 0;
-  }
-  
-  /* Contenedor principal del login */
-  .register-container {
-    background-color: #ffffffdd;
-    padding: 2.5rem;
-    border-radius: 15px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-    width: 100%;
-    max-width: 400px;
-  }
-  
-  /* Título */
-  h2 {
-    margin-bottom: 0.5rem;
-    color: #5a2d82;
-    text-align: center;
-  }
-  
-  /* Texto descriptivo */
-  p {
-    margin-bottom: 1.5rem;
-    color: #444;
-    text-align: center;
-  }
-  
-  /* Agrupación de inputs */
-  .form-group {
-    margin-bottom: 1rem;
-  }
-  
-  /* Etiquetas */
-  label {
-    display: block;
-    margin-bottom: 0.25rem;
-    font-weight: bold;
-    color: #333;
-  }
-  
-  /* Inputs */
-  input {
-    width: 100%;
-    padding: 0.6rem;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 1rem;
-  }
-  
-  /* Botón de enviar */
-  .btn-submit {
-    width: 100%;
-    padding: 0.75rem;
-    background-color: #9b59b6;
-    border: none;
-    border-radius: 8px;
-    color: #fff;
-    font-weight: bold;
-    font-size: 1rem;
-    cursor: pointer;
-    margin-top: 1rem;
-    transition: background-color 0.3s ease;
-  }
-  
-  .btn-submit:hover {
-    background-color: #7d3c98;
-  }
-  
-  /* Enlace de registro */
-  .register-link {
-    margin-top: 1rem;
-    font-size: 0.9rem;
-    text-align: center;
-  }
-  
-  .register-link a {
-    color: #6c3483;
-    text-decoration: none;
-    font-weight: bold;
-  }
-  
-  .register-link a:hover {
-    text-decoration: underline;
-  }
-  
+/* Aseguramos que la página ocupe el 100% de la altura */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.page-container {
+  min-height: 100vh; /* Hace que el contenedor principal ocupe toda la altura de la ventana */
+  display: flex;
+  flex-direction: column;
+}
+
+.register-container {
+  flex: 1; /* Esto asegura que el contenedor principal ocupe el espacio restante */
+  max-width: 400px;
+  margin: 100px auto;
+  padding: 40px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  color: #6a0dad;
+}
+
+.register-container form input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.register-container button {
+  width: 100%;
+  padding: 12px;
+  background-color: #6a0dad;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.register-container button:hover {
+  background-color: #5800a3;
+}
+
+.register-container a {
+  color: #6a0dad;
+  text-decoration: underline;
+}
+
+/* Aseguramos que el footer siempre esté al final */
+.footer-info {
+  background-color: white;
+  border-top: 4px solid #000;
+  padding: 20px 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: auto; /* Asegura que el footer siempre esté abajo */
+}
+
+.footer-right {
+  display: flex;
+  align-items: center;
+  gap: 30px; /* Aumentamos el espacio entre los enlaces */
+  flex-wrap: wrap;
+  font-family: 'Georgia', serif;
+  font-size: 0.9rem;
+}
+
+.footer-logo {
+  height: 40px;
+  width: auto;
+}
+
+/* Ajustamos específicamente los enlaces del footer para que no se vean en violeta */
+.footer-info a {
+  color: #000000; /* Cambié el color a negro para los enlaces del footer */
+  text-decoration: none;
+  font-weight: normal; /* Asegura que no sea negrita */
+  letter-spacing: 1px; /* Espaciado entre caracteres en los enlaces */
+  line-height: 1.5;  /* Espaciado entre líneas en los enlaces */
+  margin: 0 10px; /* Añadimos un margen para separar más los enlaces */
+}
+
+.footer-info a:hover {
+  text-decoration: underline; /* Subrayado en hover */
+}
+
