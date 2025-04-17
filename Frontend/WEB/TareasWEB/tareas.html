@@ -11,6 +11,7 @@
     <header class="dashboard-header">
         <h1 class="logo">NothingEverHappens</h1>
         <div class="dashboard-actions">
+          <button class="notif-btn">🔔</button>
           <button class="logout-btn" onclick="window.location.href='../DashboardWEB/dashboard.html'">Volver</button>
         </div>
     </header>
@@ -18,33 +19,62 @@
     <main class="dashboard-main">
       <section class="task-panel">
         <h2 class="task-title">Mis Tareas Asignadas</h2>
+
+        <!-- Filtros de tareas -->
         <div class="task-filters">
-            <button class="filter-btn active" data-filter="todas">Todas</button>
-            <button class="filter-btn" data-filter="pendiente">Pendientes</button>
-            <button class="filter-btn" data-filter="en-progreso">En Progreso</button>
-            <button class="filter-btn" data-filter="completada">Completadas</button>
-          </div>
-          
-          <div class="task-cards">
-            <div class="task-card" data-status="pendiente">
-              <h3>Finalizar reporte financiero</h3>
-              <p>Fecha límite: 20/04/2025</p>
-              <span class="status pending">Pendiente</span>
-            </div>
-            <div class="task-card" data-status="en-progreso">
-              <h3>Revisar documentación técnica</h3>
-              <p>Fecha límite: 18/04/2025</p>
-              <span class="status in-progress">En Progreso</span>
-            </div>
-            <div class="task-card" data-status="completada">
-              <h3>Reunión con el equipo de ventas</h3>
-              <p>Fecha límite: 22/04/2025</p>
-              <span class="status completed">Completada</span>
+          <button class="filter-btn active" data-filter="todas">Todas</button>
+          <button class="filter-btn" data-filter="pendiente">Pendientes</button>
+          <button class="filter-btn" data-filter="en-progreso">En Progreso</button>
+          <button class="filter-btn" data-filter="completada">Completadas</button>
+        </div>
+
+        <!-- Columnas Kanban -->
+        <div class="kanban-board">
+          <!-- Pendiente -->
+          <div class="kanban-column" data-status="pendiente">
+            <h3>Pendiente</h3>
+            <div class="kanban-tasks">
+              <div class="task-card" data-status="pendiente">
+                <h3>Finalizar reporte financiero</h3>
+                <p>Fecha límite: 20/04/2025</p>
+                <span class="status pending">Pendiente</span>
+              </div>
             </div>
           </div>
-          
+
+          <!-- En Progreso -->
+          <div class="kanban-column" data-status="en-progreso">
+            <h3>En Progreso</h3>
+            <div class="kanban-tasks">
+              <div class="task-card" data-status="en-progreso">
+                <h3>Revisar documentación técnica</h3>
+                <p>Fecha límite: 18/04/2025</p>
+                <span class="status in-progress">En Progreso</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Completada -->
+          <div class="kanban-column" data-status="completada">
+            <h3>Completadas</h3>
+            <div class="kanban-tasks">
+              <div class="task-card" data-status="completada">
+                <h3>Reunión con el equipo de ventas</h3>
+                <p>Fecha límite: 22/04/2025</p>
+                <span class="status completed">Completada</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
       </section>
     </main>
+    <div class="notification-panel" id="notificationPanel">
+      <h3>Notificaciones</h3>
+      <ul>
+        <li>No tenés nuevas notificaciones.</li>
+      </ul>
+    </div>
 
     <footer class="footer-info">
       <div class="footer-right">
@@ -57,6 +87,7 @@
       </div>
     </footer>
   </div>
+
   <script src="../js/tareas.js"></script>
 </body>
 </html>

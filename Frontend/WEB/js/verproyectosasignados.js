@@ -1,3 +1,18 @@
+const taskCards = document.querySelectorAll('.task-card');
+const notifBtn = document.querySelector('.notif-btn');
+  const panel = document.getElementById('notificationPanel');
+
+  notifBtn.addEventListener('click', () => {
+    panel.classList.toggle('open');
+  });
+
+  // Opción opcional: cerrar si se hace clic fuera
+  document.addEventListener('click', (e) => {
+    if (!panel.contains(e.target) && !notifBtn.contains(e.target)) {
+      panel.classList.remove('open');
+    }
+  });
+
 document.addEventListener('DOMContentLoaded', function () {
     // Obtener los botones de filtro y las tarjetas de proyectos
     const filterBtns = document.querySelectorAll('.filter-btn');

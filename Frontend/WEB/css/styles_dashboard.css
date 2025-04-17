@@ -71,7 +71,12 @@ body {
 .notif-btn {
   background-color: #3498db;
   font-size: 1.2rem;
-  padding: 0.5rem;
+  padding: 0.5rem 1.5rem;  /* Aumenté el padding para un tamaño más acorde */
+  border: none;
+  border-radius: 30px; /* Borde redondeado más pronunciado */
+  cursor: pointer;
+  font-weight: bold;
+  color: white;
 }
 
 .logout-btn:hover,
@@ -187,3 +192,7 @@ a.dash-btn {
   text-decoration: underline;
 }
 
+.dashboard-actions {
+  display: flex;
+  gap: 1.5rem; /* Añade separación entre elementos hijos */
+}
