@@ -58,6 +58,11 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+	 <dependency>
+	  <groupId>${project.groupId}</groupId>
+	  <artifactId>error</artifactId>
+	  <version>${project.version}</version>
+	 </dependency>
 	</dependencies>
 
 	<build>
