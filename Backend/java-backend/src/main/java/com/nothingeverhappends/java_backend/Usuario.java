@@ -4,8 +4,10 @@
  */
 package com.nothingeverhappends.java_backend;
 
+import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.*;
 
 /**
  *
@@ -47,27 +49,27 @@ public class Usuario {
         return id;
     }
     
-    public Usuario iniciarSesion(ConexionBDD conexion){
+    public int iniciarSesion(ConexionBDD conexion,String Email, String Contraseña){
         try{
-            String consulta = "SELECT * FROM Usuario WHERE Email = ? AND Contraseña = ? LIMIT 1;";
+            Connection var=conexion.Conectar();
             
-            PreparedStatement ps = conexion.Conectar().prepareStatement(consulta);
-            ps.setString(1, email);
-            ps.setString(2, contraseña);
-            ResultSet rs = ps.executeQuery();
-            if(rs.next()){
-                ID = rs.getInt("UsuarioID");
-                nombre = rs.getString("Nombre");
-                apellido = rs.getString("Apellido");
-                contraseña = "";
-                return this;
+            String sql = "SELECT verificarInicioSesion(?,?);";
+            PreparedStatement stmt = var.prepareStatement(sql);
+            stmt.setString(1, Email);
+            stmt.setString(1, Contraseña);
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                ID = rs.getInt("ID");
+                
             }
+        
         }catch(Exception e){
             e.printStackTrace();
         }finally{
             conexion.Desconectar();
         }
-        return null;
+        return ID;
     }
     
     public int getID(){
