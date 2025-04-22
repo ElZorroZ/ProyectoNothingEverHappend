@@ -11,16 +11,19 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "*")
 public class Controller{
     private ConexionBDD conexion = new ConexionBDD();
-
+    
     // Crear persona
     @PostMapping("/registro")
     public int registrarUsuario(@RequestBody Usuario usuario) {
+        
         return usuario.registrar(conexion);
     }
    
     @PostMapping("/iniciosesion")
-    public Usuario iniciarSesion(@RequestBody Usuario usuario) {
-        return usuario.iniciarSesion(conexion);
+    public int iniciarSesion(@RequestBody Usuario usuario) {
+        String Email= usuario.getEmail();
+        String Contraseña= usuario.getContraseña();
+        return usuario.iniciarSesion(conexion,Email,Contraseña);
     }
 
 }
