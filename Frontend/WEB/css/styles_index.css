@@ -64,51 +64,40 @@ a.button:hover {
   z-index: 10;
 }
 
-/* Footer bien ubicado abajo */
 .footer-info {
-  background-color: white;
-  border-top: 4px solid #000;
+  background-color: #f4f4f4;
+  border-top: 4px solid black;
   padding: 20px 40px;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: 'Georgia', serif;
-  font-size: 0.9rem;
-  color: #000;
+  color: black;
 }
 
-/* Contenedor de los elementos del footer alineados a la izquierda */
 .footer-right {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 30px;
   flex-wrap: wrap;
-  justify-content: center;
+  font-family: 'Georgia', serif;
+  font-size: 0.9rem;
 }
 
-/* Logo del footer */
 .footer-logo {
   height: 40px;
   width: auto;
 }
 
-/* Texto de derechos de autor */
-.footer-text {
-  font-size: 0.9rem;
-  color: #000;
-}
-
-/* Enlaces del footer */
-.footer-links {
-  display: flex;
-  gap: 20px;
-}
-
-.footer-links a {
-  color: #000;
+.footer-info a {
+  color: black;
   text-decoration: none;
+  font-weight: normal;
+  letter-spacing: 1px;
+  line-height: 1.5;
+  margin: 0 10px;
 }
 
-.footer-links a:hover {
+.footer-info a:hover {
   text-decoration: underline;
 }
+

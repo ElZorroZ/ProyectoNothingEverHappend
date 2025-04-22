@@ -55,22 +55,20 @@ html, body {
   text-decoration: underline;
 }
 
-/* Aseguramos que el footer siempre esté al final */
 .footer-info {
-  background-color: white;
-  color: black;
-  border-top: 4px solid #000;
+  background-color: #f4f4f4;
+  border-top: 4px solid black;
   padding: 20px 40px;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: auto; /* Asegura que el footer siempre esté abajo */
+  color: black;
 }
 
 .footer-right {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 30px;
   flex-wrap: wrap;
   font-family: 'Georgia', serif;
   font-size: 0.9rem;
@@ -81,13 +79,15 @@ html, body {
   width: auto;
 }
 
-/* Ajustamos específicamente los enlaces del footer para que no se vean en violeta */
 .footer-info a {
-  color: #000000; /* Cambié el color a negro para los enlaces del footer */
+  color: black;
   text-decoration: none;
-  font-weight: normal; /* Asegura que no sea negrita */
+  font-weight: normal;
+  letter-spacing: 1px;
+  line-height: 1.5;
+  margin: 0 10px;
 }
 
 .footer-info a:hover {
-  text-decoration: underline; /* Subrayado en hover */
+  text-decoration: underline;
 }
