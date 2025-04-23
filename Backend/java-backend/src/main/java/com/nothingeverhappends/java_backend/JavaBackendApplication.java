@@ -3,11 +3,10 @@ package com.nothingeverhappends.java_backend;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.nothingeverhappends")
 public class JavaBackendApplication {
-
-	public static void main(String[] args) {
-		SpringApplication.run(JavaBackendApplication.class, args);
-	}
-
+    public static void main(String[] args) {
+        SpringApplication.run(JavaBackendApplication.class, args);
+    }
 }
+
