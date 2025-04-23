@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crear Proyecto</title>
+  <link rel="stylesheet" href="../css/styles_crear_proyecto.css">
+</head>
+<body>
+  <header class="dashboard-header">
+    <h1 class="logo">NothingEverHappens</h1>
+    <div class="dashboard-actions">
+      <button class="notif-btn">🔔</button>
+      <button class="logout-btn" onclick="window.location.href='../DashboardWEB/dashboard.html'">Volver</button>
+    </div>
+    <!-- 🔔 Panel de Notificaciones -->
+    <div id="notificationPanel" class="notification-panel">
+      <h3>Notificaciones</h3>
+      <ul>
+        <li>No hay notificaciones nuevas</li>
+      </ul>
+    </div>
+  </header>
+
+  <div class="form-container">
+    <h2>Crear Nuevo Proyecto</h2>
+    <form id="crearProyectoForm">
+      <label for="nombre">Nombre del Proyecto</label>
+      <input type="text" id="nombre" name="nombre" required>
+
+      <label for="descripcion">Descripción</label>
+      <textarea id="descripcion" name="descripcion" rows="4" required></textarea>
+
+      <label for="fechaInicio">Fecha de Inicio</label>
+      <input type="date" id="fechaInicio" name="fechaInicio" required>
+
+      <label for="fechaFin">Fecha de Finalización</label>
+      <input type="date" id="fechaFin" name="fechaFin" required>
+
+      <button type="submit">Crear Proyecto</button>
+    </form>
+  </div>
+
+  <div class="footer-info">
+    <div class="footer-right">
+      <img src="../images/Logo.png" alt="Logo" class="footer-logo">
+      <span>© 2025 NothingEverHappened, Inc.</span>
+      <a href="#">Términos</a>
+      <a href="#">Privacidad</a>
+      <a href="#">Seguridad</a>
+      <a href="#">Contacto</a>
+    </div>
+  </div>
+
+  <script src="../js/crear_proyecto.js"></script>
+</body>
+</html>
