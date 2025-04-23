@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const password = document.getElementById("password").value;
 
     try {
+      console.log("Enviando:", { email, password });
       const response = await fetch("https://java-backend-latest-rm0u.onrender.com/api/iniciosesion", {
         method: "POST",
         headers: {
