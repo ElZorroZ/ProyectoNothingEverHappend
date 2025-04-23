@@ -4,6 +4,7 @@
  */
 package com.nothingeverhappends.java_backend;
 
+import java.util.Date;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;
@@ -48,6 +49,21 @@ public class Controller {
             }
         } catch (Exception e) {
             return ResponseEntity.status(500).body(Map.of(
+                "mensaje", "Error interno del servidor: " + e.getMessage()
+            ));
+        }
+    }
+    
+    @PostMapping("/crearproyecto")
+    public void Crear(@RequestBody Proyecto proyecto) {
+        try {            
+            String Nombre=proyecto.getNombre();
+            Date FechaInicio=proyecto.getFechaInicio();
+            Date FechaFinal=proyecto.getFechaFinal();
+            String Descripcion=proyecto.getDescripcion();
+            proyecto.Crear(conexion, Nombre, Descripcion, FechaInicio, FechaFinal, 0);
+        } catch (Exception e) {
+            ResponseEntity.status(500).body(Map.of(
                 "mensaje", "Error interno del servidor: " + e.getMessage()
             ));
         }

@@ -56,6 +56,63 @@ public class Proyecto {
         }
         conexion.Desconectar();
     }
+
+    public int getProyectoID() {
+        return ProyectoID;
+    }
+
+    public void setProyectoID(int ProyectoID) {
+        this.ProyectoID = ProyectoID;
+    }
+
+    public Date getFechaInicio() {
+        return FechaInicio;
+    }
+
+    public void setFechaInicio(Date FechaInicio) {
+        this.FechaInicio = FechaInicio;
+    }
+
+    public String getDescripcion() {
+        return Descripcion;
+    }
+
+    public void setDescripcion(String Descripcion) {
+        this.Descripcion = Descripcion;
+    }
+
+    public String getNombre() {
+        return Nombre;
+    }
+
+    public void setNombre(String Nombre) {
+        this.Nombre = Nombre;
+    }
+
+    public Date getFechaFinal() {
+        return FechaFinal;
+    }
+
+    public void setFechaFinal(Date FechaFinal) {
+        this.FechaFinal = FechaFinal;
+    }
+
+    public int getUsuarioID() {
+        return UsuarioID;
+    }
+
+    public void setUsuarioID(int UsuarioID) {
+        this.UsuarioID = UsuarioID;
+    }
+
+    public boolean isPermisos() {
+        return Permisos;
+    }
+
+    public void setPermisos(boolean Permisos) {
+        this.Permisos = Permisos;
+    }
+    
 }
     
 
