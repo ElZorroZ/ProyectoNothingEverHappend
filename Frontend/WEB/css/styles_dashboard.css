@@ -196,3 +196,9 @@ a.dash-btn {
   display: flex;
   gap: 1.5rem; /* Añade separación entre elementos hijos */
 }
+
+.logo {
+  font-size: 1.5rem;
+  text-decoration: none;
+  color: white;
+}

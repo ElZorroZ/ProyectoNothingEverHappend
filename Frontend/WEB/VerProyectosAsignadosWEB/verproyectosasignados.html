@@ -9,7 +9,7 @@
 <body>
   <div class="page-container">
     <header class="dashboard-header">
-      <h1 class="logo">NothingEverHappens</h1>
+      <a href="../DashboardWEB/dashboard.html" class="logo">NothingEverHappens</a>
       <div class="dashboard-actions">
         <button class="notif-btn">🔔</button>
         <button class="back-btn" onclick="window.location.href='../DashboardWEB/dashboard.html'">Volver</button>
@@ -19,30 +19,27 @@
     <main class="dashboard-main">
       <section class="project-panel">
         <h2 class="project-title">Mis Proyectos Asignados</h2>
-        <div class="project-filters">
-          <button class="filter-btn active" data-filter="todos">Todos</button>
-          <button class="filter-btn" data-filter="pendiente">Pendientes</button>
-          <button class="filter-btn" data-filter="en-progreso">En Progreso</button>
-          <button class="filter-btn" data-filter="completado">Completados</button>
-        </div>
 
         <div class="project-cards">
-          <div class="project-card" data-status="pendiente">
+          <div class="project-card">
             <h3>Desarrollo de la nueva aplicación</h3>
             <p>Fecha límite: 30/04/2025</p>
-            <span class="status pending">Pendiente</span>
+            <button class="view-project-btn" onclick="window.location.href='../TareasWEB/tareas.html'">Entrar</button>
           </div>
-          <div class="project-card" data-status="en-progreso">
+          
+          <div class="project-card">
             <h3>Rediseño de la interfaz de usuario</h3>
             <p>Fecha límite: 25/04/2025</p>
-            <span class="status in-progress">En Progreso</span>
+            <button class="view-project-btn" onclick="window.location.href='../TareasWEB/tareas.html'">Entrar</button>
           </div>
-          <div class="project-card" data-status="completado">
+          
+          <div class="project-card">
             <h3>Optimización del sistema</h3>
             <p>Fecha límite: 20/04/2025</p>
-            <span class="status completed">Completado</span>
+            <button class="view-project-btn" onclick="window.location.href='../TareasWEB/tareas.html'">Entrar</button>
           </div>
         </div>
+        
         
       </section>
     </main>
