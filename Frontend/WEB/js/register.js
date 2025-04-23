@@ -18,7 +18,8 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     try {
-      const response = await fetch("https://java-backend-latest-9dhs.onrender.com/api/registro", {
+      console.log("Datos enviados:", data);
+      const response = await fetch("https://java-backend-latest-c5ht.onrender.com/api/registro", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
