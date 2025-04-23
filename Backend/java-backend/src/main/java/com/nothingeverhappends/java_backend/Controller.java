@@ -36,7 +36,7 @@ public class Controller {
             String password = usuario.getPassword();
             int resultado = usuario.iniciarSesion(conexion, email, password);
             if (resultado > 0) {
-                int id = usuario.getID(); // ID se asigna dentro del método iniciarSesion()
+                int id = usuario.getID(); 
                 return ResponseEntity.ok().body(Map.of(
                     "mensaje", "Inicio de sesión exitoso",
                     "id", id

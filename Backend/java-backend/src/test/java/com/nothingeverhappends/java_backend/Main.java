@@ -30,7 +30,6 @@ public class Main {
 
     public void crearProyecto() {
 
-        // Consulta
         String sql = "INSERT INTO railway.Proyecto (ProyectoID, Nombre) VALUES (?, ?)";
 
         // Obtenemos la conexión
