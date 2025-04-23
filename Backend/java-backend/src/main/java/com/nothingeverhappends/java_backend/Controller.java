@@ -11,13 +11,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 @CrossOrigin(origins = "*")
 public class Controller {
+    
     private ConexionBDD conexion = new ConexionBDD();
-
-    // Crear persona
+    
     @PostMapping("/registro")
     public ResponseEntity<String> registrarUsuario(@RequestBody Usuario usuario) {
         try {
-            // Suponiendo que el método registrar devuelve un ID mayor a 0 si el registro fue exitoso
             int resultado = usuario.registrar(conexion);
             if (resultado > 0) {
                 return ResponseEntity.ok("Registro exitoso");
@@ -28,7 +27,7 @@ public class Controller {
             return ResponseEntity.status(500).body("Error interno del servidor: " + e.getMessage());
         }
     }
-
+    
     @PostMapping("/iniciosesion")
     public ResponseEntity<String> iniciarSesion(@RequestBody Usuario usuario) {
         try {
