@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     try {
-      const response = await fetch("https://java-backend-latest-z2qz.onrender.com/api/registro", {
+      const response = await fetch("https://java-backend-latest-ggnp.onrender.com/api/registro", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
