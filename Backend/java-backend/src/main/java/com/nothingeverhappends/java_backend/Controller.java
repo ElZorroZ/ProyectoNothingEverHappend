@@ -6,6 +6,7 @@ package com.nothingeverhappends.java_backend;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -28,19 +29,27 @@ public class Controller {
         }
     }
 
-    @PostMapping("/iniciosesion")
-    public ResponseEntity<String> iniciarSesion(@RequestBody Usuario usuario) {
+  @PostMapping("/iniciosesion")
+    public ResponseEntity<?> iniciarSesion(@RequestBody Usuario usuario) {
         try {
             String email = usuario.getEmail();
             String password = usuario.getPassword();
             int resultado = usuario.iniciarSesion(conexion, email, password);
             if (resultado > 0) {
-                return ResponseEntity.ok("Inicio de sesión exitoso");
+                int id = usuario.getID(); // ID se asigna dentro del método iniciarSesion()
+                return ResponseEntity.ok().body(Map.of(
+                    "mensaje", "Inicio de sesión exitoso",
+                    "id", id
+                ));
             } else {
-                return ResponseEntity.status(400).body("Credenciales incorrectas");
+                return ResponseEntity.status(400).body(Map.of(
+                    "mensaje", "Credenciales incorrectas"
+                ));
             }
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error interno del servidor: " + e.getMessage());
+            return ResponseEntity.status(500).body(Map.of(
+                "mensaje", "Error interno del servidor: " + e.getMessage()
+            ));
         }
     }
 }
