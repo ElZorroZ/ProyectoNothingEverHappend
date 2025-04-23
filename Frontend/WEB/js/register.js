@@ -14,11 +14,10 @@ document.addEventListener("DOMContentLoaded", () => {
       nombre: formData.get("nombre"),
       apellido: formData.get("apellido"),
       email: formData.get("email"),
-      contraseña: formData.get("contraseña"),
+      password: formData.get("password"),
     };
 
     try {
-      console.log("Datos enviados:", data);
       const response = await fetch("https://java-backend-latest-c5ht.onrender.com/api/registro", {
         method: "POST",
         headers: {
@@ -27,14 +26,14 @@ document.addEventListener("DOMContentLoaded", () => {
         body: JSON.stringify(data),
       });
 
+      const responseText = await response.text();  // Obtener la respuesta como texto
+
       if (response.ok) {
-        const result = await response.text(); // en vez de .json()
-        alert("Registro exitoso. Redirigiendo al login...");
-        window.location.href = "../LoginWEB/login.html";
+        alert(responseText);  // Mostrar el mensaje que devolvió el backend
+        window.location.href = "../LoginWEB/login.html";  // Redirigir
       } else {
-        const error = await response.text(); // si devuelve texto o int también
-        alert("Error al registrarse: " + error);
-      }      
+        alert("Error al registrarse: " + responseText);  // Mostrar el mensaje de error
+      }
     } catch (error) {
       console.error("Error en la solicitud:", error);
       alert("Hubo un error al conectar con el servidor.");
