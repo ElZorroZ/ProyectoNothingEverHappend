@@ -185,3 +185,9 @@ html, body {
     text-decoration: underline;
   }
   
+  .logo {
+    font-size: 1.5rem;
+    text-decoration: none;
+    color: white;
+  }
+  
