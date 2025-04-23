@@ -13,6 +13,11 @@ public class Usuario {
     private String email;
     private String password; 
 
+    // Constructor vacío
+    public Usuario() {
+    }
+
+    // Constructor con parámetros
     public Usuario(String _mail, String _password, String _nom, String _ape) {
         this.apellido = _ape;
         this.nombre = _nom;

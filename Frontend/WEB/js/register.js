@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     try {
-      const response = await fetch("https://java-backend-latest-ggnp.onrender.com/api/registro", {
+      const response = await fetch("https://java-backend-latest-rm0u.onrender.com/api/registro", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -26,13 +26,13 @@ document.addEventListener("DOMContentLoaded", () => {
         body: JSON.stringify(data),
       });
 
-      const responseJson = await response.json();  // Obtener respuesta como JSON
+      const responseText = await response.text();
 
       if (response.ok) {
-        alert(responseJson.message);  // Suponiendo que la respuesta tiene un campo "message"
-        window.location.href = "../LoginWEB/login.html";  // Redirigir
+        alert(responseText);
+        window.location.href = "../LoginWEB/login.html";
       } else {
-        alert("Error al registrarse: " + responseJson.error);  // Mostrar el mensaje de error
+        alert("Error al registrarse: " + responseText);
       }
     } catch (error) {
       console.error("Error en la solicitud:", error);

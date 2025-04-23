@@ -2,8 +2,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-import com.nothingeverhappends.java_backend.ConexionBDD;
-import com.nothingeverhappends.java_backend.Usuario;
+package com.nothingeverhappends.java_backend;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 @CrossOrigin(origins = "*")
 public class Controller {
-    
+
     private ConexionBDD conexion = new ConexionBDD();
-    
+
     @PostMapping("/registro")
     public ResponseEntity<String> registrarUsuario(@RequestBody Usuario usuario) {
         try {
@@ -27,12 +27,12 @@ public class Controller {
             return ResponseEntity.status(500).body("Error interno del servidor: " + e.getMessage());
         }
     }
-    
+
     @PostMapping("/iniciosesion")
     public ResponseEntity<String> iniciarSesion(@RequestBody Usuario usuario) {
         try {
             String email = usuario.getEmail();
-            String password = usuario.getPassword(); 
+            String password = usuario.getPassword();
             int resultado = usuario.iniciarSesion(conexion, email, password);
             if (resultado > 0) {
                 return ResponseEntity.ok("Inicio de sesión exitoso");
