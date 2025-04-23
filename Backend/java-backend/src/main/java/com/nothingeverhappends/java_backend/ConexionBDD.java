@@ -17,19 +17,23 @@ public class ConexionBDD {
     
     public Connection Conectar() {
         try {
-            // Asegúrate de que la URL esté correctamente formateada
             String url = "jdbc:mysql://root:LgILZCXwllGpscTUGiNQjqfRbGuPbIpE@gondola.proxy.rlwy.net:22412/railway";
-            String user = "root"; // Nombre de usuario
-            String password = "LgILZCXwllGpscTUGiNQjqfRbGuPbIpE"; // Contraseña
-
-            // Intenta establecer la conexión
+            String user = "root";
+            String password = "LgILZCXwllGpscTUGiNQjqfRbGuPbIpE";
             conexion = DriverManager.getConnection(url, user, password);
-            
+
+            if (conexion != null) {
+                System.out.println("Conexión a la base de datos exitosa.");
+            } else {
+                System.out.println("La conexión fue nula.");
+            }
         } catch (SQLException e) {
-            System.out.println("No se pudo conectar correctamente a la BDD: "+e.toString());
+            System.out.println("Error de conexión a la base de datos: " + e.getMessage());
+            // Puedes lanzar una excepción personalizada o retornar un mensaje más claro si lo deseas
         }
-        return conexion; // Retorna la conexión (puede ser nula si hubo un error)
+        return conexion;
     }
+
     
     public void Desconectar(){
         try{
