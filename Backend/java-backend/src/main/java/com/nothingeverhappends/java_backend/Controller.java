@@ -29,14 +29,14 @@ public class Controller {
         }
     }
 
-  @PostMapping("/iniciosesion")
+    @PostMapping("/iniciosesion")
     public ResponseEntity<?> iniciarSesion(@RequestBody Usuario usuario) {
         try {
             String email = usuario.getEmail();
             String password = usuario.getPassword();
             int resultado = usuario.iniciarSesion(conexion, email, password);
             if (resultado > 0) {
-                int id = usuario.getID(); // ID se asigna dentro del método iniciarSesion()
+                int id = usuario.getID(); // Ahora obtiene el ID correctamente
                 return ResponseEntity.ok().body(Map.of(
                     "mensaje", "Inicio de sesión exitoso",
                     "id", id

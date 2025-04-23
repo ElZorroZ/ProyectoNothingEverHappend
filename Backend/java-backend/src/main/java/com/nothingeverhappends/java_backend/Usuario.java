@@ -57,26 +57,46 @@ public class Usuario {
 
     public int iniciarSesion(ConexionBDD conexion, String email, String password) {
         int resultado = 0;  // Asume 0 por defecto como fallo
+        ResultSet rs = null;
+        PreparedStatement stmt = null;
+
         try {
+            // Establecer la conexión a la base de datos
             Connection var = conexion.Conectar();
 
-            String sql = "SELECT verificarInicioSesion(?,?);";
-            PreparedStatement stmt = var.prepareStatement(sql);
+            // Sentencia SQL para verificar el inicio de sesión
+            String sql = "SELECT verificarInicioSesion(?, ?);";
+            stmt = var.prepareStatement(sql);
             stmt.setString(1, email);
             stmt.setString(2, password);
 
-            ResultSet rs = stmt.executeQuery();
+            // Ejecutar la consulta
+            rs = stmt.executeQuery();
+
+            // Verificar si la consulta devolvió algún resultado
             if (rs.next()) {
-                ID = rs.getInt("ID");
-                resultado = 1;  // Si la consulta tiene resultados, el inicio de sesión es exitoso.
+                resultado = rs.getInt(1);  // Resultado de la función SQL
+                if (resultado != 0) {
+                    ID = resultado;  // Asignar el ID del usuario si es válido
+                }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
+            // Manejo de excepciones SQL
             e.printStackTrace();
         } finally {
-            conexion.Desconectar();
+            // Cerrar ResultSet, PreparedStatement y la conexión
+            try {
+                if (rs != null) rs.close();
+                if (stmt != null) stmt.close();
+                conexion.Desconectar();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-        return resultado;  // Retorna 1 si fue exitoso, 0 si falló
+
+        return resultado;  // Retorna 0 si falló (usuario no encontrado o contraseña incorrecta), ID si fue exitoso
     }
+
 
 
 
