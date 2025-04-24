@@ -24,6 +24,15 @@ document.addEventListener('DOMContentLoaded', () => {
     fechaFinInput.min = fechaInicioInput.value;
   });
 
+  // Función para convertir la fecha al formato YYYY/MM/DD
+  function formatearFecha(fechaStr) {
+    const fecha = new Date(fechaStr);
+    const año = fecha.getFullYear();
+    const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+    const dia = String(fecha.getDate()).padStart(2, '0');
+    return `${año}/${mes}/${dia}`;
+  }
+
   // Validación al enviar el formulario
   form.addEventListener('submit', function (e) {
     const fechaInicio = new Date(fechaInicioInput.value);
@@ -37,8 +46,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const proyectoData = {
         nombre: form.nombre.value,
         descripcion: form.descripcion.value,
-        fechaInicio: fechaInicioInput.value,
-        fechaFin: fechaFinInput.value
+        fechaInicio: formatearFecha(fechaInicioInput.value),
+        fechaFin: formatearFecha(fechaFinInput.value)
       };
 
       // Enviar los datos al servidor usando fetch
