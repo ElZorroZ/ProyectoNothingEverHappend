@@ -73,5 +73,30 @@ public class Controller {
             System.out.println("Ocurrió un error en el controlador.");
         }
     }
+    
+    @PostMapping("/agregarrolusuario")
+    public void AgregarRolUsuario(@RequestBody AgregarUsuarios agregarusuarios ){
+        try {
+        int UsuarioID = 0;
+        int ProyectoID = 0;
+        boolean Permiso = false;
+        agregarusuarios.AgregarRolUsuario(conexion, UsuarioID,ProyectoID,Permiso);
+        } catch (Exception e) {
+            e.printStackTrace(); // <-- ¡Para ver si falla!
+            System.out.println("Ocurrió un error en el controlador.");
+        }
+    }
+    @PostMapping("/agregartareausuario")
+    public void AgregarTareaUsuario(@RequestBody AgregarUsuarios agregarusuarios ){
+        try {
+        int UsuarioID = 0;
+        int ProyectoID = 0;
+        agregarusuarios.AgregarTareaUsuario(conexion, UsuarioID,ProyectoID);
+        } catch (Exception e) {
+            e.printStackTrace(); // <-- ¡Para ver si falla!
+            System.out.println("Ocurrió un error en el controlador.");
+        }
+    }
+    
 
 }

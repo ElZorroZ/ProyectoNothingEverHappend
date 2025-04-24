@@ -13,30 +13,7 @@ import java.util.ArrayList;
  * @author PC
  */
 public class AgregarUsuarios {
-    private int UsuarioID;
-    private int OtroID;
-    private boolean permiso;
-    public AgregarUsuarios(int UsuarioID, int OtroID, boolean permiso){
-    this.UsuarioID=UsuarioID;
-    this.OtroID=OtroID;
-    this.permiso=permiso;
-}
-    public void ExtaerDatos (ArrayList Datos){
-        UsuarioID = (int) Datos.get(0);
-        OtroID = (int) Datos.get(1);
-        if (Datos.size()==3){
-            permiso = (boolean) Datos.get(2);
-        }
-    }
-    
-    public void AgregarRolUsuario (ArrayList Datos){
-        ExtaerDatos (Datos);
-    }
-    public void AgregarTareaUsuario (ArrayList Datos){
-        ExtaerDatos (Datos);
-        
-    }
-    public void InsertarRolUsuario(ConexionBDD conexion){
+    public void AgregarRolUsuario(ConexionBDD conexion, int UsuarioID,int OtroID, boolean permiso){
         try{
             String consulta = "CALL `railway`.`insertar_rol_proyecto`(?,?,?);";
             
@@ -51,7 +28,7 @@ public class AgregarUsuarios {
             conexion.Desconectar();
         }
     }
-    public void InsertarTareaUsuario(ConexionBDD conexion){
+    public void AgregarTareaUsuario(ConexionBDD conexion, int UsuarioID, int OtroID){
         try{
             String consulta = "CALL `railway`.`insertar_tarea_usuario`(?,?);";
             
