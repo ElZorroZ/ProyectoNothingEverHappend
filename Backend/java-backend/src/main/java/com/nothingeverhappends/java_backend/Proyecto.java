@@ -4,30 +4,28 @@
  */
 package com.nothingeverhappends.java_backend;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-
 import java.util.Date;
 
-
-/**
- *
- * @author Gaspar
- */
 public class Proyecto {
     private int ProyectoID;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date FechaInicio;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private Date FechaFinal;
+
     private String Descripcion;
     private String Nombre;
-    private Date FechaFinal;
-    private int UsuarioID;
     private boolean Permisos;
-    
-    public void Crear(ConexionBDD conexion,String Nombre, String Descripcion, Date FechaInicio, Date FechaFin, int Usuario ){
+
+    public void Crear(ConexionBDD conexion,String Nombre, String Descripcion, Date FechaInicio, Date FechaFin){
         String sql = "INSERT INTO railway.Proyecto (Nombre,Fecha_de_inicio,Fecha_de_final,Descripcion) VALUES (?,?,?,?)";
 
-        // Obtenemos la conexión
         Connection conn = conexion.Conectar();
 
         try (PreparedStatement pst = conn.prepareStatement(sql)) {
@@ -40,8 +38,6 @@ public class Proyecto {
             pst.setDate(3, FechaFinsql);
             pst.setString(4, Descripcion);
 
-
-            // se ejecuta la consulta
             int filasAfectadas = pst.executeUpdate();
 
             if (filasAfectadas > 0) {
@@ -57,62 +53,23 @@ public class Proyecto {
         conexion.Desconectar();
     }
 
-    public int getProyectoID() {
-        return ProyectoID;
-    }
+    // Getters y setters
 
-    public void setProyectoID(int ProyectoID) {
-        this.ProyectoID = ProyectoID;
-    }
+    public int getProyectoID() { return ProyectoID; }
+    public void setProyectoID(int ProyectoID) { this.ProyectoID = ProyectoID; }
 
-    public Date getFechaInicio() {
-        return FechaInicio;
-    }
+    public Date getFechaInicio() { return FechaInicio; }
+    public void setFechaInicio(Date FechaInicio) { this.FechaInicio = FechaInicio; }
 
-    public void setFechaInicio(Date FechaInicio) {
-        this.FechaInicio = FechaInicio;
-    }
+    public Date getFechaFinal() { return FechaFinal; }
+    public void setFechaFinal(Date FechaFinal) { this.FechaFinal = FechaFinal; }
 
-    public String getDescripcion() {
-        return Descripcion;
-    }
+    public String getDescripcion() { return Descripcion; }
+    public void setDescripcion(String Descripcion) { this.Descripcion = Descripcion; }
 
-    public void setDescripcion(String Descripcion) {
-        this.Descripcion = Descripcion;
-    }
+    public String getNombre() { return Nombre; }
+    public void setNombre(String Nombre) { this.Nombre = Nombre; }
 
-    public String getNombre() {
-        return Nombre;
-    }
-
-    public void setNombre(String Nombre) {
-        this.Nombre = Nombre;
-    }
-
-    public Date getFechaFinal() {
-        return FechaFinal;
-    }
-
-    public void setFechaFinal(Date FechaFinal) {
-        this.FechaFinal = FechaFinal;
-    }
-
-    public int getUsuarioID() {
-        return UsuarioID;
-    }
-
-    public void setUsuarioID(int UsuarioID) {
-        this.UsuarioID = UsuarioID;
-    }
-
-    public boolean isPermisos() {
-        return Permisos;
-    }
-
-    public void setPermisos(boolean Permisos) {
-        this.Permisos = Permisos;
-    }
-    
+    public boolean isPermisos() { return Permisos; }
+    public void setPermisos(boolean Permisos) { this.Permisos = Permisos; }
 }
-    
-

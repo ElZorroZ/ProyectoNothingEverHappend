@@ -56,16 +56,22 @@ public class Controller {
     
     @PostMapping("/crearproyecto")
     public void Crear(@RequestBody Proyecto proyecto) {
-        try {            
-            String Nombre=proyecto.getNombre();
-            Date FechaInicio=proyecto.getFechaInicio();
-            Date FechaFinal=proyecto.getFechaFinal();
-            String Descripcion=proyecto.getDescripcion();
-            proyecto.Crear(conexion, Nombre, Descripcion, FechaInicio, FechaFinal, 0);
+        try {
+            System.out.println("Nombre: " + proyecto.getNombre());
+            System.out.println("FechaInicio: " + proyecto.getFechaInicio());
+            System.out.println("FechaFinal: " + proyecto.getFechaFinal());
+            System.out.println("Descripcion: " + proyecto.getDescripcion());
+
+            String Nombre = proyecto.getNombre();
+            Date FechaInicio = proyecto.getFechaInicio();
+            Date FechaFinal = proyecto.getFechaFinal();
+            String Descripcion = proyecto.getDescripcion();
+
+            proyecto.Crear(conexion, Nombre, Descripcion, FechaInicio, FechaFinal);
         } catch (Exception e) {
-            ResponseEntity.status(500).body(Map.of(
-                "mensaje", "Error interno del servidor: " + e.getMessage()
-            ));
+            e.printStackTrace(); // <-- ¡Para ver si falla!
+            System.out.println("Ocurrió un error en el controlador.");
         }
     }
+
 }

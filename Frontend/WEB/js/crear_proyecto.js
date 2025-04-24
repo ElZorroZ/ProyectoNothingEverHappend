@@ -32,6 +32,37 @@ document.addEventListener('DOMContentLoaded', () => {
     if (fechaFin < fechaInicio) {
       alert('La fecha de finalización no puede ser anterior a la fecha de inicio.');
       e.preventDefault(); // Evita el envío
+    } else {
+      // Preparar los datos para el backend
+      const proyectoData = {
+        nombre: form.nombre.value,
+        descripcion: form.descripcion.value,
+        fechaInicio: fechaInicioInput.value,
+        fechaFin: fechaFinInput.value
+      };
+
+      // Enviar los datos al servidor usando fetch
+      fetch('https://java-backend-latest-rm0u.onrender.com/api/crearproyecto', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(proyectoData)
+      })
+      .then(response => {
+        if (response.ok) {
+          alert('Proyecto creado con éxito');
+          form.reset(); // Limpiar el formulario
+        } else {
+          alert('Hubo un error al crear el proyecto');
+        }
+      })
+      .catch(error => {
+        console.error('Error al enviar la solicitud:', error);
+        alert('Error al crear el proyecto');
+      });
+
+      e.preventDefault(); // Evitar el envío tradicional del formulario
     }
   });
 });
