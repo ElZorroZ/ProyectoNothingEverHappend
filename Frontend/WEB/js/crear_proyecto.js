@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
         nombre: form.nombre.value,
         descripcion: form.descripcion.value,
         fechaInicio: fechaInicioInput.value, // en formato yyyy-MM-dd
-        fechaFin: fechaFinInput.value
+        fechaFinal: fechaFinInput.value
       };
 
       // Enviar los datos al servidor usando fetch
