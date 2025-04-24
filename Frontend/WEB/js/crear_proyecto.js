@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return `${año}/${mes}/${dia}`;
   }
 
-  // Validación al enviar el formulario
+    // Validación al enviar el formulario
   form.addEventListener('submit', function (e) {
     const fechaInicio = new Date(fechaInicioInput.value);
     const fechaFin = new Date(fechaFinInput.value);
@@ -46,8 +46,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const proyectoData = {
         nombre: form.nombre.value,
         descripcion: form.descripcion.value,
-        fechaInicio: formatearFecha(fechaInicioInput.value),
-        fechaFin: formatearFecha(fechaFinInput.value)
+        fechaInicio: fechaInicioInput.value, // en formato yyyy-MM-dd
+        fechaFin: fechaFinInput.value
       };
 
       // Enviar los datos al servidor usando fetch
@@ -63,7 +63,10 @@ document.addEventListener('DOMContentLoaded', () => {
           alert('Proyecto creado con éxito');
           form.reset(); // Limpiar el formulario
         } else {
-          alert('Hubo un error al crear el proyecto');
+          response.text().then(text => {
+            console.error('Error del servidor:', text);
+            alert('Hubo un error al crear el proyecto: ' + text);
+          });
         }
       })
       .catch(error => {
@@ -74,4 +77,5 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault(); // Evitar el envío tradicional del formulario
     }
   });
+
 });
