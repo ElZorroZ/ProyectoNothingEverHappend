@@ -23,7 +23,16 @@ public class Proyecto {
     private String Nombre;
     private boolean Permisos;
 
-    public void Crear(ConexionBDD conexion,String Nombre, String Descripcion, Date FechaInicio, Date FechaFin){
+    public Proyecto(int id, String nombre, String descripcion, Date inicio, Date fin, boolean permiso) {
+        this.ProyectoID = id;
+        this.Nombre = nombre;
+        this.Descripcion = descripcion;
+        this.FechaInicio = inicio;
+        this.FechaFinal = fin;
+        this.Permisos = permiso;
+    }
+
+    public void Crear(ConexionBDD conexion){
         String sql = "INSERT INTO railway.Proyecto (Nombre,Fecha_de_inicio,Fecha_de_final,Descripcion) VALUES (?,?,?,?)";
 
         Connection conn = conexion.Conectar();
@@ -31,7 +40,7 @@ public class Proyecto {
         try (PreparedStatement pst = conn.prepareStatement(sql)) {
 
             java.sql.Date FechaIniciosql = new java.sql.Date(FechaInicio.getTime());
-            java.sql.Date FechaFinsql = new java.sql.Date(FechaFin.getTime());
+            java.sql.Date FechaFinsql = new java.sql.Date(FechaFinal.getTime());
             
             pst.setString(1, Nombre);
             pst.setDate(2, FechaIniciosql);
@@ -50,7 +59,7 @@ public class Proyecto {
             ex.printStackTrace();
             System.out.println("Error en la base de datos");
         }
-        conexion.Desconectar();
+        finally{ conexion.Desconectar(); }
     }
 
     // Getters y setters

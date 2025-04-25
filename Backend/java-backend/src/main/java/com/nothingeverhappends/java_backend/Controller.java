@@ -5,6 +5,7 @@
 package com.nothingeverhappends.java_backend;
 
 import java.util.Date;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;
@@ -55,22 +56,36 @@ public class Controller {
     }
     
     @PostMapping("/crearproyecto")
-    public void Crear(@RequestBody Proyecto proyecto) {
+    public void crearProyecto(@RequestBody Proyecto proyecto) {
         try {
             System.out.println("Nombre: " + proyecto.getNombre());
             System.out.println("FechaInicio: " + proyecto.getFechaInicio());
             System.out.println("FechaFinal: " + proyecto.getFechaFinal());
             System.out.println("Descripcion: " + proyecto.getDescripcion());
 
-            String Nombre = proyecto.getNombre();
-            Date FechaInicio = proyecto.getFechaInicio();
-            Date FechaFinal = proyecto.getFechaFinal();
-            String Descripcion = proyecto.getDescripcion();
-
-            proyecto.Crear(conexion, Nombre, Descripcion, FechaInicio, FechaFinal);
+            proyecto.Crear(conexion);
         } catch (Exception e) {
             e.printStackTrace(); // <-- ¡Para ver si falla!
             System.out.println("Ocurrió un error en el controlador.");
+        }
+    }
+    
+    @GetMapping("/proyectos/{id}")
+    public ResponseEntity<?> verProyectos(@PathVariable int id) {
+        Usuario usuario = new Usuario();
+        usuario.setID(id);
+
+        List<Proyecto> proyectos = usuario.verProyectos(conexion);
+
+        if (proyectos.isEmpty()) {
+            return ResponseEntity.ok(Map.of(
+                "mensaje", "No tienes ningún proyecto asignado."
+            ));
+        } else {
+            return ResponseEntity.ok(Map.of(
+                "mensaje", "Proyectos obtenidos exitosamente.",
+                "proyectos", proyectos
+            ));
         }
     }
     
@@ -89,9 +104,9 @@ public class Controller {
     @PostMapping("/agregartareausuario")
     public void AgregarTareaUsuario(@RequestBody AgregarUsuarios agregarusuarios ){
         try {
-        int UsuarioID = 0;
-        int ProyectoID = 0;
-        agregarusuarios.AgregarTareaUsuario(conexion, UsuarioID,ProyectoID);
+            int UsuarioID = 0;
+            int ProyectoID = 0;
+            agregarusuarios.AgregarTareaUsuario(conexion, UsuarioID,ProyectoID);
         } catch (Exception e) {
             e.printStackTrace(); // <-- ¡Para ver si falla!
             System.out.println("Ocurrió un error en el controlador.");

@@ -5,6 +5,8 @@
 package com.nothingeverhappends.java_backend;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Usuario {
     private int ID;
@@ -97,8 +99,35 @@ public class Usuario {
         return resultado;  // Retorna 0 si falló (usuario no encontrado o contraseña incorrecta), ID si fue exitoso
     }
 
+    public List<Proyecto> verProyectos(ConexionBDD conexion) {
+        List<Proyecto> proyectos = new ArrayList<>();
+        String sql = "SELECT p.ProyectoID, p.Nombre, p.Descripcion, p.Fecha_de_inicio, p.Fecha_de_final, rp.Permiso " +
+                     "FROM Proyecto p " +
+                     "INNER JOIN Rol_Proyecto rp ON p.ProyectoID = rp.ProyectoID " +
+                     "WHERE rp.UsuarioID = ?";
 
+        try (PreparedStatement stmt = conexion.Conectar().prepareStatement(sql)) {
+            stmt.setInt(1, this.ID);
 
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    int id = rs.getInt("ProyectoID");
+                    String nombre = rs.getString("Nombre");
+                    String descripcion = rs.getString("Descripcion");
+                    Date fechaInicio = rs.getDate("Fecha_de_inicio");
+                    Date fechaFin = rs.getDate("Fecha_de_final");
+                    boolean permiso = rs.getBoolean("Permiso");
+
+                    Proyecto proyecto = new Proyecto(id, nombre, descripcion, fechaInicio, fechaFin, permiso);
+                    proyectos.add(proyecto);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally { conexion.Desconectar(); }
+
+        return proyectos;
+    }
 
     // Métodos Getter y Setter
     public int getID() {
