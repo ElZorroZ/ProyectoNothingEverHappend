@@ -92,10 +92,10 @@ public class Controller {
     @PostMapping("/agregarrolusuario")
     public void AgregarRolUsuario(@RequestBody AgregarUsuarios agregarusuarios ){
         try {
-        int UsuarioID = 0;
+        String Email = "";
         int ProyectoID = 0;
         boolean Permiso = false;
-        agregarusuarios.AgregarRolUsuario(conexion, UsuarioID,ProyectoID,Permiso);
+        agregarusuarios.AgregarRolUsuario(conexion, Email,ProyectoID,Permiso);
         } catch (Exception e) {
             e.printStackTrace(); // <-- ¡Para ver si falla!
             System.out.println("Ocurrió un error en el controlador.");
