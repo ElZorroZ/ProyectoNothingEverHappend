@@ -24,7 +24,16 @@ document.addEventListener('DOMContentLoaded', () => {
     fechaFinInput.min = fechaInicioInput.value;
   });
 
-  // Validación al enviar el formulario
+  // Función para convertir la fecha al formato YYYY/MM/DD
+  function formatearFecha(fechaStr) {
+    const fecha = new Date(fechaStr);
+    const año = fecha.getFullYear();
+    const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+    const dia = String(fecha.getDate()).padStart(2, '0');
+    return `${año}/${mes}/${dia}`;
+  }
+
+    // Validación al enviar el formulario
   form.addEventListener('submit', function (e) {
     const fechaInicio = new Date(fechaInicioInput.value);
     const fechaFin = new Date(fechaFinInput.value);
@@ -32,6 +41,41 @@ document.addEventListener('DOMContentLoaded', () => {
     if (fechaFin < fechaInicio) {
       alert('La fecha de finalización no puede ser anterior a la fecha de inicio.');
       e.preventDefault(); // Evita el envío
+    } else {
+      // Preparar los datos para el backend
+      const proyectoData = {
+        nombre: form.nombre.value,
+        descripcion: form.descripcion.value,
+        fechaInicio: fechaInicioInput.value, // en formato yyyy-MM-dd
+        fechaFinal: fechaFinInput.value
+      };
+
+      // Enviar los datos al servidor usando fetch
+      fetch('https://java-backend-latest-rm0u.onrender.com/api/crearproyecto', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(proyectoData)
+      })
+      .then(response => {
+        if (response.ok) {
+          alert('Proyecto creado con éxito');
+          form.reset(); // Limpiar el formulario
+        } else {
+          response.text().then(text => {
+            console.error('Error del servidor:', text);
+            alert('Hubo un error al crear el proyecto: ' + text);
+          });
+        }
+      })
+      .catch(error => {
+        console.error('Error al enviar la solicitud:', error);
+        alert('Error al crear el proyecto');
+      });
+
+      e.preventDefault(); // Evitar el envío tradicional del formulario
     }
   });
+
 });

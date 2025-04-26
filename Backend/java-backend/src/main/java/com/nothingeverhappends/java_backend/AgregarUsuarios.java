@@ -13,30 +13,40 @@ import java.util.ArrayList;
  * @author PC
  */
 public class AgregarUsuarios {
-    private int UsuarioID;
-    private int OtroID;
-    private boolean permiso;
-    public AgregarUsuarios(int UsuarioID, int OtroID, boolean permiso){
-    this.UsuarioID=UsuarioID;
-    this.OtroID=OtroID;
-    this.permiso=permiso;
-}
-    public void ExtaerDatos (ArrayList Datos){
-        UsuarioID = (int) Datos.get(0);
-        OtroID = (int) Datos.get(1);
-        if (Datos.size()==3){
-            permiso = (boolean) Datos.get(2);
+    int UsuarioID;
+    int OtroID;
+    boolean permiso;
+    String Email;
+    public AgregarUsuarios(int UsuarioID, int OtroID, boolean permiso, String Email){
+        this.UsuarioID=UsuarioID;
+        this.OtroID=OtroID;
+        this.permiso=permiso;
+        this.Email=Email;
+    }
+    public void AgregarRolUsuario(ConexionBDD conexion, String Email,int OtroID, boolean permiso){
+        int resultado=0;
+        int UsuarioID=0;
+        try{
+            String consulta = "SELECT FROM Usuario UsuarioID WHERE Email = ?";
+            
+            PreparedStatement ps = conexion.Conectar().prepareStatement(consulta);
+            ps.setString(1, Email);
+            ps.setInt(2, OtroID);
+            ps.setBoolean(3, permiso);
+            ResultSet rs = ps.executeQuery();
+
+            // Verificar si la consulta devolvió algún resultado
+            if (rs.next()) {
+                resultado = rs.getInt(1);  // Resultado de la función SQL
+                if (resultado != 0) {
+                    UsuarioID = resultado;  // Asignar el ID del usuario si es válido
+                }
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }finally{
+            conexion.Desconectar();
         }
-    }
-    
-    public void AgregarRolUsuario (ArrayList Datos){
-        ExtaerDatos (Datos);
-    }
-    public void AgregarTareaUsuario (ArrayList Datos){
-        ExtaerDatos (Datos);
-        
-    }
-    public void InsertarRolUsuario(ConexionBDD conexion){
         try{
             String consulta = "CALL `railway`.`insertar_rol_proyecto`(?,?,?);";
             
@@ -51,7 +61,7 @@ public class AgregarUsuarios {
             conexion.Desconectar();
         }
     }
-    public void InsertarTareaUsuario(ConexionBDD conexion){
+    public void AgregarTareaUsuario(ConexionBDD conexion, int UsuarioID, int OtroID){
         try{
             String consulta = "CALL `railway`.`insertar_tarea_usuario`(?,?);";
             

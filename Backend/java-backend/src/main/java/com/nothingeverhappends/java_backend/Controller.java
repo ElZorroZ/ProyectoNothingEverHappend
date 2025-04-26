@@ -2,28 +2,116 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-import com.nothingeverhappends.java_backend.ConexionBDD;
-import com.nothingeverhappends.java_backend.Usuario;
+package com.nothingeverhappends.java_backend;
+
+import java.util.Date;
+import java.util.List;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = "*")
-public class Controller{
+public class Controller {
+
     private ConexionBDD conexion = new ConexionBDD();
-    
-    // Crear persona
+
     @PostMapping("/registro")
-    public int registrarUsuario(@RequestBody Usuario usuario) {
-        
-        return usuario.registrar(conexion);
+    public ResponseEntity<String> registrarUsuario(@RequestBody Usuario usuario) {
+        try {
+            int resultado = usuario.registrar(conexion);
+            if (resultado > 0) {
+                return ResponseEntity.ok("Registro exitoso");
+            } else {
+                return ResponseEntity.status(400).body("Error en el registro");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error interno del servidor: " + e.getMessage());
+        }
     }
-   
-    @PostMapping("/iniciosesion")
-    public int iniciarSesion(@RequestBody Usuario usuario) {
-        String Email= usuario.getEmail();
-        String Contraseña= usuario.getContraseña();
-        return usuario.iniciarSesion(conexion,Email,Contraseña);
+
+  @PostMapping("/iniciosesion")
+    public ResponseEntity<?> iniciarSesion(@RequestBody Usuario usuario) {
+        try {
+            String email = usuario.getEmail();
+            String password = usuario.getPassword();
+            int resultado = usuario.iniciarSesion(conexion, email, password);
+            if (resultado > 0) {
+                int id = usuario.getID(); 
+                return ResponseEntity.ok().body(Map.of(
+                    "mensaje", "Inicio de sesión exitoso",
+                    "id", id
+                ));
+            } else {
+                return ResponseEntity.status(400).body(Map.of(
+                    "mensaje", "Credenciales incorrectas"
+                ));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(Map.of(
+                "mensaje", "Error interno del servidor: " + e.getMessage()
+            ));
+        }
     }
+    
+    @PostMapping("/crearproyecto")
+    public void crearProyecto(@RequestBody Proyecto proyecto) {
+        try {
+            System.out.println("Nombre: " + proyecto.getNombre());
+            System.out.println("FechaInicio: " + proyecto.getFechaInicio());
+            System.out.println("FechaFinal: " + proyecto.getFechaFinal());
+            System.out.println("Descripcion: " + proyecto.getDescripcion());
+
+            proyecto.Crear(conexion);
+        } catch (Exception e) {
+            e.printStackTrace(); // <-- ¡Para ver si falla!
+            System.out.println("Ocurrió un error en el controlador.");
+        }
+    }
+    
+    @GetMapping("/proyectos/{id}")
+    public ResponseEntity<?> verProyectos(@PathVariable int id) {
+        Usuario usuario = new Usuario();
+        usuario.setID(id);
+
+        List<Proyecto> proyectos = usuario.verProyectos(conexion);
+
+        if (proyectos.isEmpty()) {
+            return ResponseEntity.ok(Map.of(
+                "mensaje", "No tienes ningún proyecto asignado."
+            ));
+        } else {
+            return ResponseEntity.ok(Map.of(
+                "mensaje", "Proyectos obtenidos exitosamente.",
+                "proyectos", proyectos
+            ));
+        }
+    }
+    
+    @PostMapping("/agregarrolusuario")
+    public void AgregarRolUsuario(@RequestBody AgregarUsuarios agregarusuarios ){
+        try {
+        String Email = "";
+        int ProyectoID = 0;
+        boolean Permiso = false;
+        agregarusuarios.AgregarRolUsuario(conexion, Email,ProyectoID,Permiso);
+        } catch (Exception e) {
+            e.printStackTrace(); // <-- ¡Para ver si falla!
+            System.out.println("Ocurrió un error en el controlador.");
+        }
+    }
+    @PostMapping("/agregartareausuario")
+    public void AgregarTareaUsuario(@RequestBody AgregarUsuarios agregarusuarios ){
+        try {
+            int UsuarioID = 0;
+            int ProyectoID = 0;
+            agregarusuarios.AgregarTareaUsuario(conexion, UsuarioID,ProyectoID);
+        } catch (Exception e) {
+            e.printStackTrace(); // <-- ¡Para ver si falla!
+            System.out.println("Ocurrió un error en el controlador.");
+        }
+    }
+    
 
 }
