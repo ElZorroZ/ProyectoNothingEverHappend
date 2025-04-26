@@ -55,8 +55,8 @@ public class Controller {
         }
     }
     
-    @PostMapping("/crearproyecto")
-    public void crearProyecto(@RequestBody Proyecto proyecto, int id) {
+    @PostMapping("/crearproyecto/{id}")
+    public void crearProyecto(@RequestBody Proyecto proyecto,@PathVariable int id ) {
         try {
             System.out.println("Nombre: " + proyecto.getNombre());
             System.out.println("FechaInicio: " + proyecto.getFechaInicio());
