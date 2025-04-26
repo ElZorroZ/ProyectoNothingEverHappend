@@ -13,6 +13,16 @@ import java.util.ArrayList;
  * @author PC
  */
 public class AgregarUsuarios {
+    int UsuarioID;
+    int OtroID;
+    boolean permiso;
+    String Email;
+    public AgregarUsuarios(int UsuarioID, int OtroID, boolean permiso, String Email){
+        this.UsuarioID=UsuarioID;
+        this.OtroID=OtroID;
+        this.permiso=permiso;
+        this.Email=Email;
+    }
     public void AgregarRolUsuario(ConexionBDD conexion, String Email,int OtroID, boolean permiso){
         int resultado=0;
         int UsuarioID=0;
