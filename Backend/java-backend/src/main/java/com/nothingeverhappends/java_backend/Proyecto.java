@@ -5,10 +5,14 @@
 package com.nothingeverhappends.java_backend;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Proyecto {
     private int ProyectoID;
@@ -32,12 +36,11 @@ public class Proyecto {
         this.Permisos = permiso;
     }
 
-    public void Crear(ConexionBDD conexion){
-        String sql = "INSERT INTO railway.Proyecto (Nombre,Fecha_de_inicio,Fecha_de_final,Descripcion) VALUES (?,?,?,?)";
+    public void Crear(ConexionBDD conexion,int Id_usuario){ 
 
         Connection conn = conexion.Conectar();
 
-        try (PreparedStatement pst = conn.prepareStatement(sql)) {
+        try (CallableStatement pst = conn.prepareCall("{ call Crear_Proyecto(?, ?, ?, ?, ?) }");) {
 
             java.sql.Date FechaIniciosql = new java.sql.Date(FechaInicio.getTime());
             java.sql.Date FechaFinsql = new java.sql.Date(FechaFinal.getTime());
@@ -46,20 +49,39 @@ public class Proyecto {
             pst.setDate(2, FechaIniciosql);
             pst.setDate(3, FechaFinsql);
             pst.setString(4, Descripcion);
+            pst.registerOutParameter(5, Types.INTEGER);
 
-            int filasAfectadas = pst.executeUpdate();
+            
+            pst.execute();
+            int id_proyecto = pst.getInt(5);
 
-            if (filasAfectadas > 0) {
+            if (id_proyecto > 0) {
                 System.out.println("Proyecto creado");
+                ProyectoID=id_proyecto;
             } else {
                 System.out.println("Error");
             }
+            
 
         } catch (SQLException ex) {
             ex.printStackTrace();
             System.out.println("Error en la base de datos");
         }
-        finally{ conexion.Desconectar(); }
+        
+        try (CallableStatement pst2 = conn.prepareCall("{ call Agregar_Rol(?,?,?) }");){
+            pst2.setInt(1, Id_usuario);
+            pst2.setInt(2, ProyectoID);
+            pst2.setInt(3, 1);
+            
+            pst2.execute();
+        
+        } 
+            
+        catch (SQLException ex) {
+            ex.printStackTrace();
+            System.out.println("Error en la base de datos");
+        }
+        conexion.Desconectar();
     }
 
     // Getters y setters
