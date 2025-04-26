@@ -78,9 +78,6 @@ document.addEventListener("DOMContentLoaded", function () {
           card.innerHTML = `
             <h3>${nombre}</h3>
             <p>${descripcion}</p>
-            <p>Inicio: ${fecha_de_inicio}</p>
-            <p>Fin: ${fecha_de_final}</p>
-            <p>Permiso: ${permiso}</p>
             <button class="view-project-btn" onclick="window.location.href='../TareasWEB/tareas.html'">Entrar</button>
           `;
           cardsContainer.appendChild(card);
