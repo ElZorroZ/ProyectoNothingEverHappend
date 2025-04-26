@@ -91,17 +91,21 @@ public class Controller {
     }
     
     @PostMapping("/agregarrolusuario")
-    public void AgregarRolUsuario(@RequestBody AgregarUsuarios agregarusuarios ){
+    public void AgregarRolUsuario(@RequestBody AgregarUsuarios agregarusuarios) {
         try {
-        String Email = "";
-        int ProyectoID = 0;
-        boolean Permiso = false;
-        agregarusuarios.AgregarRolUsuario(conexion, Email,ProyectoID,Permiso);
+            // Usa la propiedad Email del objeto recibido
+            String Email = agregarusuarios.getEmail();
+            int ProyectoID = agregarusuarios.getOtroID(); // Usar OtroID del objeto recibido
+            boolean Permiso = agregarusuarios.isPermiso(); // Usar permiso del objeto recibido
+
+            // Llama a la función con los valores correctos
+            agregarusuarios.AgregarRolUsuario(conexion, Email, ProyectoID, Permiso);
         } catch (Exception e) {
-            e.printStackTrace(); // <-- ¡Para ver si falla!
+            e.printStackTrace(); // Para ver si falla
             System.out.println("Ocurrió un error en el controlador.");
         }
     }
+
     @PostMapping("/agregartareausuario")
     public void AgregarTareaUsuario(@RequestBody AgregarUsuarios agregarusuarios ){
         try {

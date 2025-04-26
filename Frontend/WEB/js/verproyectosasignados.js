@@ -1,8 +1,10 @@
-const taskCards = document.querySelectorAll('.task-card');
 const notifBtn = document.querySelector('.notif-btn');
 const panel = document.getElementById('notificationPanel');
 const idUsuario = localStorage.getItem('usuarioId');
 const cardsContainer = document.querySelector('.project-cards');
+const proyectoSelect = document.getElementById('proyecto');
+const rolSelect = document.getElementById('rol'); // nuevo select de rol
+let proyectosGlobal = [];
 
 // Abrir/cerrar panel de notificaciones
 notifBtn.addEventListener('click', () => {
@@ -32,24 +34,50 @@ window.onclick = function(event) {
   }
 };
 
-// Al cargar la página
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("userForm");
+
   if (form) {
     form.addEventListener("submit", function (e) {
       e.preventDefault();
 
-      const proyecto = document.getElementById("proyecto").value;
+      const proyectoSeleccionado = proyectoSelect.value;
       const email = document.getElementById("email").value;
+      const rolSeleccionado = rolSelect.value;
 
-      alert("Usuario agregado: \nProyecto: " + proyecto + "\nEmail: " + email);
+      // Mapear el rol a 0 para 'Miembro' y 1 para 'Administrador'
+      const rol = rolSeleccionado === 'Administrador' ? 1 : 0;
 
-      form.reset();
-      closeModal();
+      // Fetch para agregar usuario
+      fetch('https://java-backend-latest-rm0u.onrender.com/api/agregarrolusuario', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          OtroID: proyectoSeleccionado,
+          email: email,
+          permiso: rol
+        })
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Error al agregar usuario');
+        }
+        return response.json();
+      })
+      .then(data => {
+        alert('Usuario agregado exitosamente!');
+        form.reset();
+        closeModal();
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Hubo un error al agregar el usuario.');
+      });
     });
   }
 
-  // Pedir y mostrar proyectos asignados al usuario
   if (cardsContainer && idUsuario) {
     cardsContainer.innerHTML = '';
 
@@ -61,18 +89,18 @@ document.addEventListener("DOMContentLoaded", function () {
         return response.json();
       })
       .then(data => {
-        console.log(data.mensaje);
-
         const proyectos = data.proyectos;
+        proyectosGlobal = proyectos;
 
         if (!proyectos || proyectos.length === 0) {
           cardsContainer.innerHTML = '<p>No tenés proyectos asignados.</p>';
           return;
         }
 
+        // Llenar tarjetas
         proyectos.forEach(proyecto => {
-          const { nombre, descripcion, fecha_de_inicio, fecha_de_final, permiso } = proyecto;
-        
+          const { nombre, descripcion } = proyecto;
+
           const card = document.createElement('div');
           card.classList.add('project-card');
           card.innerHTML = `
@@ -85,12 +113,29 @@ document.addEventListener("DOMContentLoaded", function () {
             </div>
           `;
           cardsContainer.appendChild(card);
-        });        
+        });
+
+        // Llenar el select de proyectos
+        proyectos.forEach(proyecto => {
+          const option = document.createElement('option');
+          option.value = proyecto.nombre;
+          option.textContent = proyecto.nombre;
+          proyectoSelect.appendChild(option);
+        });
+
       })
       .catch(error => {
         console.error('Error al pedir los proyectos:', error);
         cardsContainer.innerHTML = '<p>Error al cargar los proyectos.</p>';
       });
+
+    // Llenar el select de roles
+    const roles = ['Miembro', 'Administrador'];
+    roles.forEach(rol => {
+      const option = document.createElement('option');
+      option.value = rol;
+      option.textContent = rol;
+      rolSelect.appendChild(option);
+    });
   }
 });
-
