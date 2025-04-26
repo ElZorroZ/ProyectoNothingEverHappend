@@ -27,6 +27,8 @@ public class Proyecto {
     private String Nombre;
     private boolean Permisos;
     private int id;
+    
+    public Proyecto() {}
 
     public Proyecto(int id, String nombre, String descripcion, Date inicio, Date fin, boolean permiso) {
         this.ProyectoID = id;
