@@ -56,14 +56,14 @@ public class Controller {
     }
     
     @PostMapping("/crearproyecto")
-    public void crearProyecto(@RequestBody Proyecto proyecto) {
+    public void crearProyecto(@RequestBody Proyecto proyecto, int id) {
         try {
             System.out.println("Nombre: " + proyecto.getNombre());
             System.out.println("FechaInicio: " + proyecto.getFechaInicio());
             System.out.println("FechaFinal: " + proyecto.getFechaFinal());
             System.out.println("Descripcion: " + proyecto.getDescripcion());
 
-            proyecto.Crear(conexion);
+            proyecto.Crear(conexion,id);
         } catch (Exception e) {
             e.printStackTrace(); // <-- ¡Para ver si falla!
             System.out.println("Ocurrió un error en el controlador.");
