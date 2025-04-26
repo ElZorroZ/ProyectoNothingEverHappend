@@ -13,7 +13,30 @@ import java.util.ArrayList;
  * @author PC
  */
 public class AgregarUsuarios {
-    public void AgregarRolUsuario(ConexionBDD conexion, int UsuarioID,int OtroID, boolean permiso){
+    public void AgregarRolUsuario(ConexionBDD conexion, String Email,int OtroID, boolean permiso){
+        int resultado=0;
+        int UsuarioID=0;
+        try{
+            String consulta = "SELECT FROM Usuario UsuarioID WHERE Email = ?";
+            
+            PreparedStatement ps = conexion.Conectar().prepareStatement(consulta);
+            ps.setString(1, Email);
+            ps.setInt(2, OtroID);
+            ps.setBoolean(3, permiso);
+            ResultSet rs = ps.executeQuery();
+
+            // Verificar si la consulta devolvió algún resultado
+            if (rs.next()) {
+                resultado = rs.getInt(1);  // Resultado de la función SQL
+                if (resultado != 0) {
+                    UsuarioID = resultado;  // Asignar el ID del usuario si es válido
+                }
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }finally{
+            conexion.Desconectar();
+        }
         try{
             String consulta = "CALL `railway`.`insertar_rol_proyecto`(?,?,?);";
             
