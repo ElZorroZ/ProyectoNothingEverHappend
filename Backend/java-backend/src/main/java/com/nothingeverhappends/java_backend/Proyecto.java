@@ -26,6 +26,7 @@ public class Proyecto {
     private String Descripcion;
     private String Nombre;
     private boolean Permisos;
+    private int id;
 
     public Proyecto(int id, String nombre, String descripcion, Date inicio, Date fin, boolean permiso) {
         this.ProyectoID = id;
@@ -36,7 +37,7 @@ public class Proyecto {
         this.Permisos = permiso;
     }
 
-    public void Crear(ConexionBDD conexion,int Id_usuario){ 
+    public void Crear(ConexionBDD conexion){ 
 
         Connection conn = conexion.Conectar();
 
@@ -69,7 +70,7 @@ public class Proyecto {
         }
         
         try (CallableStatement pst2 = conn.prepareCall("{ call Agregar_Rol(?,?,?) }");){
-            pst2.setInt(1, Id_usuario);
+            pst2.setInt(1, id);
             pst2.setInt(2, ProyectoID);
             pst2.setInt(3, 1);
             
@@ -103,4 +104,9 @@ public class Proyecto {
 
     public boolean isPermisos() { return Permisos; }
     public void setPermisos(boolean Permisos) { this.Permisos = Permisos; }
+
+    public int getId() {return id;}
+
+    public void setId(int id) {this.id = id;}
+    
 }

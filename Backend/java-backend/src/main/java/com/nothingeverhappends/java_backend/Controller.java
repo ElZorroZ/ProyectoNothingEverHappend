@@ -55,15 +55,16 @@ public class Controller {
         }
     }
     
-    @PostMapping("/crearproyecto/{id}")
-    public void crearProyecto(@RequestBody Proyecto proyecto,@PathVariable int id ) {
+    @PostMapping("/crearproyecto")
+    public void crearProyecto(@RequestBody Proyecto proyecto) {
         try {
             System.out.println("Nombre: " + proyecto.getNombre());
             System.out.println("FechaInicio: " + proyecto.getFechaInicio());
             System.out.println("FechaFinal: " + proyecto.getFechaFinal());
             System.out.println("Descripcion: " + proyecto.getDescripcion());
+            System.out.println("id de usuario: " + proyecto.getId());
 
-            proyecto.Crear(conexion,id);
+            proyecto.Crear(conexion);
         } catch (Exception e) {
             e.printStackTrace(); // <-- ¡Para ver si falla!
             System.out.println("Ocurrió un error en el controlador.");
