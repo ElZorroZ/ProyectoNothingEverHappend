@@ -272,3 +272,98 @@ body {
   text-decoration: none;
   color: white;
 }
+
+.button-group {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.add-task-btn {
+  margin-top: 1rem;
+  background-color: #27ae60;
+  color: white;
+  padding: 0.5rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.add-task-btn:hover {
+  background-color: #1e874b;
+}
+.add-user-btn {
+  margin-top: 1rem;
+  background-color: #2980b9;
+  color: white;
+  padding: 0.5rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.add-user-btn:hover {
+  background-color: #21618c;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+  background-color: white;
+  margin: 10% auto;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 400px;
+  color: black;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.close-btn {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  color: #000;
+}
+
+.modal-content input, .modal-content button {
+  display: block;
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.7rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+.modal-content button {
+  background-color: #6a0dad;
+  color: white;
+  font-weight: bold;
+  border: none;
+}
+
+.modal-content button:hover {
+  background-color: #4e0783;
+}

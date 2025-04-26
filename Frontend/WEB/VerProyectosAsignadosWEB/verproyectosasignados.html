@@ -20,25 +20,89 @@
       <section class="project-panel">
         <h2 class="project-title">Mis Proyectos Asignados</h2>
 
-        <div class="project-cards">
-          <div class="project-card">
-            <h3>Desarrollo de la nueva aplicación</h3>
-            <p>Fecha límite: 30/04/2025</p>
+        <div class="project-card">
+          <h3>Desarrollo de la nueva aplicación</h3>
+          <p>Fecha límite: 30/04/2025</p>
+          <div class="button-group">
             <button class="view-project-btn" onclick="window.location.href='../TareasWEB/tareas.html'">Entrar</button>
-          </div>
-          
-          <div class="project-card">
-            <h3>Rediseño de la interfaz de usuario</h3>
-            <p>Fecha límite: 25/04/2025</p>
-            <button class="view-project-btn" onclick="window.location.href='../TareasWEB/tareas.html'">Entrar</button>
-          </div>
-          
-          <div class="project-card">
-            <h3>Optimización del sistema</h3>
-            <p>Fecha límite: 20/04/2025</p>
-            <button class="view-project-btn" onclick="window.location.href='../TareasWEB/tareas.html'">Entrar</button>
+            <button class="add-task-btn" onclick="window.location.href='../TareasWEB/agregartarea.html'">Agregar Tarea</button>
+            <button class="add-user-btn" onclick="openModal()">Agregar Usuario</button>
           </div>
         </div>
+        
+        <!-- Modal de Agregar Usuario -->
+        <div id="addUserModal" class="modal">
+          <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h2>Agregar Usuario al Proyecto</h2>
+            <form id="userForm">
+              <label for="proyecto">Proyecto:</label>
+              <input type="text" id="proyecto" name="proyecto" required />
+        
+              <label for="email">Email:</label>
+              <input type="email" id="email" name="email" required />
+        
+              <button type="submit">Agregar</button>
+            </form>
+          </div>
+        </div>
+        
+        
+        <div class="project-card">
+          <h3>Desarrollo de la nueva aplicación</h3>
+          <p>Fecha límite: 30/04/2025</p>
+          <div class="button-group">
+            <button class="view-project-btn" onclick="window.location.href='../TareasWEB/tareas.html'">Entrar</button>
+            <button class="add-task-btn" onclick="window.location.href='../TareasWEB/agregartarea.html'">Agregar Tarea</button>
+            <button class="add-user-btn" onclick="openModal()">Agregar Usuario</button>
+          </div>
+        </div>
+        
+        <!-- Modal de Agregar Usuario -->
+        <div id="addUserModal" class="modal">
+          <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h2>Agregar Usuario al Proyecto</h2>
+            <form id="userForm">
+              <label for="proyecto">Proyecto:</label>
+              <input type="text" id="proyecto" name="proyecto" required />
+        
+              <label for="email">Email:</label>
+              <input type="email" id="email" name="email" required />
+        
+              <button type="submit">Agregar</button>
+            </form>
+          </div>
+        </div>
+        
+          
+        <div class="project-card">
+          <h3>Desarrollo de la nueva aplicación</h3>
+          <p>Fecha límite: 30/04/2025</p>
+          <div class="button-group">
+            <button class="view-project-btn" onclick="window.location.href='../TareasWEB/tareas.html'">Entrar</button>
+            <button class="add-task-btn" onclick="window.location.href='../TareasWEB/agregartarea.html'">Agregar Tarea</button>
+            <button class="add-user-btn" onclick="openModal()">Agregar Usuario</button>
+          </div>
+        </div>
+        
+        <!-- Modal de Agregar Usuario -->
+        <div id="addUserModal" class="modal">
+          <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h2>Agregar Usuario al Proyecto</h2>
+            <form id="userForm">
+              <label for="proyecto">Proyecto:</label>
+              <input type="text" id="proyecto" name="proyecto" required />
+        
+              <label for="email">Email:</label>
+              <input type="email" id="email" name="email" required />
+        
+              <button type="submit">Agregar</button>
+            </form>
+          </div>
+        </div>
+        
         
         
       </section>
