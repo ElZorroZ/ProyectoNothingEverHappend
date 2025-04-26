@@ -20,9 +20,20 @@ document.addEventListener('click', (e) => {
 
 // Modal
 function openModal() {
+  // Primero, limpiamos las opciones del select de proyectos
+  proyectoSelect.innerHTML = '';
+
+  // Luego, agregamos las opciones correspondientes a los proyectos
+  proyectosGlobal.forEach(proyecto => {
+    const option = document.createElement('option');
+    option.value = proyecto.idProyecto;  // ID del proyecto
+    option.textContent = proyecto.nombre;  // Nombre del proyecto
+    proyectoSelect.appendChild(option);
+  });
+
+  // Finalmente, mostramos el modal
   document.getElementById("addUserModal").style.display = "block";
 }
-
 function closeModal() {
   document.getElementById("addUserModal").style.display = "none";
 }
@@ -40,52 +51,72 @@ document.addEventListener("DOMContentLoaded", function () {
   if (form) {
     form.addEventListener("submit", function (e) {
       e.preventDefault();
-    
-      const nombreProyectoSeleccionado = proyectoSelect.value;
-      const email = document.getElementById("email").value;
-      const rolSeleccionado = rolSelect.value;
-    
-      const rol = rolSeleccionado === 'Administrador' ? 1 : 0;
-    
-      // Buscar el id del proyecto
+
+      // Primero, mostramos el array global de proyectos para verificar su contenido
+      console.log('Lista de Proyectos:', proyectosGlobal); // Muestra el array de proyectos
+
+      // Obtener el nombre del proyecto seleccionado desde el combobox
+      const nombreProyectoSeleccionado = proyectoSelect.options[proyectoSelect.selectedIndex].textContent;
+      console.log('Nombre del Proyecto seleccionado:', nombreProyectoSeleccionado); // Verifica el nombre seleccionado
+
+      // Verificar si se seleccionó un proyecto
+      if (!nombreProyectoSeleccionado) {
+        alert('Error: No se ha seleccionado un proyecto.');
+        return;
+      }
+
+      // Encontrar el proyecto que coincida con el nombre seleccionado
       const proyectoEncontrado = proyectosGlobal.find(proyecto => proyecto.nombre === nombreProyectoSeleccionado);
-      const idProyectoSeleccionado = proyectoEncontrado ? proyectoEncontrado.id : null;
-    
-      if (!idProyectoSeleccionado) {
+      console.log('Proyecto Encontrado:', proyectoEncontrado);
+
+      // Verificar si se encontró el proyecto
+      if (!proyectoEncontrado) {
         alert('Error: Proyecto no encontrado.');
         return;
       }
-    
-      // Fetch para agregar usuario
+
+      // Mostrar el ID del proyecto encontrado
+      console.log('ID del Proyecto encontrado:', proyectoEncontrado.proyectoID);
+
+      // Preparar los datos que se enviarán al backend
+      const requestData = {
+        OtroID: proyectoEncontrado.proyectoID,  // Asignamos el proyectoID al OtroID
+        email: document.getElementById("email").value,
+        permiso: rolSelect.value === 'Administrador' ? 1 : 0
+      };
+
+      console.log('Datos que se enviarán al fetch:', requestData);
+
       fetch('https://java-backend-latest-rm0u.onrender.com/api/agregarrolusuario', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          OtroID: idProyectoSeleccionado,
-          email: email,
-          permiso: rol
-        })
+        body: JSON.stringify(requestData)
       })
       .then(response => {
         if (!response.ok) {
-          throw new Error('Error al agregar usuario');
+            console.error(`Error en la respuesta: ${response.status} - ${response.statusText}`);
+            throw new Error(`Error al agregar usuario. Estado: ${response.status}`);
         }
-        return response.json();
-      })
-      .then(data => {
-        alert('Usuario agregado exitosamente!');
+        return response.text(); // Obtén la respuesta como texto
+    })
+    .then(data => {
+        console.log('Respuesta del servidor:', data); // Verifica si la respuesta realmente contiene algo
+        // No es necesario hacer JSON.parse si la respuesta es texto plano
+        if (data === "Usuario agregado exitosamente") {
+            alert('Usuario agregado exitosamente!');
+        } else {
+            alert('Hubo un problema al agregar el usuario');
+        }
         form.reset();
         closeModal();
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        alert('Hubo un error al agregar el usuario.');
-      });
-    });    
+    })    
+    
+    });
   }
 
+  // Llenar el select de proyectos (esto ya debería estar hecho antes)
   if (cardsContainer && idUsuario) {
     cardsContainer.innerHTML = '';
 
@@ -104,6 +135,9 @@ document.addEventListener("DOMContentLoaded", function () {
           cardsContainer.innerHTML = '<p>No tenés proyectos asignados.</p>';
           return;
         }
+
+        // Muestra todos los proyectos obtenidos en la consola para ver cómo son
+        console.log('Proyectos obtenidos:', proyectos);
 
         // Llenar tarjetas
         proyectos.forEach(proyecto => {
@@ -126,11 +160,10 @@ document.addEventListener("DOMContentLoaded", function () {
         // Llenar el select de proyectos
         proyectos.forEach(proyecto => {
           const option = document.createElement('option');
-          option.value = proyecto.nombre;
+          option.value = proyecto.proyectoID; // Usamos 'proyectoID' ahora
           option.textContent = proyecto.nombre;
           proyectoSelect.appendChild(option);
         });
-
       })
       .catch(error => {
         console.error('Error al pedir los proyectos:', error);
@@ -147,3 +180,4 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 });
+

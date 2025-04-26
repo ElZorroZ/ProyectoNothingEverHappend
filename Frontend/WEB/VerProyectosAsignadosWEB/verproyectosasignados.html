@@ -32,10 +32,18 @@
         <h2>Agregar Usuario al Proyecto</h2>
         <form id="userForm">
           <label for="proyecto">Proyecto:</label>
-          <input type="text" id="proyecto" name="proyecto" required />
+          <select id="proyecto" name="proyecto" required>
+            <option value="">Selecciona un proyecto</option>
+          </select>
 
           <label for="email">Email:</label>
           <input type="email" id="email" name="email" required />
+
+          <label for="rol">Rol:</label>
+          <select id="rol" name="rol" required>
+            <option value="">Seleccioná un rol</option>
+            <!-- Los roles se llenarán dinámicamente -->
+          </select>
 
           <button type="submit">Agregar</button>
         </form>
