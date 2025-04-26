@@ -40,14 +40,22 @@ document.addEventListener("DOMContentLoaded", function () {
   if (form) {
     form.addEventListener("submit", function (e) {
       e.preventDefault();
-
-      const proyectoSeleccionado = proyectoSelect.value;
+    
+      const nombreProyectoSeleccionado = proyectoSelect.value;
       const email = document.getElementById("email").value;
       const rolSeleccionado = rolSelect.value;
-
-      // Mapear el rol a 0 para 'Miembro' y 1 para 'Administrador'
+    
       const rol = rolSeleccionado === 'Administrador' ? 1 : 0;
-
+    
+      // Buscar el id del proyecto
+      const proyectoEncontrado = proyectosGlobal.find(proyecto => proyecto.nombre === nombreProyectoSeleccionado);
+      const idProyectoSeleccionado = proyectoEncontrado ? proyectoEncontrado.id : null;
+    
+      if (!idProyectoSeleccionado) {
+        alert('Error: Proyecto no encontrado.');
+        return;
+      }
+    
       // Fetch para agregar usuario
       fetch('https://java-backend-latest-rm0u.onrender.com/api/agregarrolusuario', {
         method: 'POST',
@@ -55,7 +63,7 @@ document.addEventListener("DOMContentLoaded", function () {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          OtroID: proyectoSeleccionado,
+          OtroID: idProyectoSeleccionado,
           email: email,
           permiso: rol
         })
@@ -75,7 +83,7 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error('Error:', error);
         alert('Hubo un error al agregar el usuario.');
       });
-    });
+    });    
   }
 
   if (cardsContainer && idUsuario) {
