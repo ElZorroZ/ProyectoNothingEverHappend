@@ -72,16 +72,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
         proyectos.forEach(proyecto => {
           const { nombre, descripcion, fecha_de_inicio, fecha_de_final, permiso } = proyecto;
-
+        
           const card = document.createElement('div');
           card.classList.add('project-card');
           card.innerHTML = `
             <h3>${nombre}</h3>
             <p>${descripcion}</p>
-            <button class="view-project-btn" onclick="window.location.href='../TareasWEB/tareas.html'">Entrar</button>
+            <div class="button-group">
+              <button class="view-project-btn" onclick="window.location.href='../TareasWEB/tareas.html'">Entrar</button>
+              <button class="add-task-btn" onclick="window.location.href='../TareasWEB/agregartarea.html'">Agregar Tarea</button>
+              <button class="add-user-btn" onclick="openModal()">Agregar Usuario</button>
+            </div>
           `;
           cardsContainer.appendChild(card);
-        });
+        });        
       })
       .catch(error => {
         console.error('Error al pedir los proyectos:', error);
