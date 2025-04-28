@@ -8,7 +8,7 @@
 </head>
 <body>
   <header class="dashboard-header">
-    <a href="../DashboardWEB/dashboard.html" class="logo">NothingEverHappens</a>
+    <a href="../DashboardWEB/dashboard.html" class="logo">NothingEverHappened</a>
     <div class="dashboard-actions">
       <button class="notif-btn">🔔</button>
       <button class="logout-btn" onclick="window.location.href='../DashboardWEB/dashboard.html'">Volver</button>
@@ -30,8 +30,11 @@
       <label for="detalle">Detalle</label>
       <textarea id="detalle" name="detalle" rows="4" required></textarea>
 
-      <label for="fechaEntrega">Fecha de Entrega</label>
-      <input type="date" id="fechaEntrega" name="fechaEntrega" required>
+      <label for="fechaInicio">Fecha de Inicio</label>
+      <input type="date" id="fechaInicio" name="fechaInicio" required>
+
+      <label for="fechaVencimiento">Fecha de Vencimiento</label>
+      <input type="date" id="fechaVencimiento" name="fechaVencimiento" required>
 
       <button type="submit">Crear Tarea</button>
     </form>
