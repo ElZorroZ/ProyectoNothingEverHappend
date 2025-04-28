@@ -150,7 +150,7 @@ document.addEventListener("DOMContentLoaded", function () {
             <p>${descripcion}</p>
             <div class="button-group">
               <button class="view-project-btn" onclick="window.location.href='../TareasWEB/tareas.html'">Entrar</button>
-              <button class="add-task-btn" onclick="window.location.href='../TareasWEB/agregartarea.html'">Agregar Tarea</button>
+              <button class="add-task-btn" onclick="window.location.href='../AgregarTareaWEB/AgregarTarea.html'">Agregar Tarea</button>
               <button class="add-user-btn" onclick="openModal()">Agregar Usuario</button>
             </div>
           `;
