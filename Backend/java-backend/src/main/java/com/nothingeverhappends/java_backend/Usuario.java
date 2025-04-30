@@ -17,6 +17,7 @@ public class Usuario {
     private String apellido;
     private String email;
     private String password; 
+    private String password2;
 
     // Constructor vacío
     public Usuario() {
@@ -27,13 +28,15 @@ public class Usuario {
         this.apellido = _ape;
         this.nombre = _nom;
         this.email = _mail;
-        this.password = hashearContraseña(_password);
+        
+        
     }
     
     
     // CIFRAR LA CONTRASEÑA
     
     private String hashearContraseña(String contraseña) {
+
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256"); //OBJETO QUE USA ALGORITMO SHA-256
             byte[] hashBytes = md.digest(contraseña.getBytes()); // SE TRANSFORMA EN UN ARRAY DE BYTES
@@ -51,6 +54,13 @@ public class Usuario {
 
     // Método para registrar usuario
     public int registrar(ConexionBDD conexion) {
+        
+        System.out.println("Contraseña: " + password);
+        
+        password2 = hashearContraseña(password);
+        
+        System.out.println("Contraseña cifrada: " + password2);
+        
         int id = 0;
         PreparedStatement ps = null;
         ResultSet rs = null;
