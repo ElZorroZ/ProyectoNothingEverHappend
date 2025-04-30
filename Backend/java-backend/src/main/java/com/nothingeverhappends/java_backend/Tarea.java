@@ -20,7 +20,7 @@ public class Tarea {
     @JsonProperty("Descripcion")
     String Descripcion;
     @JsonProperty("Proridad")
-    int Prioridad;
+    int Prioridad; //1 Es baja, 2 Media, 3 Alta
     @JsonProperty("Estado")
     String Estado;
     @JsonProperty("Vencimiento")
@@ -53,7 +53,9 @@ public class Tarea {
         }
     }
     
-    public void Cambiar_Estado(ConexionBDD conexion,String Estado){
-        
+    public void Cambiar_Estado(ConexionBDD conexion,String Estado,int ProyectoID){
+        try{
+            
+        }
     }
 }
