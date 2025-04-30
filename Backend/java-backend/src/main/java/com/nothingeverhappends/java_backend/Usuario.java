@@ -68,7 +68,7 @@ public class Usuario {
             String consulta = "SELECT registrarUsuario(?,?,?,?) AS retorno;";
             ps = conexion.Conectar().prepareStatement(consulta);
             ps.setString(1, email);
-            ps.setString(2, password);  
+            ps.setString(2, password2);  
             ps.setString(3, nombre);
             ps.setString(4, apellido);
             rs = ps.executeQuery();
@@ -97,12 +97,13 @@ public class Usuario {
         try {
             // Establecer la conexión a la base de datos
             Connection var = conexion.Conectar();
-
+            
+            password2 = hashearContraseña(password);
             // Sentencia SQL para verificar el inicio de sesión
             String sql = "SELECT verificarInicioSesion(?, ?);";
             stmt = var.prepareStatement(sql);
             stmt.setString(1, email);
-            stmt.setString(2, password);
+            stmt.setString(2, password2);
 
             // Ejecutar la consulta
             rs = stmt.executeQuery();
