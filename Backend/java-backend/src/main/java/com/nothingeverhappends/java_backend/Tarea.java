@@ -25,6 +25,9 @@ public class Tarea {
     String Estado;
     @JsonProperty("Vencimiento")
     Date Vencimiento;
+    @JsonProperty("TareaID")
+    int TareaID;
+    
     public Tarea(int ProyectoID, String Nombre, String Descripcion, int Prioridad, String Estado, Date Vencimiento){
         this.ProyectoID=ProyectoID;
         this.Nombre=Nombre;
@@ -32,6 +35,9 @@ public class Tarea {
         this.Prioridad=Prioridad;
         this.Estado=Estado;
         this.Vencimiento=Vencimiento;
+    }
+    
+    public Tarea(){
     }
     public void Crear(ConexionBDD conexion, int ProyectoID, String Nombre, String Descripcion, int Prioridad, String Estado, Date Vencimiento){
 
@@ -55,10 +61,13 @@ public class Tarea {
     
     public void ModificarPrioridad(ConexionBDD conexion,int Prioridad,int TareaId){
         try{
-            String consulta = " CALL `railway`.`Cambiar_Estado`(?,?);";   
+            String consulta = " CALL `Cambiar_Estado`(?,?);";   
+            PreparedStatement ps = conexion.Conectar().prepareStatement(consulta);
+            ps.setInt(1, Prioridad);
+            ps.setInt(2, TareaId);
+            ResultSet rs = ps.executeQuery();
         }catch(Exception e){
-            
-            
+            e.printStackTrace();
         }finally{
             conexion.Desconectar();
         }
