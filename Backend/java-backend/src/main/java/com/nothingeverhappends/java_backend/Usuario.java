@@ -8,6 +8,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 public class Usuario {
     private int ID;
     private String nombre;
@@ -24,7 +27,26 @@ public class Usuario {
         this.apellido = _ape;
         this.nombre = _nom;
         this.email = _mail;
-        this.password = _password;  
+        this.password = hashearContraseña(_password);
+    }
+    
+    
+    // CIFRAR LA CONTRASEÑA
+    
+    private String hashearContraseña(String contraseña) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256"); //OBJETO QUE USA ALGORITMO SHA-256
+            byte[] hashBytes = md.digest(contraseña.getBytes()); // SE TRANSFORMA EN UN ARRAY DE BYTES
+
+            // CONVIERTE BYTE X BYTE A TEXTO HEXADECIMAL
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hashBytes) {
+                hexString.append(String.format("%02x", b));
+            }
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     // Método para registrar usuario
