@@ -52,4 +52,8 @@ public class Tarea {
             conexion.Desconectar();
         }
     }
+    
+    public void Cambiar_Estado(ConexionBDD conexion,String Estado){
+        
+    }
 }
