@@ -53,9 +53,14 @@ public class Tarea {
         }
     }
     
-    public void Cambiar_Estado(ConexionBDD conexion,String Estado,int ProyectoID){
+    public void ModificarPrioridad(ConexionBDD conexion,int Prioridad,int TareaId){
         try{
+            String consulta = " CALL `railway`.`Cambiar_Estado`(?,?);";   
+        }catch(Exception e){
             
+            
+        }finally{
+            conexion.Desconectar();
         }
     }
 }
