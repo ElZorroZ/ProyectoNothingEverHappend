@@ -15,6 +15,18 @@ html, body {
     display: flex;
     flex-direction: column;
   }
+
+  .form-container select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 60px !important;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+    background-color: white;
+    color: black;
+  }
+  
   
   /* Header */
   .dashboard-header {
@@ -103,8 +115,8 @@ html, body {
   .form-container {
     flex: 1;
     max-width: 600px;
-    margin: 40px auto;
-    padding: 30px;
+    margin: 100px auto;
+    padding: 70px;
     background-color: #ffffff;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -141,6 +153,7 @@ html, body {
     border-radius: 6px;
     font-size: 16px;
     cursor: pointer;
+    margin-top: 30px; /* ← Agregá esta línea */
     transition: background-color 0.3s ease;
   }
   
@@ -191,4 +204,3 @@ html, body {
     text-decoration: none;
     color: white;
   }
-  
