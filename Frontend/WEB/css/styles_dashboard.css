@@ -94,6 +94,7 @@ body {
   padding: 1.5rem;
   transition: right 0.3s ease-in-out;
   z-index: 1000;
+  color: black;
 }
 
 .notification-panel.open {

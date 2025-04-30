@@ -25,22 +25,36 @@
       </section>
     </main>
 
-    <!-- Modal único para agregar usuario -->
+        <!-- Modal único para agregar usuario -->
     <div id="addUserModal" class="modal">
       <div class="modal-content">
         <span class="close-btn" onclick="closeModal()">&times;</span>
         <h2>Agregar Usuario al Proyecto</h2>
-        <form id="userForm">
-          <label for="proyecto">Proyecto:</label>
-          <input type="text" id="proyecto" name="proyecto" required />
+        <form id="userForm" style="display: flex; flex-direction: column; gap: 10px;">
+          <div style="display: flex; flex-direction: column;">
+            <label for="proyecto">Proyecto:</label>
+            <select id="proyecto" name="proyecto" required>
+              <option value="">Seleccioná un proyecto</option>
+            </select>
+          </div>
 
-          <label for="email">Email:</label>
-          <input type="email" id="email" name="email" required />
+          <div style="display: flex; flex-direction: column;">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required />
+          </div>
+
+          <div style="display: flex; flex-direction: column;">
+            <label for="rol">Rol:</label>
+            <select id="rol" name="rol" required>
+              <option value="">Seleccioná un rol</option>
+            </select>
+          </div>
 
           <button type="submit">Agregar</button>
         </form>
       </div>
     </div>
+
 
     <div class="notification-panel" id="notificationPanel">
       <h3>Notificaciones</h3>

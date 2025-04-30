@@ -9,6 +9,7 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;
+import org.springframework.http.HttpStatus;
 
 @RestController
 @RequestMapping("/api")
@@ -91,17 +92,26 @@ public class Controller {
     }
     
     @PostMapping("/agregarrolusuario")
-    public void AgregarRolUsuario(@RequestBody AgregarUsuarios agregarusuarios ){
+    public ResponseEntity<String> AgregarRolUsuario(@RequestBody AgregarUsuarios agregarusuarios) {
         try {
-        String Email = "";
-        int ProyectoID = 0;
-        boolean Permiso = false;
-        agregarusuarios.AgregarRolUsuario(conexion, Email,ProyectoID,Permiso);
+            String Email = agregarusuarios.getEmail();
+            int ProyectoID = agregarusuarios.getOtroID(); // Usar OtroID del objeto recibido
+            boolean Permiso = agregarusuarios.isPermiso(); // Usar permiso del objeto recibido
+
+            // Llama a la función con los valores correctos
+            agregarusuarios.AgregarRolUsuario(conexion, Email, ProyectoID, Permiso);
+
+            // Si todo está bien, devolver una respuesta exitosa
+            return ResponseEntity.ok("Usuario agregado exitosamente");
         } catch (Exception e) {
-            e.printStackTrace(); // <-- ¡Para ver si falla!
+            e.printStackTrace();
             System.out.println("Ocurrió un error en el controlador.");
+            // Si hay un error, devolver una respuesta de error
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body("Ocurrió un error al agregar el usuario");
         }
     }
+
     @PostMapping("/agregartareausuario")
     public void AgregarTareaUsuario(@RequestBody AgregarUsuarios agregarusuarios ){
         try {
