@@ -40,7 +40,7 @@ form.addEventListener('submit', function (e) {
     prioridad: prioridad  
   };
 
-  fetch('https://java-backend-latest-rm0u.onrender.com/api/creartarea', {
+  fetch('https://java-backend-latest-rm0u.onrender.com/api/agregartareausuario', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
