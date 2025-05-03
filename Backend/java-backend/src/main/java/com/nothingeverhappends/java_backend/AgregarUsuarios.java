@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import com.nothingeverhappends.java_backend.Notificaciones;
 
 /**
  *
@@ -74,6 +75,7 @@ public class AgregarUsuarios {
             ps.setInt(1, UsuarioID);
             ps.setInt(2, OtroID);
             ResultSet rs = ps.executeQuery();
+            Notificaciones.NotificacionUsuarioTarea(conexion,  UsuarioID,  OtroID);
         }catch(Exception e){
             e.printStackTrace();
         }finally{
