@@ -51,7 +51,8 @@ public class Tarea {
             ps.setString(3, Descripcion);
             ps.setInt(4, Prioridad);
             ps.setString(5, Estado);
-            ps.setDate(6, (java.sql.Date) Vencimiento);
+            java.sql.Date Vencimientosql = new java.sql.Date(Vencimiento.getTime());
+            ps.setDate(6, Vencimientosql);
             ResultSet rs = ps.executeQuery();
         }catch(Exception e){
             e.printStackTrace();
@@ -62,7 +63,8 @@ public class Tarea {
             
             ps = conexion.Conectar().prepareStatement(consulta);
             ps.setString(1, Nombre);
-            ps.setDate(2, (java.sql.Date) Vencimiento);
+            java.sql.Date Vencimientosql = new java.sql.Date(Vencimiento.getTime());
+            ps.setDate(2, Vencimientosql);
            
             ResultSet rs = ps.executeQuery();
             
