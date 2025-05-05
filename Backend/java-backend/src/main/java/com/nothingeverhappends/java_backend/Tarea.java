@@ -7,9 +7,13 @@ package com.nothingeverhappends.java_backend;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.io.InputStream;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 /**
  *
  * @author PC
@@ -40,7 +44,8 @@ public class Tarea {
         this.Vencimiento=Vencimiento;
     }
     
-    public Tarea(){
+    public Tarea(int tareaID){
+        this.TareaID=tareaID;
     }
     public void Crear(ConexionBDD conexion){
         PreparedStatement ps;
@@ -90,5 +95,34 @@ public class Tarea {
         }finally{
             conexion.Desconectar();
         }
+    }
+    
+    public List<Comentario> obtenerComentarios(ConexionBDD conexion){
+        List<Comentario> comentarios = new ArrayList<>();
+        String sql = "SELECT c.ComentarioID, c.TareaID, u.Apellido, u.Nombre, c.Comentario, c.Fecha, a.Archivo " +
+                     "FROM Comentario c JOIN Usuario u ON c.UsuarioID = u.UsuarioID " +
+                     "JOIN Archivo a ON c.ComentarioID = a.ComentarioID " +
+                     "WHERE c.TareaID = ?";
+
+        try (PreparedStatement stmt = conexion.Conectar().prepareStatement(sql)) {
+            stmt.setInt(1, this.TareaID);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    int id = rs.getInt("ComentarioID");
+                    String apellido = rs.getString("Apellido");
+                    String nombre = rs.getString("Nombre");
+                    String coment = rs.getString("Comentario");
+                    Date fecha = rs.getDate("Fecha");
+                    InputStream input = rs.getBinaryStream("archivo");
+                    Comentario com = new Comentario(id, apellido, nombre, coment, fecha, input);
+                    comentarios.add(com);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally { conexion.Desconectar(); }
+
+        return comentarios;
     }
 }

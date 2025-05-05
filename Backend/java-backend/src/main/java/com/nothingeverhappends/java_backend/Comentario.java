@@ -4,6 +4,7 @@
  */
 package com.nothingeverhappends.java_backend;
 
+import java.io.InputStream;
 import java.util.Date;
 
 /**
@@ -14,20 +15,25 @@ public class Comentario {
     private int ComentarioID;
     private int TareaID;
     private int UsuarioID;
+    private String NombreUsuario;
+    private String ApellidoUsuario;
     private String Contenido;
     private Date Fecha;
+    private InputStream Archivo;
     
-    public Comentario(int comentID, int tareaID, int usuID, String coment, Date fecha){
+    public Comentario(int comentID, String nombre, String ape, String coment, Date fecha, InputStream file){
         this.ComentarioID=comentID;
-        this.TareaID=tareaID;
-        this.UsuarioID=usuID;
+        this.NombreUsuario=nombre;
+        this.ApellidoUsuario=ape;
         this.Contenido=coment;
         this.Fecha=fecha;
+        this.Archivo=file;
     }
-    public Comentario(int tareaID, int usuID, String coment){
+    public Comentario(int tareaID, int usuID, String coment, InputStream file){
         this.TareaID=tareaID;
         this.UsuarioID=usuID;
         this.Contenido=coment;
+        this.Archivo=file;
     }
     
     public void setID(int id){
@@ -47,5 +53,8 @@ public class Comentario {
     }
     public Date getFecha(){
         return Fecha;
+    }
+    public InputStream getArchivo(){
+        return Archivo;
     }
 }

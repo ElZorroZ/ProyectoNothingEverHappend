@@ -20,11 +20,7 @@ public class WebSocketController {
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
     
-    public void enviarNotificacion(int UsuarioID) {
-        messagingTemplate.convertAndSend("/topic/notificaciones/" + UsuarioID, "Nueva notificación entrante");
-    }
-    
-    @MessageMapping("/mandarComentario") // frontend envía a /app/mandarComentario
+    @MessageMapping("/mandarComentario") // frontend envía a /ws/mandarComentario
     public void sendComentario(@Payload Comentario comentario) {
         // Enviar el comentario al canal
         messagingTemplate.convertAndSend("/topic/comentarios/" + comentario.getTareaID(), comentario);

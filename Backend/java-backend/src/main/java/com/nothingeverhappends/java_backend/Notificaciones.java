@@ -16,8 +16,8 @@ import java.util.Date;
  * @author PC
  */
 public class Notificaciones {
-    int UsuarioID;
-    int TareaID;
+    private int UsuarioID;
+    private int TareaID;
     private int NotificacionID;
     private String Titulo;
     private String Mensaje;
@@ -39,7 +39,8 @@ public class Notificaciones {
         this.Fecha=Fecha;
     }
     
-    public static void NotificacionUsuarioTarea(ConexionBDD conexion, int UsuarioID, int TareaID){
+    public static Notificaciones NotificacionUsuarioTarea(ConexionBDD conexion, int UsuarioID, int TareaID){
+        Notificaciones note = new Notificaciones(UsuarioID, TareaID);
         try {
             Connection conn = conexion.Conectar();
             // Llamar al stored procedure correctamente
@@ -47,11 +48,19 @@ public class Notificaciones {
             PreparedStatement ps = conn.prepareStatement(consulta);
             ps.setInt(1, TareaID);   
             ps.setInt(2, UsuarioID);
-            ps.execute();
+            ResultSet rs = ps.executeQuery();
+
+            note.NotificacionID = rs.getInt("NotificacionID");
+            note.Titulo = rs.getString("Titulo");
+            note.Mensaje = rs.getString("Mensaje");
+            note.Fecha = rs.getTimestamp("Fecha").toLocalDateTime();
+            boolean leido = rs.getBoolean("Leido");
+            
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             conexion.Desconectar();
         }
+        return note;
     }
 }

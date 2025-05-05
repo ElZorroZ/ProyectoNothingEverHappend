@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -26,7 +27,13 @@ public class AgregarUsuarios {
     @JsonProperty("email")
     String Email;
     
-    public AgregarUsuarios() {}
+    @Autowired
+    private NotificationService notificationService;
+        
+    public AgregarUsuarios(int usuarioID, int tareaID){
+        this.UsuarioID=usuarioID;
+        this.OtroID=tareaID;
+    }
 
     public AgregarUsuarios(int UsuarioID, int OtroID, boolean permiso, String Email){
         this.UsuarioID=UsuarioID;
@@ -36,7 +43,6 @@ public class AgregarUsuarios {
     }
     public void AgregarRolUsuario(ConexionBDD conexion, String Email, int ProyectoID, boolean permiso) {
         Connection conn = null;
-        int UsuarioID = 0;
         try {
             conn = conexion.Conectar();
             // Buscar UsuarioID
@@ -66,7 +72,7 @@ public class AgregarUsuarios {
         }
     }
     
-    public void AgregarTareaUsuario(ConexionBDD conexion, int UsuarioID, int OtroID){
+    public void AgregarTareaUsuario(ConexionBDD conexion){
         try{
             String consulta = "CALL `railway`.`insertar_tarea_usuario`(?,?);";
             
@@ -74,7 +80,7 @@ public class AgregarUsuarios {
             ps.setInt(1, UsuarioID);
             ps.setInt(2, OtroID);
             ResultSet rs = ps.executeQuery();
-            Notificaciones.NotificacionUsuarioTarea(conexion,  UsuarioID,  OtroID);
+            notificationService.notificar(UsuarioID, Notificaciones.NotificacionUsuarioTarea(conexion,  UsuarioID,  OtroID));
         }catch(Exception e){
             e.printStackTrace();
         }finally{

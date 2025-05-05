@@ -136,9 +136,7 @@ public class Controller {
     @PostMapping("/agregartareausuario")
     public void AgregarTareaUsuario(@RequestBody AgregarUsuarios agregarusuarios ){
         try {
-            int UsuarioID = 0;
-            int ProyectoID = 0;
-            agregarusuarios.AgregarTareaUsuario(conexion, UsuarioID,ProyectoID);
+            agregarusuarios.AgregarTareaUsuario(conexion);
         } catch (Exception e) {
             e.printStackTrace(); // <-- ¡Para ver si falla!
             System.out.println("Ocurrió un error en el controlador.");
@@ -147,7 +145,7 @@ public class Controller {
     @PostMapping("/modificarprioridad/{Prioridad}/{TareaId}")
     public void Modificar_Prioridad(@PathVariable int Prioridad,@PathVariable int TareaId){
         try {
-            Tarea tarea= new Tarea();
+            Tarea tarea= new Tarea(TareaId);
             tarea.ModificarPrioridad(conexion, Prioridad, TareaId);
             
         } catch (Exception e) {
@@ -164,5 +162,21 @@ public class Controller {
             System.out.println("Ocurrió un error en el controlador.");
         }
     }
+    
+    @GetMapping("/comentarios/{tareaID}")
+    public ResponseEntity<?> getComentarios(@PathVariable int tareaID) {
+        Tarea tarea = new Tarea(tareaID);
+        List<Comentario> comentarios =tarea.obtenerComentarios(conexion);
 
+        if (comentarios.isEmpty()) {
+            return ResponseEntity.ok(Map.of(
+                "mensaje", "Esta tarea aún no tiene comentarios."
+            ));
+        } else {
+            return ResponseEntity.ok(Map.of(
+                "mensaje", "Comentarios obtenidos exitosamente.",
+                "comentarios", comentarios
+            ));
+        }
+    }
 }
