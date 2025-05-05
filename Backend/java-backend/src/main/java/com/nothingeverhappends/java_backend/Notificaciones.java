@@ -4,6 +4,7 @@
  */
 package com.nothingeverhappends.java_backend;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,7 +14,9 @@ import java.sql.ResultSet;
  * @author PC
  */
 public class Notificaciones {
+    @JsonIgnore
     int UsuarioID;
+    @JsonIgnore
     int TareaID;
     public Notificaciones(int UsuarioID, int TareaID){
         this.UsuarioID=UsuarioID;
