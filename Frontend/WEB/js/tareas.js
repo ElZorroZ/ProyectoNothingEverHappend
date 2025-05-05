@@ -1,7 +1,8 @@
 const filterButtons = document.querySelectorAll('.filter-btn');
 const taskCards = document.querySelectorAll('.task-card');
 const notifBtn = document.querySelector('.notif-btn');
-  const panel = document.getElementById('notificationPanel');
+const panel = document.getElementById('notificationPanel');
+
 // Modal de Asignar Tarea
 const assignTaskModal = document.getElementById('assignTaskModal');
 const assignTaskForm = document.getElementById('assignTaskForm');
@@ -11,43 +12,69 @@ function openAssignTaskModal() {
   assignTaskModal.style.display = 'block';
 }
 
+// Función para cerrar el modal
 function closeModal() {
-  document.getElementById("assignTaskModal").style.display = "none";
+  assignTaskModal.style.display = 'none';
 }
-
-
 
 // Cerrar el modal si se hace clic afuera
 window.onclick = function(event) {
-  const modal = document.getElementById("addUserModal");
-  if (event.target == modal) {
-    modal.style.display = "none";
+  if (event.target == assignTaskModal) {
+    assignTaskModal.style.display = 'none';
   }
 }
 
-
-// Evento para enviar el formulario de asignación (por ahora solo evitamos que recargue la página)
-assignTaskForm.addEventListener('submit', function(event) {
+// Evento para enviar el formulario de asignación (con conexión al backend)
+assignTaskForm.addEventListener('submit', async function(event) {
   event.preventDefault();
+
   const email = document.getElementById('email').value;
-  
-  // Acá podrías hacer un fetch() o lo que necesites para asignar la tarea
-  console.log(`Asignando tarea a: ${email}`);
-  
-  closeAssignTaskModal();
+
+  // Reemplazá esto con el ID real de la tarea que quieras asignar
+  const tareaID = 1;
+
+  try {
+    const response = await fetch('http://localhost:3000/api/agregartareausuario', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: email,
+        tareaID: tareaID
+      }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      if (data.success) {
+        alert('Tarea asignada exitosamente');
+        closeModal();
+      } else {
+        alert('Error al asignar tarea: ' + (data.message || 'desconocido'));
+      }
+    } else {
+      alert('Error de conexión con el servidor');
+    }
+  } catch (error) {
+    console.error('Error al asignar tarea:', error);
+    alert('Ocurrió un error al intentar asignar la tarea');
+  }
 });
 
-  notifBtn.addEventListener('click', () => {
-    panel.classList.toggle('open');
-  });
+// Botón de notificaciones
+notifBtn.addEventListener('click', () => {
+  panel.classList.toggle('open');
+});
 
-  // Opción opcional: cerrar si se hace clic fuera
-  document.addEventListener('click', (e) => {
-    if (!panel.contains(e.target) && !notifBtn.contains(e.target)) {
-      panel.classList.remove('open');
-    }
-  });
+// Cierra panel de notificaciones si se hace clic afuera
+document.addEventListener('click', (e) => {
+  if (!panel.contains(e.target) && !notifBtn.contains(e.target)) {
+    panel.classList.remove('open');
+  }
+});
 
+// Filtro de tareas
 filterButtons.forEach(button => {
   button.addEventListener('click', () => {
     const filter = button.getAttribute('data-filter');
@@ -68,4 +95,3 @@ filterButtons.forEach(button => {
     });
   });
 });
-
