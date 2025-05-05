@@ -23,7 +23,7 @@
 
   <div class="form-container">
     <h2>Crear Nueva Tarea</h2>
-    <form id="crearTareaForm">
+    <form id="crearTareaForm" enctype="multipart/form-data">
       <label for="titulo">Nombre de la Tarea</label>
       <input type="text" id="titulo" name="titulo" required>
 
@@ -40,7 +40,8 @@
         <option value="Media">Media</option>
         <option value="Baja">Baja</option>
       </select>
-  
+      <label for="archivoPDF">Subir archivo PDF (opcional)</label>
+      <input type="file" id="archivoPDF" name="archivoPDF" accept="application/pdf">
       <button type="submit">Crear Tarea</button>
     </form>
   </div>
