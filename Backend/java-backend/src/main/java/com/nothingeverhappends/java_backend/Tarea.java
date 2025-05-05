@@ -4,6 +4,7 @@
  */
 package com.nothingeverhappends.java_backend;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,13 +20,13 @@ public class Tarea {
     String Nombre;
     @JsonProperty("Descripcion")
     String Descripcion;
-    @JsonProperty("Proridad")
+    @JsonProperty("Prioridad")
     int Prioridad; //1 Es baja, 2 Media, 3 Alta
     @JsonProperty("Estado")
     String Estado;
     @JsonProperty("Vencimiento")
     Date Vencimiento;
-    @JsonProperty("TareaID")
+    @JsonIgnore
     int TareaID;
     
     public Tarea(int ProyectoID, String Nombre, String Descripcion, int Prioridad, String Estado, Date Vencimiento){
