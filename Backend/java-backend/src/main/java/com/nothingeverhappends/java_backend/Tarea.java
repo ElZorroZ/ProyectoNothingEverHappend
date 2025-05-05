@@ -23,13 +23,13 @@ public class Tarea {
     @JsonProperty("Prioridad")
     int Prioridad; //1 Es baja, 2 Media, 3 Alta
     @JsonProperty("Estado")
-    String Estado;
+    int Estado;
     @JsonProperty("Vencimiento")
     Date Vencimiento;
     @JsonIgnore
     int TareaID;
     
-    public Tarea(int ProyectoID, String Nombre, String Descripcion, int Prioridad, String Estado, Date Vencimiento){
+    public Tarea(int ProyectoID, String Nombre, String Descripcion, int Prioridad, int Estado, Date Vencimiento){
         this.ProyectoID=ProyectoID;
         this.Nombre=Nombre;
         this.Descripcion=Descripcion;
@@ -50,7 +50,7 @@ public class Tarea {
             ps.setString(2, Nombre);
             ps.setString(3, Descripcion);
             ps.setInt(4, Prioridad);
-            ps.setString(5, Estado);
+            ps.setInt(5, Estado);
             java.sql.Date Vencimientosql = new java.sql.Date(Vencimiento.getTime());
             ps.setDate(6, Vencimientosql);
             ResultSet rs = ps.executeQuery();
