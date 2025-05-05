@@ -10,6 +10,7 @@ import java.util.List;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
 
 public class Usuario {
     private int ID;
@@ -19,17 +20,16 @@ public class Usuario {
     private String password; 
     private String password2;
 
-    // Constructor vacío
-    public Usuario() {
+    // Constructor con solo id
+    public Usuario(int id) {
+        this.ID=id;
     }
 
     // Constructor con parámetros
     public Usuario(String _mail, String _password, String _nom, String _ape) {
         this.apellido = _ape;
         this.nombre = _nom;
-        this.email = _mail;
-        
-        
+        this.email = _mail; 
     }
     
     
@@ -160,6 +160,35 @@ public class Usuario {
         } finally { conexion.Desconectar(); }
 
         return proyectos;
+    }
+    
+    public List<Notificaciones> verNotificaciones(ConexionBDD conexion) {
+        List<Notificaciones> notificaciones = new ArrayList<>();
+        String sql = "SELECT NotificacionID, TareaID, Titulo, Mensaje, Fecha, Leido " +
+                     "FROM Notificacion " +
+                     "WHERE UsuarioID = ?";
+
+        try (PreparedStatement stmt = conexion.Conectar().prepareStatement(sql)) {
+            stmt.setInt(1, this.ID);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    int id = rs.getInt("NotificacionID");
+                    int tarea = rs.getInt("TareaID");
+                    String titulo = rs.getString("Titulo");
+                    String mensaje = rs.getString("Mensaje");
+                    LocalDateTime fecha = rs.getTimestamp("Fecha").toLocalDateTime();
+                    boolean leido = rs.getBoolean("Leido");
+
+                    Notificaciones not = new Notificaciones(id, ID, tarea, titulo, mensaje, fecha, leido);
+                    notificaciones.add(not);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally { conexion.Desconectar(); }
+
+        return notificaciones;
     }
 
     // Métodos Getter y Setter

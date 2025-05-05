@@ -20,11 +20,14 @@ public class Controller {
     private ConexionBDD conexion = new ConexionBDD();
 
     @PostMapping("/registro")
-    public ResponseEntity<String> registrarUsuario(@RequestBody Usuario usuario) {
+    public ResponseEntity<?> registrarUsuario(@RequestBody Usuario usuario) {
         try {
             int resultado = usuario.registrar(conexion);
             if (resultado > 0) {
-                return ResponseEntity.ok("Registro exitoso");
+                return ResponseEntity.ok().body(Map.of(
+                    "mensaje", "Registro exitoso",
+                    "id", resultado
+                ));
             } else {
                 return ResponseEntity.status(400).body("Error en el registro");
             }
@@ -75,8 +78,7 @@ public class Controller {
     
     @GetMapping("/proyectos/{id}")
     public ResponseEntity<?> verProyectos(@PathVariable int id) {
-        Usuario usuario = new Usuario();
-        usuario.setID(id);
+        Usuario usuario = new Usuario(id);
 
         List<Proyecto> proyectos = usuario.verProyectos(conexion);
 
@@ -88,6 +90,24 @@ public class Controller {
             return ResponseEntity.ok(Map.of(
                 "mensaje", "Proyectos obtenidos exitosamente.",
                 "proyectos", proyectos
+            ));
+        }
+    }
+    
+    @GetMapping("/notificaciones/{id}")
+    public ResponseEntity<?> verNotificaciones(@PathVariable int id) {
+        Usuario usuario = new Usuario(id);
+
+        List<Notificaciones> nots = usuario.verNotificaciones(conexion);
+
+        if (nots.isEmpty()) {
+            return ResponseEntity.ok(Map.of(
+                "mensaje", "No tienes ninguna notificación."
+            ));
+        } else {
+            return ResponseEntity.ok(Map.of(
+                "mensaje", "Notificaciones obtenidas exitosamente.",
+                "notificaciones", nots
             ));
         }
     }

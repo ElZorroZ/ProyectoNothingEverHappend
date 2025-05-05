@@ -8,60 +8,45 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  *
  * @author PC
  */
 public class Notificaciones {
-    @JsonIgnore
     int UsuarioID;
-    @JsonIgnore
     int TareaID;
+    private int NotificacionID;
+    private String Titulo;
+    private String Mensaje;
+    
+    private LocalDateTime Fecha;
+            
     public Notificaciones(int UsuarioID, int TareaID){
         this.UsuarioID=UsuarioID;
         this.TareaID=TareaID;
     }
     
 
+    public Notificaciones(int NotificacionID, int UsuarioID, int TareaID, String Titulo, String Mensaje, LocalDateTime Fecha, boolean Leido){
+        this.NotificacionID=NotificacionID;
+        this.UsuarioID=UsuarioID;
+        this.TareaID=TareaID;
+        this.Titulo=Titulo;
+        this.Mensaje=Mensaje;
+        this.Fecha=Fecha;
+    }
+    
     public static void NotificacionUsuarioTarea(ConexionBDD conexion, int UsuarioID, int TareaID){
-        Connection conn = null;
-        String TareaNombre;
-        String ProyNombre;
-        int ProyectoID;
         try {
-            conn = conexion.Conectar();
-            // Buscar nombre de la tarea
-            String consulta = "SELECT Nombre,ProyectoID FROM Tarea WHERE TareaID = ?";
-            PreparedStatement ps = conn.prepareStatement(consulta);
-            ps.setInt(1,TareaID);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                TareaNombre = rs.getString("Nombre");
-                ProyectoID=rs.getInt("ProyectoID");
-            } else {
-                return;
-            }
-            String consulta2 = "SELECT Nombre FROM Proyecto WHERE ProyectoID = ?";
-            ps = conn.prepareStatement(consulta);
-            ps.setInt(1,ProyectoID);
-            rs = ps.executeQuery();
-
-            if (rs.next()) {
-                ProyNombre = rs.getString("Nombre");
-            } else {
-                return;
-            }
-
+            Connection conn = conexion.Conectar();
             // Llamar al stored procedure correctamente
-            String insertRol = "CALL `railway`.`NotificacionUsuarioTarea`(?,?,?,?)";
-            ps = conn.prepareStatement(insertRol);
+            String consulta = "CALL `railway`.`NotificacionUsuarioTarea`(?,?)";
+            PreparedStatement ps = conn.prepareStatement(consulta);
             ps.setInt(1, TareaID);   
-            ps.setInt(2, UsuarioID);  
-            String nombre="Ha sido asignado a una nueva tarea";
-            String Mensaje="Ha sido asignado a la tarea "+TareaNombre+" en el proyecto"+ProyNombre;
-            ps.setString(3, nombre); 
+            ps.setInt(2, UsuarioID);
             ps.execute();
         } catch (Exception e) {
             e.printStackTrace();
