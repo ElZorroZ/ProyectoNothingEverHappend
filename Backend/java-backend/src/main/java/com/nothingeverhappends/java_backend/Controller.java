@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
+import com.nothingeverhappends.java_backend.Tarea;
 
 @RestController
 @RequestMapping("/api")
@@ -134,6 +135,14 @@ public class Controller {
             System.out.println("Ocurrió un error en el controlador.");
         }
     }
-    
+    @PostMapping("/creartarea")
+    public void crearTarea(@RequestBody Tarea tarea) {
+        try {
+            tarea.Crear(conexion);
+        } catch (Exception e) {
+            e.printStackTrace(); // <-- ¡Para ver si falla!
+            System.out.println("Ocurrió un error en el controlador.");
+        }
+    }
 
 }

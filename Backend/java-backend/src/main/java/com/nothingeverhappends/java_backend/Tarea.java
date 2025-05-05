@@ -39,7 +39,7 @@ public class Tarea {
     
     public Tarea(){
     }
-    public void Crear(ConexionBDD conexion, int ProyectoID, String Nombre, String Descripcion, int Prioridad, String Estado, Date Vencimiento){
+    public void Crear(ConexionBDD conexion){
         PreparedStatement ps;
         try{
             String consulta = " CALL `railway`.`CrearTarea`(?,?,?,?,?,?);";
