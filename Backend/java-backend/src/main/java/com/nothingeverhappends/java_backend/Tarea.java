@@ -40,11 +40,11 @@ public class Tarea {
     public Tarea(){
     }
     public void Crear(ConexionBDD conexion, int ProyectoID, String Nombre, String Descripcion, int Prioridad, String Estado, Date Vencimiento){
-
+        PreparedStatement ps;
         try{
             String consulta = " CALL `railway`.`CrearTarea`(?,?,?,?,?,?);";
             
-            PreparedStatement ps = conexion.Conectar().prepareStatement(consulta);
+            ps = conexion.Conectar().prepareStatement(consulta);
             ps.setInt(1, ProyectoID);
             ps.setString(2, Nombre);
             ps.setString(3, Descripcion);
@@ -54,7 +54,21 @@ public class Tarea {
             ResultSet rs = ps.executeQuery();
         }catch(Exception e){
             e.printStackTrace();
-        }finally{
+        }
+        
+        try{
+            String consulta = " CALL `railway`.`CrearVencimientoTarea`(?,?);";
+            
+            ps = conexion.Conectar().prepareStatement(consulta);
+            ps.setString(1, Nombre);
+            ps.setDate(2, (java.sql.Date) Vencimiento);
+           
+            ResultSet rs = ps.executeQuery();
+            
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        finally{
             conexion.Desconectar();
         }
     }
