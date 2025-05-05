@@ -1,7 +1,6 @@
 const notifBtn = document.querySelector('.notif-btn');
 const panel = document.getElementById('notificationPanel');
 const form = document.getElementById('crearTareaForm');
-const fechaInicioInput = document.getElementById('fechaInicio');
 const fechaVencimientoInput = document.getElementById('fechaVencimiento');
 const prioridadSelect = document.getElementById('prioridad');
 
@@ -21,26 +20,39 @@ document.addEventListener('click', (e) => {
 form.addEventListener('submit', function (e) {
   e.preventDefault();
 
-  const fechaInicio = new Date(fechaInicioInput.value);
+  // En este ejemplo no hay fechaInicio en el formulario, así que lo eliminamos
   const fechaVencimiento = new Date(fechaVencimientoInput.value);
 
-  if (fechaVencimiento < fechaInicio) {
-    alert('La fecha de vencimiento no puede ser anterior a la fecha de inicio.');
-    return;
+  // Obtener el valor numérico de la prioridad
+  const prioridadTexto = prioridadSelect.value;
+  let prioridadNum;
+
+  switch (prioridadTexto) {
+    case 'Baja':
+      prioridadNum = 1;
+      break;
+    case 'Media':
+      prioridadNum = 2;
+      break;
+    case 'Alta':
+      prioridadNum = 3;
+      break;
+    default:
+      alert('Debe seleccionar una prioridad válida.');
+      return;
   }
 
-  // Obtener datos del formulario
-  const prioridad = prioridadSelect.value;
-
   const tareaData = {
-    titulo: document.getElementById('titulo').value,
-    detalle: document.getElementById('detalle').value,
-    fechaInicio: fechaInicioInput.value,
-    fechaVencimiento: fechaVencimientoInput.value,
-    prioridad: prioridad  
+    ProyectoID: localStorage.getItem("proyectoSeleccionadoID"),
+    Nombre: document.getElementById('titulo').value,
+    Descripcion: document.getElementById('detalle').value,
+    Prioridad: prioridadNum,
+    Estado: "1",
+    Vencimiento: fechaVencimientoInput.value
+
   };
 
-  fetch('https://java-backend-latest-rm0u.onrender.com/api/agregartareausuario', {
+  fetch('https://java-backend-latest-rm0u.onrender.com/api/creartarea', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
