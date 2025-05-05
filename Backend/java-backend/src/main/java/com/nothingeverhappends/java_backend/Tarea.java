@@ -4,6 +4,7 @@
  */
 package com.nothingeverhappends.java_backend;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.sql.PreparedStatement;
@@ -24,6 +25,7 @@ public class Tarea {
     int Prioridad; //1 Es baja, 2 Media, 3 Alta
     @JsonProperty("Estado")
     int Estado;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @JsonProperty("Vencimiento")
     Date Vencimiento;
     @JsonIgnore
