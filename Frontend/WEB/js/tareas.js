@@ -95,3 +95,21 @@ filterButtons.forEach(button => {
     });
   });
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+  const allTasks = document.querySelectorAll(".task-card");
+  const completedTasks = document.querySelectorAll('.task-card[data-status="completada"]');
+
+  const total = allTasks.length;
+  const completadas = completedTasks.length;
+
+  let porcentaje = 0;
+  if (total > 0) {
+    porcentaje = Math.round((completadas / total) * 100);
+  }
+
+  const fill = document.getElementById("progressFill");
+  fill.style.width = porcentaje + "%";
+  fill.textContent = porcentaje + "%";
+});
+

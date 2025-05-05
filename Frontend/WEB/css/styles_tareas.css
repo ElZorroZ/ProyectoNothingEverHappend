@@ -317,3 +317,30 @@ border: none;
 .modal-content button:hover {
 background-color: #4e0783;
 }
+
+.progress-container {
+  margin-bottom: 2rem;
+  color: #2c3e50;
+  font-weight: bold;
+}
+
+.progress-bar {
+  background-color: #ddd;
+  border-radius: 20px;
+  overflow: hidden;
+  height: 25px;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #6a0dad, #b266ff);
+  color: white;
+  text-align: center;
+  line-height: 25px;
+  border-radius: 20px;
+  transition: width 0.5s ease-in-out;
+  font-weight: bold;
+}
