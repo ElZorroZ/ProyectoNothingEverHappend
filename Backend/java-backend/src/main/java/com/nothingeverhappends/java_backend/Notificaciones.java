@@ -19,7 +19,8 @@ public class Notificaciones {
         this.UsuarioID=UsuarioID;
         this.TareaID=TareaID;
     }
-    public void NotificacionUsuarioTarea(ConexionBDD conexion, int UsuarioID, int TareaID){
+    
+    public static void NotificacionUsuarioTarea(ConexionBDD conexion, int UsuarioID, int TareaID){
         Connection conn = null;
         String TareaNombre;
         String ProyNombre;
