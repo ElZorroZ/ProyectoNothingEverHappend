@@ -48,6 +48,8 @@ public class Tarea {
         this.Estado=Estado;
         this.Vencimiento=Vencimiento;
     }
+    public Tarea(){
+    }
     
     public Tarea(int tareaID){
         this.TareaID=tareaID;
