@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.InputStream;
 import java.sql.CallableStatement;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -72,6 +73,7 @@ public class Tarea {
         this.archivoPDF=archivoPDF;
     }
     public void Crear(ConexionBDD conexion){
+        
         PreparedStatement ps;
         if (archivoPDF==null){
             try{
@@ -89,10 +91,11 @@ public class Tarea {
             }catch(Exception e){
                 e.printStackTrace();
             }
-            
+            Connection conn = conexion.Conectar();
+
             try{
                 String sql = "{? = CALL RegresarUltimoIdIngresado()}";
-                CallableStatement cs = conexion.prepareCall(sql);
+                CallableStatement cs = conexion.Conectar().prepareCall(sql);
 
                 // Primer parámetro es el valor de retorno
                 cs.registerOutParameter(1, java.sql.Types.INTEGER);
@@ -146,7 +149,7 @@ public class Tarea {
             
             try{
                 String sql = "{? = CALL RegresarUltimoIdIngresado()}";
-                CallableStatement cs = conexion.prepareCall(sql);
+                CallableStatement cs = conexion.Conectar().prepareCall(sql);
 
                 // Primer parámetro es el valor de retorno
                 cs.registerOutParameter(1, java.sql.Types.INTEGER);
