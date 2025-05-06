@@ -93,7 +93,7 @@ public class Controller {
             ));
         }
     }
-    
+    // --- Ver Tareas asignadas a un usuario --- //
     @GetMapping("/tareas/{id}")
     public ResponseEntity<?> verTareas(@PathVariable int UsuarioID, int ProyectoID) {
         Usuario usuario = new Usuario(UsuarioID);
@@ -108,6 +108,24 @@ public class Controller {
             return ResponseEntity.ok(Map.of(
                 "mensaje", "Tareas obtenidas exitosamente.",
                 "Tareas", Tareas
+            ));
+        }
+    }
+    
+    @GetMapping("/usuarios/{id}")
+    public ResponseEntity<?> verUsuarios(@PathVariable int id) {
+        Proyecto proyecto = new Proyecto(id);
+
+        List<Usuario> Usuarios = proyecto.verUsuarios(conexion);
+
+        if (Usuarios.isEmpty()) {
+            return ResponseEntity.ok(Map.of(
+                "mensaje", "No tienes ningún usuario en el proyecto."
+            ));
+        } else {
+            return ResponseEntity.ok(Map.of(
+                "mensaje", "Usuarios del proyecto obtenidos exitosamente.",
+                "usuarios", Usuarios
             ));
         }
     }

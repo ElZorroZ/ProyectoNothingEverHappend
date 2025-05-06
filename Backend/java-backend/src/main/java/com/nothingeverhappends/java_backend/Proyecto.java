@@ -8,9 +8,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,6 +40,10 @@ public class Proyecto {
         this.FechaInicio = inicio;
         this.FechaFinal = fin;
         this.Permisos = permiso;
+    }
+    
+    public Proyecto(int proyectoid){
+        this.ProyectoID=proyectoid;
     }
 
     public void Crear(ConexionBDD conexion){ 
@@ -85,6 +92,33 @@ public class Proyecto {
             System.out.println("Error en la base de datos");
         }
         conexion.Desconectar();
+    }
+    
+    public List<Usuario> verUsuarios(ConexionBDD conexion) {
+        List<Usuario> Usuarios = new ArrayList<>();
+        String sql = "CALL `railway`.`obtener_usuarios_proyecto`(?);";
+
+
+        try (PreparedStatement stmt = conexion.Conectar().prepareStatement(sql)) {
+            stmt.setInt(1, this.ProyectoID);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    int usuarioid = rs.getInt("UsuarioID");
+                    /*
+                    String nombre = rs.getString("Nombre");
+                    String apellido = rs.getString("Apellido");
+                    */
+
+                    Usuario usuario = new Usuario(usuarioid);
+                    Usuarios.add(usuario);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally { conexion.Desconectar(); }
+
+        return Usuarios;
     }
 
     // Getters y setters
