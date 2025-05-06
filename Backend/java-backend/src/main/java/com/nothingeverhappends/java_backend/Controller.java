@@ -97,7 +97,7 @@ public class Controller {
         }
     }
     // --- Ver Tareas asignadas a un usuario --- //
-    @PostMapping("/tareas/{UsuarioID}/{ProyectoID}")
+    @GetMapping("/tareas/{UsuarioID}/{ProyectoID}")
     public ResponseEntity<?> verTareas(@PathVariable int UsuarioID,  @PathVariable int ProyectoID) {
         Usuario usuario = new Usuario(UsuarioID);
 
