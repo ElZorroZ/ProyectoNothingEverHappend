@@ -147,7 +147,6 @@ document.addEventListener("DOMContentLoaded", function () {
         // Llenar tarjetas
         proyectos.forEach(proyecto => {
           const { nombre, descripcion, proyectoID } = proyecto;
-          localStorage.setItem("ProyectoID", proyectos.proyectoID);
           const card = document.createElement('div');
           card.classList.add('project-card');
           card.innerHTML = `
@@ -186,3 +185,8 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
+proyectoSelect.addEventListener('change', () => {
+  const proyectoIDSeleccionado = proyectoSelect.value;
+  localStorage.setItem('proyectoSeleccionadoID', proyectoIDSeleccionado);
+  console.log('Proyecto seleccionado guardado en localStorage:', proyectoIDSeleccionado);
+});
