@@ -158,7 +158,7 @@ public class Controller {
     public void Modificar_Estado(@PathVariable int Estado,@PathVariable int TareaId){
         try {
             Tarea tarea= new Tarea(TareaId);
-            tarea.ModificarPrioridad(conexion, Estado, TareaId);
+            tarea.ModificarEstado(conexion, Estado, TareaId);
             
         } catch (Exception e) {
             e.printStackTrace(); // <-- ¡Para ver si falla!
