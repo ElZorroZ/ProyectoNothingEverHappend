@@ -24,6 +24,18 @@ window.onclick = function(event) {
   }
 }
 
+// Botón de notificaciones
+notifBtn.addEventListener('click', () => {
+  panel.classList.toggle('open');
+});
+
+// Cierra panel de notificaciones si se hace clic afuera
+document.addEventListener('click', (e) => {
+  if (!panel.contains(e.target) && !notifBtn.contains(e.target)) {
+    panel.classList.remove('open');
+  }
+});
+
 // Evento para enviar el formulario de asignación (con conexión al backend)
 assignTaskForm.addEventListener('submit', async function(event) {
   event.preventDefault();
@@ -62,17 +74,6 @@ assignTaskForm.addEventListener('submit', async function(event) {
   }
 });
 
-// Botón de notificaciones
-notifBtn.addEventListener('click', () => {
-  panel.classList.toggle('open');
-});
-
-// Cierra panel de notificaciones si se hace clic afuera
-document.addEventListener('click', (e) => {
-  if (!panel.contains(e.target) && !notifBtn.contains(e.target)) {
-    panel.classList.remove('open');
-  }
-});
 
 // Filtro de tareas
 filterButtons.forEach(button => {
@@ -113,3 +114,47 @@ document.addEventListener("DOMContentLoaded", () => {
   fill.textContent = porcentaje + "%";
 });
 
+document.addEventListener("DOMContentLoaded", async () => {
+  const estadoMap = {
+    0: { id: "pendiente-tasks", class: "pending", label: "Pendiente" },
+    1: { id: "enprogreso-tasks", class: "in-progress", label: "En Progreso" },
+    2: { id: "completada-tasks", class: "completed", label: "Completada" }
+  };
+
+  const UsuarioID = localStorage.getItem('usuarioId');
+  const ProyectoID = localStorage.getItem('ProyectoID');
+
+  try {
+    const response = await fetch(`https://java-backend-latest-rm0u.onrender.com/api/tareas/${UsuarioID}/${ProyectoID}`);
+    const tareas = await response.json();
+
+    let total = tareas.length;
+    let completadas = 0;
+
+    tareas.forEach(tarea => {
+      const { id, nombre, descripcion, prioridad, estado, vencimiento } = tarea;
+      if (estado === 2) completadas++;
+
+      const tareaCard = document.createElement("div");
+      tareaCard.classList.add("task-card");
+      tareaCard.setAttribute("data-status", estadoMap[estado].label.toLowerCase());
+
+      tareaCard.innerHTML = `
+        <h3>${nombre}</h3>
+        <p>${descripcion}</p>
+        <p>Fecha límite: ${vencimiento}</p>
+        <span class="status ${estadoMap[estado].class}">${estadoMap[estado].label}</span>
+        <button class="assign-task-btn" onclick="openAssignTaskModal()">Asignar Tarea a Usuario</button>
+      `;
+
+      document.getElementById(estadoMap[estado].id).appendChild(tareaCard);
+    });
+
+    const porcentaje = total > 0 ? Math.round((completadas / total) * 100) : 0;
+    const fill = document.getElementById("progressFill");
+    fill.style.width = porcentaje + "%";
+    fill.textContent = porcentaje + "%";
+  } catch (error) {
+    console.error("Error al cargar tareas:", error);
+  }
+});

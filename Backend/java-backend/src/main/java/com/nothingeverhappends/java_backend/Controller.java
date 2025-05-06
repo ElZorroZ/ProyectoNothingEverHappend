@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
 import com.nothingeverhappends.java_backend.Tarea;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.MediaType;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api")
@@ -202,15 +205,25 @@ public class Controller {
         }
     }    
     
-    @PostMapping("/creartarea")
-    public void crearTarea(@RequestBody Tarea tarea) {
+    @PostMapping(value = "/creartarea", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public void crearTarea(
+        @RequestParam("ProyectoID") int ProyectoID,
+        @RequestParam("Nombre") String Nombre,
+        @RequestParam("Descripcion") String Descripcion,
+        @RequestParam("Prioridad") int Prioridad,
+        @RequestParam("Estado") int Estado,
+        @RequestParam("Vencimiento") @DateTimeFormat(pattern = "yyyy-MM-dd") Date Vencimiento,
+        @RequestParam(value = "Archivo", required = false) MultipartFile archivoPDF
+    ) {
         try {
+            Tarea tarea = new Tarea(ProyectoID, Nombre, Descripcion, Prioridad, Estado, Vencimiento, archivoPDF);
             tarea.Crear(conexion);
         } catch (Exception e) {
-            e.printStackTrace(); // <-- ¡Para ver si falla!
+            e.printStackTrace();
             System.out.println("Ocurrió un error en el controlador.");
         }
     }
+
     
     @GetMapping("/comentarios/{tareaID}")
     public ResponseEntity<?> getComentarios(@PathVariable int tareaID) {

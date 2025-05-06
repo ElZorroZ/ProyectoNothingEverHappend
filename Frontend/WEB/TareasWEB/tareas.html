@@ -40,41 +40,19 @@
           <!-- Pendiente -->
           <div class="kanban-column" data-status="pendiente">
             <h3>Pendiente</h3>
-            <div class="kanban-tasks">
-              <div class="task-card" data-status="pendiente">
-                <h3>Finalizar reporte financiero</h3>
-                <p>Fecha límite: 20/04/2025</p>
-                <span class="status pending">Pendiente</span>
-                <button class="assign-task-btn" onclick="openAssignTaskModal()">Asignar Tarea a Usuario</button>
-              </div>
-            </div>
+            <div class="kanban-tasks" id="pendiente-tasks"></div>
           </div>
 
           <!-- En Progreso -->
           <div class="kanban-column" data-status="en-progreso">
             <h3>En Progreso</h3>
-            <div class="kanban-tasks">
-              <div class="task-card" data-status="en-progreso">
-                <h3>Revisar documentación técnica</h3>
-                <p>Fecha límite: 18/04/2025</p>
-                <span class="status in-progress">En Progreso</span>
-                <button class="assign-task-btn" onclick="openAssignTaskModal()">Asignar Tarea a Usuario</button>
-
-              </div>
-            </div>
+            <div class="kanban-tasks" id="enprogreso-tasks"></div>
           </div>
 
           <!-- Completada -->
           <div class="kanban-column" data-status="completada">
             <h3>Completadas</h3>
-            <div class="kanban-tasks">
-              <div class="task-card" data-status="completada">
-                <h3>Reunión con el equipo de ventas</h3>
-                <p>Fecha límite: 22/04/2025</p>
-                <span class="status completed">Completada</span>
-                <button class="assign-task-btn" onclick="openAssignTaskModal()">Asignar Tarea a Usuario</button>
-              </div>
-            </div>
+            <div class="kanban-tasks" id="completada-tasks"></div>
           </div>
         </div>
         

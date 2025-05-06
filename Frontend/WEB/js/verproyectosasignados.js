@@ -18,36 +18,6 @@ document.addEventListener('click', (e) => {
   }
 });
 
-document.addEventListener("DOMContentLoaded", async () => {
-  const usuarioID = localStorage.getItem("usuarioId");
-
-  if (!usuarioID) {
-    console.error("No se encontró el ID del usuario.");
-    return;
-  }
-
-  try {
-    const response = await fetch(`http://localhost:3000/api/notificaciones?usuarioId=${usuarioID}`);
-    const notificaciones = await response.json();
-
-    const ul = document.querySelector("#notificationPanel ul");
-    ul.innerHTML = ""; // Limpiar anteriores
-
-    if (notificaciones.length === 0) {
-      ul.innerHTML = "<li>No tenés nuevas notificaciones.</li>";
-    } else {
-      notificaciones.forEach((noti) => {
-        const li = document.createElement("li");
-        li.textContent = noti.mensaje; // Suponiendo que el objeto tiene una propiedad 'mensaje'
-        ul.appendChild(li);
-      });
-    }
-  } catch (error) {
-    console.error("Error al obtener notificaciones:", error);
-  }
-});
-
-
 function guardarProyectoYRedirigir(proyectoID) {
   localStorage.setItem('proyectoSeleccionadoID', proyectoID);
   window.location.href = '../AgregarTareaWEB/AgregarTarea.html';
@@ -177,7 +147,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Llenar tarjetas
         proyectos.forEach(proyecto => {
           const { nombre, descripcion, proyectoID } = proyecto;
-
+          localStorage.setItem("ProyectoID", proyectos.proyectoID);
           const card = document.createElement('div');
           card.classList.add('project-card');
           card.innerHTML = `
@@ -192,7 +162,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
           cardsContainer.appendChild(card);
         });
-        localStorage.getItem("proyectoSeleccionadoID")
         // Llenar el select de proyectos
         proyectos.forEach(proyecto => {
           const option = document.createElement('option');
