@@ -90,22 +90,13 @@ public class Tarea {
                 java.sql.Date Vencimientosql = new java.sql.Date(Vencimiento.getTime());
                 ps.setDate(6, Vencimientosql);
                 ResultSet rs = ps.executeQuery();
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-            Connection conn = conexion.Conectar();
-
-            try{
-                String sql = "{? = CALL RegresarUltimoIdIngresado()}";
-                CallableStatement cs = conexion.Conectar().prepareCall(sql);
-
-                // Primer parámetro es el valor de retorno
-                cs.registerOutParameter(1, java.sql.Types.INTEGER);
-                cs.execute();
-                // Obtener el valor retornado
-                TareaID = cs.getInt(1);
                 
-                
+                if (rs.next()) {
+                    TareaID = rs.getInt(1);  // el resultado del SELECT LAST_INSERT_ID()
+                }
+
+                rs.close();
+                ps.close();
             }catch(Exception e){
                 e.printStackTrace();
             }
@@ -144,22 +135,9 @@ public class Tarea {
                 ps.setDate(6, Vencimientosql);
                 
                 ResultSet rs = ps.executeQuery();
-                 
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-            
-            try{
-                String sql = "{? = CALL RegresarUltimoIdIngresado()}";
-                CallableStatement cs = conexion.Conectar().prepareCall(sql);
-
-                // Primer parámetro es el valor de retorno
-                cs.registerOutParameter(1, java.sql.Types.INTEGER);
-                cs.execute();
-                // Obtener el valor retornado
-                TareaID = cs.getInt(1);
-                
-                
+                if (rs.next()) {
+                    TareaID = rs.getInt(1);  // el resultado del SELECT LAST_INSERT_ID()
+                }
             }catch(Exception e){
                 e.printStackTrace();
             }
