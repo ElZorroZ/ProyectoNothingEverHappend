@@ -94,13 +94,14 @@ public class Proyecto {
         conexion.Desconectar();
     }
     
-    public List<Usuario> verUsuarios(ConexionBDD conexion) {
+    public List<Usuario> verUsuarios(ConexionBDD conexion, int TareaID) {
         List<Usuario> Usuarios = new ArrayList<>();
-        String sql = "CALL `railway`.`obtener_usuarios_proyecto`(?);";
+        String sql = "CALL `railway`.`obtener_usuarios_proyecto`(?,?);";
 
 
         try (PreparedStatement stmt = conexion.Conectar().prepareStatement(sql)) {
             stmt.setInt(1, this.ProyectoID);
+            stmt.setInt(2, TareaID);
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {

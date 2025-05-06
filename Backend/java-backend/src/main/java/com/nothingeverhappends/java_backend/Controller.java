@@ -94,7 +94,7 @@ public class Controller {
         }
     }
     // --- Ver Tareas asignadas a un usuario --- //
-    @GetMapping("/tareas/{id}")
+    @GetMapping("/tareas/{UsuarioID}{ProyectoID}")
     public ResponseEntity<?> verTareas(@PathVariable int UsuarioID, int ProyectoID) {
         Usuario usuario = new Usuario(UsuarioID);
 
@@ -112,11 +112,11 @@ public class Controller {
         }
     }
     
-    @GetMapping("/usuarios/{id}")
-    public ResponseEntity<?> verUsuarios(@PathVariable int id) {
-        Proyecto proyecto = new Proyecto(id);
+    @GetMapping("/usuariosProyectoTarea/{ProyectoID}{TareaID}")
+    public ResponseEntity<?> verUsuarios(@PathVariable int ProyectoID, int TareaID) {
+        Proyecto proyecto = new Proyecto(ProyectoID);
 
-        List<Usuario> Usuarios = proyecto.verUsuarios(conexion);
+        List<Usuario> Usuarios = proyecto.verUsuarios(conexion, TareaID);
 
         if (Usuarios.isEmpty()) {
             return ResponseEntity.ok(Map.of(
