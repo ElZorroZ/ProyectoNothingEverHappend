@@ -46,7 +46,7 @@ public class AgregarUsuarios {
         try {
             conn = conexion.Conectar();
             // Buscar UsuarioID
-            String consulta = "SELECT UsuarioID FROM Usuario WHERE LOWER(TRIM(Email)) = ?";
+            String consulta = "CALL `railway`.`UsuarioID_Del_ID`(?);";
             PreparedStatement ps = conn.prepareStatement(consulta);
             ps.setString(1, Email.trim().toLowerCase());
             System.out.println("Email que estoy buscando: [" + Email.trim().toLowerCase() + "]");
