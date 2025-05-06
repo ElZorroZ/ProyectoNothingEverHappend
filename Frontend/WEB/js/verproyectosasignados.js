@@ -49,7 +49,45 @@ window.onclick = function(event) {
     modal.style.display = "none";
   }
 };
+function guardarProyectoYEntrar(proyectoID) {
+  localStorage.setItem('proyectoSeleccionadoID', proyectoID);
+  window.location.href = '../TareasWEB/tareas.html';
+}
 
+// Función que se llama cuando se selecciona un proyecto
+proyectoSelect.addEventListener('change', () => {
+  const proyectoIDSeleccionado = proyectoSelect.value;
+
+  // Verificar si el valor seleccionado es válido
+  if (!proyectoIDSeleccionado || proyectoIDSeleccionado === 'undefined') {
+    console.error('Error: No se ha seleccionado un proyecto válido');
+    alert('Por favor, selecciona un proyecto válido');
+    return; // Evita que se ejecute el siguiente código, como la redirección
+  }
+
+  // Actualizar el proyecto seleccionado en localStorage
+  localStorage.setItem('proyectoSeleccionadoID', proyectoIDSeleccionado);  // Guardamos el proyecto seleccionado
+  console.log('Proyecto seleccionado guardado en localStorage:', proyectoIDSeleccionado);
+
+  // Redirigir a la página correspondiente si el proyecto es válido
+  window.location.href = '../AgregarTareaWEB/AgregarTarea.html';
+});
+
+
+// Cuando se carga la página, revisar si ya existe un proyecto seleccionado en localStorage
+document.addEventListener("DOMContentLoaded", function () {
+  const proyectoSeleccionado = localStorage.getItem('proyectoSeleccionadoID');
+  
+  // Si hay un proyecto seleccionado en localStorage, establecerlo como seleccionado en el <select>
+  if (proyectoSeleccionado) {
+    proyectoSelect.value = proyectoSeleccionado;
+    console.log('Proyecto previamente seleccionado:', proyectoSeleccionado);
+  } else {
+    console.log('No se encontró un proyecto previamente seleccionado');
+  }
+});
+
+// Llenar el select de proyectos (esto ya debería estar hecho antes)
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("userForm");
 
@@ -153,7 +191,7 @@ document.addEventListener("DOMContentLoaded", function () {
             <h3>${nombre}</h3>
             <p>${descripcion}</p>
             <div class="button-group">
-              <button class="view-project-btn" onclick="window.location.href='../TareasWEB/tareas.html'">Entrar</button>
+             <button class="view-project-btn" onclick="guardarProyectoYEntrar(${proyectoID})">Entrar</button>
               <button class="add-task-btn" onclick="guardarProyectoYRedirigir(${proyectoID})">Agregar Tarea</button>
               <button class="add-user-btn" onclick="openModal()">Agregar Usuario</button>
             </div>
@@ -161,6 +199,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
           cardsContainer.appendChild(card);
         });
+
         // Llenar el select de proyectos
         proyectos.forEach(proyecto => {
           const option = document.createElement('option');
@@ -183,25 +222,5 @@ document.addEventListener("DOMContentLoaded", function () {
       rolSelect.appendChild(option);
     });
   }
-});
-
-// Función que se llama cuando se selecciona un proyecto
-proyectoSelect.addEventListener('change', () => {
-  const proyectoIDSeleccionado = proyectoSelect.value;
-
-  // Verificar si el valor seleccionado es válido
-  if (!proyectoIDSeleccionado || proyectoIDSeleccionado === 'undefined') {
-    console.error('Error: No se ha seleccionado un proyecto válido');
-    alert('Por favor, selecciona un proyecto válido');
-    return; // Evita que se ejecute el siguiente código, como la redirección
-  }
-
-  // Si el valor es válido, guarda el proyecto en localStorage
-  localStorage.setItem('proyectoSeleccionadoID', proyectoIDSeleccionado);
-
-  console.log('Proyecto seleccionado guardado en localStorage:', proyectoIDSeleccionado);
-
-  // Redirigir a la página correspondiente si el proyecto es válido
-  window.location.href = '../AgregarTareaWEB/AgregarTarea.html';
 });
 
