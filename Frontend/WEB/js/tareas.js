@@ -122,11 +122,14 @@ document.addEventListener("DOMContentLoaded", async () => {
   };
 
   const UsuarioID = localStorage.getItem('usuarioId');
-  const ProyectoID = localStorage.getItem('ProyectoID');
+  const ProyectoID = localStorage.getItem('proyectoSeleccionadoID');
 
   try {
     const response = await fetch(`https://java-backend-latest-rm0u.onrender.com/api/tareas/${UsuarioID}/${ProyectoID}`);
     const tareas = await response.json();
+
+    // Mostrar el array de tareas en la consola
+    console.log(tareas);
 
     let total = tareas.length;
     let completadas = 0;
@@ -158,3 +161,4 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error("Error al cargar tareas:", error);
   }
 });
+
