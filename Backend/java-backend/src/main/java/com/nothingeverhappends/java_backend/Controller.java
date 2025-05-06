@@ -97,8 +97,8 @@ public class Controller {
         }
     }
     // --- Ver Tareas asignadas a un usuario --- //
-    @GetMapping("/tareas/{UsuarioID}/{ProyectoID}")
-    public ResponseEntity<?> verTareas(@PathVariable int UsuarioID, @PathVariable int ProyectoID) {
+    @PostMapping("/tareas/{UsuarioID}/{ProyectoID}")
+    public ResponseEntity<?> verTareas(@PathVariable int UsuarioID,  @PathVariable int ProyectoID) {
         Usuario usuario = new Usuario(UsuarioID);
 
         List<Tarea> Tareas = usuario.verTareas(conexion, ProyectoID);
@@ -115,8 +115,8 @@ public class Controller {
         }
     }
 
-    @GetMapping("/usuariosProyectoTarea/{ProyectoID}{TareaID}")
-    public ResponseEntity<?> verUsuarios(@PathVariable int ProyectoID, int TareaID) {
+    @GetMapping("/usuariosProyectoTarea/{ProyectoID}/{TareaID}")
+    public ResponseEntity<?> verUsuarios(@PathVariable int ProyectoID, @PathVariable int TareaID) {
         Proyecto proyecto = new Proyecto(ProyectoID);
 
         List<Usuario> Usuarios = proyecto.verUsuarios(conexion, TareaID);
