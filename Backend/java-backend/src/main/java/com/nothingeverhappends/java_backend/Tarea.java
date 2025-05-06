@@ -7,7 +7,9 @@ package com.nothingeverhappends.java_backend;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.web.multipart.MultipartFile;
 import java.io.InputStream;
+import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -32,6 +34,8 @@ public class Tarea {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @JsonProperty("Vencimiento")
     Date Vencimiento;
+    @JsonProperty("Archivo")
+    MultipartFile archivoPDF=null;
     @JsonIgnore
     int TareaID;
     
@@ -57,39 +61,133 @@ public class Tarea {
         this.Estado=Estado;
         this.Vencimiento=Vencimiento;
     }
+    
+    public Tarea(int ProyectoID, String Nombre, String Descripcion, int Prioridad, int Estado, Date Vencimiento,MultipartFile archivoPDF){
+        this.ProyectoID=ProyectoID;
+        this.Nombre=Nombre;
+        this.Descripcion=Descripcion;
+        this.Prioridad=Prioridad;
+        this.Estado=Estado;
+        this.Vencimiento=Vencimiento;
+        this.archivoPDF=archivoPDF;
+    }
     public void Crear(ConexionBDD conexion){
         PreparedStatement ps;
-        try{
-            String consulta = " CALL `railway`.`CrearTarea`(?,?,?,?,?,?);";
+        if (archivoPDF==null){
+            try{
+                String consulta = " CALL `railway`.`CrearTarea`(?,?,?,?,?,?);";
+
+                ps = conexion.Conectar().prepareStatement(consulta);
+                ps.setInt(1, ProyectoID);
+                ps.setString(2, Nombre);
+                ps.setString(3, Descripcion);
+                ps.setInt(4, Prioridad);
+                ps.setInt(5, Estado);
+                java.sql.Date Vencimientosql = new java.sql.Date(Vencimiento.getTime());
+                ps.setDate(6, Vencimientosql);
+                ResultSet rs = ps.executeQuery();
+            }catch(Exception e){
+                e.printStackTrace();
+            }
             
-            ps = conexion.Conectar().prepareStatement(consulta);
-            ps.setInt(1, ProyectoID);
-            ps.setString(2, Nombre);
-            ps.setString(3, Descripcion);
-            ps.setInt(4, Prioridad);
-            ps.setInt(5, Estado);
-            java.sql.Date Vencimientosql = new java.sql.Date(Vencimiento.getTime());
-            ps.setDate(6, Vencimientosql);
-            ResultSet rs = ps.executeQuery();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        
-        try{
-            String consulta = " CALL `railway`.`CrearVencimientoTarea`(?,?);";
+            try{
+                String sql = "{? = CALL RegresarUltimoIdIngresado()}";
+                CallableStatement cs = conexion.prepareCall(sql);
+
+                // Primer parámetro es el valor de retorno
+                cs.registerOutParameter(1, java.sql.Types.INTEGER);
+                cs.execute();
+                // Obtener el valor retornado
+                TareaID = cs.getInt(1);
+                
+                
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+            try{
+                String consulta = " CALL `railway`.`CrearVencimientoTarea`(?,?,?);";
+
+                ps = conexion.Conectar().prepareStatement(consulta);
+                ps.setString(1, Nombre);
+                ps.setInt(2, TareaID);
+                java.sql.Date Vencimientosql = new java.sql.Date(Vencimiento.getTime());
+                ps.setDate(3, Vencimientosql);
+
+                ResultSet rs = ps.executeQuery();
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+            finally{
+                conexion.Desconectar();
+            }
             
-            ps = conexion.Conectar().prepareStatement(consulta);
-            ps.setString(1, Nombre);
-            java.sql.Date Vencimientosql = new java.sql.Date(Vencimiento.getTime());
-            ps.setDate(2, Vencimientosql);
-           
-            ResultSet rs = ps.executeQuery();
             
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        finally{
-            conexion.Desconectar();
+        }else{
+            try{
+                String consulta = " CALL `railway`.`CrearTarea`(?,?,?,?,?,?);";
+                
+                
+                ps = conexion.Conectar().prepareStatement(consulta);
+                ps.setInt(1, ProyectoID);
+                ps.setString(2, Nombre);
+                ps.setString(3, Descripcion);
+                ps.setInt(4, Prioridad);
+                ps.setInt(5, Estado);
+                java.sql.Date Vencimientosql = new java.sql.Date(Vencimiento.getTime());
+                ps.setDate(6, Vencimientosql);
+                
+                ResultSet rs = ps.executeQuery();
+                 
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+            
+            try{
+                String sql = "{? = CALL RegresarUltimoIdIngresado()}";
+                CallableStatement cs = conexion.prepareCall(sql);
+
+                // Primer parámetro es el valor de retorno
+                cs.registerOutParameter(1, java.sql.Types.INTEGER);
+                cs.execute();
+                // Obtener el valor retornado
+                TareaID = cs.getInt(1);
+                
+                
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+            
+            try{
+                byte[] pdfBytes = archivoPDF.getBytes();
+                String consulta = " CALL `railway`.`IngresarPDFTarea`(?,?);";
+                ps = conexion.Conectar().prepareStatement(consulta);
+                
+                ps.setInt(1,TareaID);
+                ps.setBytes(2,pdfBytes);
+                ResultSet rs = ps.executeQuery();
+                
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+            
+            try{
+                String consulta = " CALL `railway`.`CrearVencimientoTarea`(?,?);";
+
+                ps = conexion.Conectar().prepareStatement(consulta);
+                ps.setString(1, Nombre);
+                java.sql.Date Vencimientosql = new java.sql.Date(Vencimiento.getTime());
+                ps.setDate(2, Vencimientosql);
+
+                ResultSet rs = ps.executeQuery();
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+            finally{
+                conexion.Desconectar();
+            }
         }
     }
     
