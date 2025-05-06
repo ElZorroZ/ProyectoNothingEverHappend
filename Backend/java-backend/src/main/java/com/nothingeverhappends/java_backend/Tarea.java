@@ -97,6 +97,21 @@ public class Tarea {
         }
     }
     
+    public void ModificarEstado(ConexionBDD conexion,int Estado,int TareaId){
+        try{
+            String consulta = " CALL `Modificar_Estado`(?,?);";   
+            PreparedStatement ps = conexion.Conectar().prepareStatement(consulta);
+            ps.setInt(1, Estado);
+            ps.setInt(2, TareaId);
+            ResultSet rs = ps.executeQuery();
+        }catch(Exception e){
+            e.printStackTrace();
+        }finally{
+            conexion.Desconectar();
+        }
+    }    
+    
+    
     public List<Comentario> obtenerComentarios(ConexionBDD conexion){
         List<Comentario> comentarios = new ArrayList<>();
         String sql = "SELECT c.ComentarioID, c.TareaID, u.Apellido, u.Nombre, c.Comentario, c.Fecha, a.Archivo " +

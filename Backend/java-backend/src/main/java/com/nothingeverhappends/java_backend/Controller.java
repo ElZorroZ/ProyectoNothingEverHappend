@@ -153,6 +153,19 @@ public class Controller {
             System.out.println("Ocurrió un error en el controlador.");
         }
     }
+    
+    @PostMapping("/modificarestado/{Estado}/{TareaId}")
+    public void Modificar_Estado(@PathVariable int Estado,@PathVariable int TareaId){
+        try {
+            Tarea tarea= new Tarea(TareaId);
+            tarea.ModificarPrioridad(conexion, Estado, TareaId);
+            
+        } catch (Exception e) {
+            e.printStackTrace(); // <-- ¡Para ver si falla!
+            System.out.println("Ocurrió un error en el controlador.");
+        }
+    }    
+    
     @PostMapping("/creartarea")
     public void crearTarea(@RequestBody Tarea tarea) {
         try {
