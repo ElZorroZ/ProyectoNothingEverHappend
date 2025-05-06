@@ -34,7 +34,7 @@ assignTaskForm.addEventListener('submit', async function(event) {
   const tareaID = 1;
 
   try {
-    const response = await fetch('http://localhost:3000/api/agregartareausuario', {
+    const response = await fetch('https://java-backend-latest-rm0u.onrender.com/api/agregartareausuario', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

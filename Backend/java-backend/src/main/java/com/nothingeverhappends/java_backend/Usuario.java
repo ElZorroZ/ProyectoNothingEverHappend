@@ -24,6 +24,10 @@ public class Usuario {
     public Usuario(int id) {
         this.ID=id;
     }
+    
+    public Usuario() {
+    // Constructor vacío requerido por Jackson
+    }
 
     // Constructor con parámetros
     public Usuario(String _mail, String _password, String _nom, String _ape) {
