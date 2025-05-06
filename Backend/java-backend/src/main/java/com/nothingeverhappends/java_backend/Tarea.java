@@ -173,12 +173,13 @@ public class Tarea {
             }
             
             try{
-                String consulta = " CALL `railway`.`CrearVencimientoTarea`(?,?);";
+                String consulta = " CALL `railway`.`CrearVencimientoTarea`(?,?,?);";
 
                 ps = conexion.Conectar().prepareStatement(consulta);
                 ps.setString(1, Nombre);
+                ps.setInt(2, TareaID);
                 java.sql.Date Vencimientosql = new java.sql.Date(Vencimiento.getTime());
-                ps.setDate(2, Vencimientosql);
+                ps.setDate(3, Vencimientosql);
 
                 ResultSet rs = ps.executeQuery();
 

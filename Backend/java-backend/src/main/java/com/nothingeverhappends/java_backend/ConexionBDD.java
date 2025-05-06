@@ -4,6 +4,7 @@
  */
 package com.nothingeverhappends.java_backend;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -48,5 +49,9 @@ public class ConexionBDD {
     
     public Connection getConexion(){
         return conexion;
+    }
+
+    CallableStatement prepareCall(String sql) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }
