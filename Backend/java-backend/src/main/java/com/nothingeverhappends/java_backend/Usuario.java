@@ -7,10 +7,14 @@ package com.nothingeverhappends.java_backend;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
+import org.apache.pdfbox.pdmodel.PDDocument;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 public class Usuario {
     private int ID;
@@ -185,8 +189,11 @@ public class Usuario {
                     int prioridad = rs.getInt("Prioridad");
                     int estado = rs.getInt("Estado");
                     Date vencimiento = rs.getDate("Vencimiento");
-
-                    Tarea tarea = new Tarea(tareaid, proyectoid, nombre, descripcion, prioridad, estado, vencimiento);
+                    byte[] pdfBytes=rs.getBytes("Archivo");
+                    MultipartFile  Archivo;
+                    Archivo = new MockMultipartFile("PDF_de_Tarea"+nombre,"PDF_de_Tarea"+nombre + ".pdf","application/pdf",pdfBytes);
+                   
+                    Tarea tarea = new Tarea(tareaid, proyectoid, nombre, descripcion, prioridad, estado, vencimiento,Archivo);
                     Tareas.add(tarea);
                 }
             }

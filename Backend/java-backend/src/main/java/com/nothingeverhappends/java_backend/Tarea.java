@@ -74,6 +74,17 @@ public class Tarea {
         this.Vencimiento=Vencimiento;
         this.archivoPDF=archivoPDF;
     }
+    
+     public Tarea(int tareaID,int ProyectoID, String Nombre, String Descripcion, int Prioridad, int Estado, Date Vencimiento,MultipartFile archivoPDF){
+        this.TareaID=tareaID;
+        this.ProyectoID=ProyectoID;
+        this.Nombre=Nombre;
+        this.Descripcion=Descripcion;
+        this.Prioridad=Prioridad;
+        this.Estado=Estado;
+        this.Vencimiento=Vencimiento;
+        this.archivoPDF=archivoPDF;
+    }
     public void Crear(ConexionBDD conexion){
         
         PreparedStatement ps;
