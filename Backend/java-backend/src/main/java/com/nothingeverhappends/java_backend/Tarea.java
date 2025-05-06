@@ -47,6 +47,16 @@ public class Tarea {
     public Tarea(int tareaID){
         this.TareaID=tareaID;
     }
+    
+    public Tarea(int tareaID,int ProyectoID, String Nombre, String Descripcion, int Prioridad, int Estado, Date Vencimiento){
+        this.TareaID=tareaID;
+        this.ProyectoID=ProyectoID;
+        this.Nombre=Nombre;
+        this.Descripcion=Descripcion;
+        this.Prioridad=Prioridad;
+        this.Estado=Estado;
+        this.Vencimiento=Vencimiento;
+    }
     public void Crear(ConexionBDD conexion){
         PreparedStatement ps;
         try{
