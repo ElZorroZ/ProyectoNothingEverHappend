@@ -162,6 +162,37 @@ public class Usuario {
         return proyectos;
     }
     
+    // --- Ver Tareas asignadar a un usuario --- // 
+    public List<Tarea> verTareas(ConexionBDD conexion, int ProyectoID) {
+        List<Tarea> Tareas = new ArrayList<>();
+        String sql = "CALL `railway`.`obtener_tareas_usuario_proyecto`(?, ?);";
+
+
+        try (PreparedStatement stmt = conexion.Conectar().prepareStatement(sql)) {
+            stmt.setInt(1, this.ID);
+            stmt.setInt(2, ProyectoID);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    int tareaid = rs.getInt("TareaID");
+                    int proyectoid = rs.getInt("ProyectoID");
+                    String nombre = rs.getString("Nombre");
+                    String descripcion = rs.getString("Descripcion");
+                    int prioridad = rs.getInt("Prioridad");
+                    int estado = rs.getInt("Estado");
+                    Date vencimiento = rs.getDate("Vencimiento");
+
+                    Tarea tarea = new Tarea(tareaid, proyectoid, nombre, descripcion, prioridad, estado, vencimiento);
+                    Tareas.add(tarea);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally { conexion.Desconectar(); }
+
+        return Tareas;
+    }
+    
     public List<Notificaciones> verNotificaciones(ConexionBDD conexion) {
         List<Notificaciones> notificaciones = new ArrayList<>();
         String sql = "SELECT NotificacionID, TareaID, Titulo, Mensaje, Fecha, Leido " +

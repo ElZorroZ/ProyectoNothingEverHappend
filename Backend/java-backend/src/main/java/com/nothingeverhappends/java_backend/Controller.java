@@ -94,6 +94,24 @@ public class Controller {
         }
     }
     
+    @GetMapping("/tareas/{id}")
+    public ResponseEntity<?> verTareas(@PathVariable int UsuarioID, int ProyectoID) {
+        Usuario usuario = new Usuario(UsuarioID);
+
+        List<Tarea> Tareas = usuario.verTareas(conexion, ProyectoID);
+
+        if (Tareas.isEmpty()) {
+            return ResponseEntity.ok(Map.of(
+                "mensaje", "No tienes ningúna tarea asignada."
+            ));
+        } else {
+            return ResponseEntity.ok(Map.of(
+                "mensaje", "Tareas obtenidas exitosamente.",
+                "Tareas", Tareas
+            ));
+        }
+    }
+    
     @GetMapping("/notificaciones/{id}")
     public ResponseEntity<?> verNotificaciones(@PathVariable int id) {
         Usuario usuario = new Usuario(id);
