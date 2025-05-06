@@ -185,8 +185,23 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
+// Función que se llama cuando se selecciona un proyecto
 proyectoSelect.addEventListener('change', () => {
   const proyectoIDSeleccionado = proyectoSelect.value;
+
+  // Verificar si el valor seleccionado es válido
+  if (!proyectoIDSeleccionado || proyectoIDSeleccionado === 'undefined') {
+    console.error('Error: No se ha seleccionado un proyecto válido');
+    alert('Por favor, selecciona un proyecto válido');
+    return; // Evita que se ejecute el siguiente código, como la redirección
+  }
+
+  // Si el valor es válido, guarda el proyecto en localStorage
   localStorage.setItem('proyectoSeleccionadoID', proyectoIDSeleccionado);
+
   console.log('Proyecto seleccionado guardado en localStorage:', proyectoIDSeleccionado);
+
+  // Redirigir a la página correspondiente si el proyecto es válido
+  window.location.href = '../AgregarTareaWEB/AgregarTarea.html';
 });
+

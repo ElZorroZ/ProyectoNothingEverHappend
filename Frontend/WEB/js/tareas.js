@@ -123,6 +123,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const UsuarioID = localStorage.getItem('usuarioId');
   const ProyectoID = localStorage.getItem('proyectoSeleccionadoID');
+  console.log(UsuarioID)
+  console.log(ProyectoID)
 
   try {
     const response = await fetch(`https://java-backend-latest-rm0u.onrender.com/api/tareas/${UsuarioID}/${ProyectoID}`);
