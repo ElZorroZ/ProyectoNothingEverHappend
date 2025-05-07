@@ -35,25 +35,44 @@ document.addEventListener('click', (e) => {
     panel.classList.remove('open');
   }
 });
+async function openAssignTaskModal(tareaIDSeleccionada) {
+  assignTaskModal.style.display = 'block';
+  window.tareaID = tareaIDSeleccionada; // Guardamos la tarea seleccionada en variable global
 
-// Evento para enviar el formulario de asignación (con conexión al backend)
+  const select = document.getElementById("userSelect");
+  select.innerHTML = `<option value="">Cargando usuarios...</option>`;
+
+  const ProyectoID = localStorage.getItem("proyectoSeleccionadoID");
+  try {
+    const response = await fetch(`https://java-backend-latest-rm0u.onrender.com/api/usuariosProyectoTarea/${ProyectoID}/${TareaID}`);
+    const data = await response.json();
+
+    // Vaciar y llenar select
+    select.innerHTML = '<option value="">Selecciona un usuario</option>';
+    data.forEach(usuario => {
+      const option = document.createElement("option");
+      option.value = usuario.id; // asegurate que el backend devuelve ID
+      option.textContent = usuario.email;
+      select.appendChild(option);
+    });
+  } catch (error) {
+    console.error("Error al cargar usuarios:", error);
+    select.innerHTML = '<option value="">Error al cargar</option>';
+  }
+}
+
 assignTaskForm.addEventListener('submit', async function(event) {
   event.preventDefault();
 
-  const email = document.getElementById('email').value;
-
-  // Reemplazá esto con el ID real de la tarea que quieras asignar
-  const tareaID = 1;
+  const usuarioSeleccionadoID = document.getElementById('userSelect').value;
 
   try {
     const response = await fetch('https://java-backend-latest-rm0u.onrender.com/api/agregartareausuario', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        email: email,
-        tareaID: tareaID
+        UsuarioID: usuarioSeleccionadoID,
+        OtroID: window.tareaID
       }),
     });
 
@@ -73,6 +92,7 @@ assignTaskForm.addEventListener('submit', async function(event) {
     alert('Ocurrió un error al intentar asignar la tarea');
   }
 });
+
 
 
 // Filtro de tareas
@@ -116,9 +136,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
 document.addEventListener("DOMContentLoaded", async () => {
   const estadoMap = {
-    0: { id: "pendiente-tasks", class: "pending", label: "Pendiente" },
-    1: { id: "enprogreso-tasks", class: "in-progress", label: "En Progreso" },
-    2: { id: "completada-tasks", class: "completed", label: "Completada" }
+    1: { id: "pendiente-tasks", class: "pending", label: "Pendiente" },
+    2: { id: "enprogreso-tasks", class: "in-progress", label: "En Progreso" },
+    3: { id: "completada-tasks", class: "completed", label: "Completada" },
+    4: { id: "vencimiento-tasks", class: "vencimiento", label: "Vencimiento" }
   };
 
   const UsuarioID = localStorage.getItem('usuarioId');
@@ -128,7 +149,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   try {
     const response = await fetch(`https://java-backend-latest-rm0u.onrender.com/api/tareas/${UsuarioID}/${ProyectoID}`);
-    const tareas = await response.json();
+    const data = await response.json();
+    const tareas = data.Tareas || [];
 
     // Mostrar el array de tareas en la consola
     console.log(tareas);
@@ -137,8 +159,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     let completadas = 0;
 
     tareas.forEach(tarea => {
-      const { id, nombre, descripcion, prioridad, estado, vencimiento } = tarea;
-      if (estado === 2) completadas++;
+      const { Nombre, Descripcion, Estado, Prioridad, Vencimiento, Archivo } = tarea;
+      const nombre = Nombre;
+      const descripcion = Descripcion;
+      const estado = Estado;
+      const prioridad = Prioridad;
+      const vencimiento = Vencimiento;
+      const archivo = Archivo;
+    
+      if (estado === 3) completadas++;
 
       const tareaCard = document.createElement("div");
       tareaCard.classList.add("task-card");
@@ -149,7 +178,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         <p>${descripcion}</p>
         <p>Fecha límite: ${vencimiento}</p>
         <span class="status ${estadoMap[estado].class}">${estadoMap[estado].label}</span>
-        <button class="assign-task-btn" onclick="openAssignTaskModal()">Asignar Tarea a Usuario</button>
+        <button class="assign-task-btn" onclick="openAssignTaskModal(${tareaID})">Asignar Tarea a Usuario</button>
       `;
 
       document.getElementById(estadoMap[estado].id).appendChild(tareaCard);
