@@ -184,16 +184,15 @@ public class Usuario {
                 while (rs.next()) {
                     int tareaid = rs.getInt("TareaID");
                     int proyectoid = rs.getInt("ProyectoID");
-                    String nombre = rs.getString("Nombre");
+                    String nombreTarea = rs.getString("Nombre");
                     String descripcion = rs.getString("Descripcion");
                     int prioridad = rs.getInt("Prioridad");
                     int estado = rs.getInt("Estado");
                     Date vencimiento = rs.getDate("Vencimiento");
-                    byte[] pdfBytes=rs.getBytes("Archivo");
-                    MultipartFile  Archivo;
-                    Archivo = new MockMultipartFile("PDF_de_Tarea"+nombre,"PDF_de_Tarea"+nombre + ".pdf","application/pdf",pdfBytes);
-                   
-                    Tarea tarea = new Tarea(tareaid, proyectoid, nombre, descripcion, prioridad, estado, vencimiento,Archivo);
+     
+                    System.out.println(tareaid +"-"+proyectoid +"-"+nombreTarea+"-"+descripcion+"-"+prioridad+"-"+estado+"-"+vencimiento);
+                    
+                    Tarea tarea = new Tarea(tareaid, proyectoid, nombreTarea, descripcion, prioridad, estado, vencimiento);
                     Tareas.add(tarea);
                 }
             }
