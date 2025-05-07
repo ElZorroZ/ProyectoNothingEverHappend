@@ -71,7 +71,6 @@ public class Tarea {
     public void Crear(ConexionBDD conexion){
         
         PreparedStatement ps;
-        if (archivoPDF==null){
             try{
                 String consulta = " CALL `railway`.`CrearTarea`(?,?,?,?,?,?);";
 
@@ -114,60 +113,10 @@ public class Tarea {
             }
             
             
-        }else{
-            try{
-                String consulta = " CALL `railway`.`CrearTarea`(?,?,?,?,?,?);";
-                
-                
-                ps = conexion.Conectar().prepareStatement(consulta);
-                ps.setInt(1, ProyectoID);
-                ps.setString(2, Nombre);
-                ps.setString(3, Descripcion);
-                ps.setInt(4, Prioridad);
-                ps.setInt(5, Estado);
-                java.sql.Date Vencimientosql = new java.sql.Date(Vencimiento.getTime());
-                ps.setDate(6, Vencimientosql);
-                
-                ResultSet rs = ps.executeQuery();
-                if (rs.next()) {
-                    TareaID = rs.getInt(1);  // el resultado del SELECT LAST_INSERT_ID()
-                }
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-            
-            try{
-                byte[] pdfBytes = archivoPDF.getBytes();
-                String consulta = " CALL `railway`.`IngresarPDFTarea`(?,?);";
-                ps = conexion.Conectar().prepareStatement(consulta);
-                
-                ps.setInt(1,TareaID);
-                ps.setBytes(2,pdfBytes);
-                ResultSet rs = ps.executeQuery();
-                
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-            
-            try{
-                String consulta = " CALL `railway`.`CrearVencimientoTarea`(?,?,?);";
-
-                ps = conexion.Conectar().prepareStatement(consulta);
-                ps.setString(1, Nombre);
-                ps.setInt(2, TareaID);
-                java.sql.Date Vencimientosql = new java.sql.Date(Vencimiento.getTime());
-                ps.setDate(3, Vencimientosql);
-
-                ResultSet rs = ps.executeQuery();
-
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-            finally{
-                conexion.Desconectar();
-            }
+   
+           
         }
-    }
+
     
     public void ModificarPrioridad(ConexionBDD conexion,int Prioridad,int TareaId){
         try{
