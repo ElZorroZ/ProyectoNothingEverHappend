@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author PC
  */
 public class AgregarUsuarios {
-    @JsonIgnore
+    @JsonProperty("UsuarioID")
     int UsuarioID;
     @JsonProperty("OtroID")
     int OtroID;
@@ -34,14 +34,15 @@ public class AgregarUsuarios {
         this.UsuarioID=usuarioID;
         this.OtroID=tareaID;
     }
-
+    public AgregarUsuarios(){
+    }
     public AgregarUsuarios(int UsuarioID, int OtroID, boolean permiso, String Email){
         this.UsuarioID=UsuarioID;
         this.OtroID=OtroID;
         this.permiso=permiso;
         this.Email=Email;
     }
-    public void AgregarRolUsuario(ConexionBDD conexion, String Email, int ProyectoID, boolean permiso) {
+    public void AgregarRolUsuario(ConexionBDD conexion, int UsuarioID, String Email, int ProyectoID, boolean permiso) {
         Connection conn = null;
         try {
             conn = conexion.Conectar();

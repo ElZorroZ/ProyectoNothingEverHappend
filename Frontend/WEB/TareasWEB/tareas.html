@@ -77,7 +77,34 @@
         <li>No tenés nuevas notificaciones.</li>
       </ul>
     </div>
-
+    <div id="priorityModal" class="modal" style="display:none;">
+      <div class="modal-content">
+        <span class="close-btn" onclick="closePriorityModal()">&times;</span>
+        <h3>Cambiar Prioridad</h3>
+        <select id="prioritySelect"></select>
+        <div class="modal-buttons">
+          <button onclick="cambiarPrioridad()">Confirmar</button>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+    <div id="statusModal" class="modal" style="display:none;">
+      <div class="modal-content">
+        <span class="close-btn" onclick="closeStatusModal()">&times;</span>
+        <h2>Cambiar Estado</h2>
+        <form id="changeStatusForm">
+          <label for="statusSelect">Seleccionar Estado:</label>
+          <select id="statusSelect" name="statusSelect" required>
+            <option value="pendiente">Pendiente</option>
+            <option value="en-progreso">En Proceso</option>
+            <option value="completada">Completada</option>
+          </select>
+          <button type="submit">Aplicar</button>
+        </form>
+      </div>
+    </div>
     <footer class="footer-info">
       <div class="footer-right">
         <img src="../images/Logo.png" alt="Logo" class="footer-logo">

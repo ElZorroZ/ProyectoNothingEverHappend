@@ -125,7 +125,8 @@ document.addEventListener("DOMContentLoaded", function () {
       const requestData = {
         OtroID: proyectoEncontrado.proyectoID,  // Asignamos el proyectoID al OtroID
         email: document.getElementById("email").value,
-        permiso: rolSelect.value === 'Administrador' ? 1 : 0
+        permiso: rolSelect.value === 'Administrador' ? true : false,
+        UsuarioID: 0
       };
 
       console.log('Datos que se enviarán al fetch:', requestData);
