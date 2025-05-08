@@ -56,7 +56,7 @@ form.addEventListener('submit', function (e) {
   formData.append("Prioridad", prioridadNum);                                    // Prioridad como número
   formData.append("Estado", "1");                                                // Estado inicial de la tarea (1 = pendiente, por ejemplo)
   formData.append("Vencimiento", fechaVencimientoInput.value);                  // Fecha de vencimiento
-
+  formData.append("TareaID", "1");
   // Si el usuario subió un archivo, se agrega al formulario
   if (archivo) {
     formData.append("Archivo", archivo);
