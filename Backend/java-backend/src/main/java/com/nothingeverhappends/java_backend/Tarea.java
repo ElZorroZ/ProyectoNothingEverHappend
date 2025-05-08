@@ -37,26 +37,18 @@ public class Tarea {
     Date Vencimiento;
     @JsonProperty("Archivo")
     MultipartFile archivoPDF=null;
-    @JsonIgnore
+    @JsonProperty("TareaID")
     int TareaID;
     
-    public Tarea(int ProyectoID, String Nombre, String Descripcion, int Prioridad, int Estado, Date Vencimiento){
-        this.ProyectoID=ProyectoID;
-        this.Nombre=Nombre;
-        this.Descripcion=Descripcion;
-        this.Prioridad=Prioridad;
-        this.Estado=Estado;
-        this.Vencimiento=Vencimiento;
-    }
     public Tarea(){
     }
     
-    public Tarea(int tareaID){
-        this.TareaID=tareaID;
+    public Tarea(int TareaID){
+        this.TareaID=TareaID;
     }
     
-    public Tarea(int tareaID,int ProyectoID, String Nombre, String Descripcion, int Prioridad, int Estado, Date Vencimiento){
-        this.TareaID=tareaID;
+    public Tarea(int TareaID,int ProyectoID, String Nombre, String Descripcion, int Prioridad, int Estado, Date Vencimiento){
+        this.TareaID=TareaID;
         this.ProyectoID=ProyectoID;
         this.Nombre=Nombre;
         this.Descripcion=Descripcion;
