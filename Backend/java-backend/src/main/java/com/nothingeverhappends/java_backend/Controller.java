@@ -207,6 +207,7 @@ public class Controller {
     
     @PostMapping(value = "/creartarea", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public void crearTarea(
+        @RequestParam("TareaID") int TareID,
         @RequestParam("ProyectoID") int ProyectoID,
         @RequestParam("Nombre") String Nombre,
         @RequestParam("Descripcion") String Descripcion,
@@ -216,7 +217,7 @@ public class Controller {
         
     ) {
         try {
-            Tarea tarea = new Tarea(ProyectoID, Nombre, Descripcion, Prioridad, Estado, Vencimiento);
+            Tarea tarea = new Tarea(TareID,ProyectoID, Nombre, Descripcion, Prioridad, Estado, Vencimiento);
             tarea.Crear(conexion);
         } catch (Exception e) {
             e.printStackTrace();
