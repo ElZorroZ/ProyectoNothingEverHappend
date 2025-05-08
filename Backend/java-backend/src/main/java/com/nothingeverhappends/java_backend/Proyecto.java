@@ -106,12 +106,12 @@ public class Proyecto {
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     int usuarioid = rs.getInt("UsuarioID");
-                    /*
+                    
                     String nombre = rs.getString("Nombre");
                     String apellido = rs.getString("Apellido");
-                    */
+                    
 
-                    Usuario usuario = new Usuario(usuarioid);
+                    Usuario usuario = new Usuario(usuarioid, nombre, apellido);
                     Usuarios.add(usuario);
                 }
             }

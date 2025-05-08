@@ -28,7 +28,11 @@ public class Usuario {
     public Usuario(int id) {
         this.ID=id;
     }
-    
+    public Usuario(int id, String Nombre, String Apellido) {
+        this.ID=id;
+        this.nombre=Nombre;
+        this.apellido=Apellido;
+    }
     public Usuario() {
     // Constructor vacío requerido por Jackson
     }
