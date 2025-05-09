@@ -72,13 +72,68 @@ function closePriorityModal() {
   document.getElementById("priorityModal").style.display = "none";
 }
 
-function openStatusModal() {
-  document.getElementById("statusModal").style.display = "block";
+function openStatusModal(tareaID, estadoActual) {
+  const modal = document.getElementById("statusModal");
+  const select = document.getElementById("statusSelect");
+
+  modal.style.display = "block";
+  window.tareaID = tareaID;
+
+  // Limpiar opciones anteriores
+  select.innerHTML = "";
+
+  // Definir los estados posibles
+  const estados = {
+    1: "Pendiente",
+    2: "En proceso",
+    3: "Completada"
+  };
+
+  // Excluir el estado actual
+  for (const [valor, texto] of Object.entries(estados)) {
+    if (parseInt(valor, 10) !== parseInt(estadoActual, 10)) {
+      const option = document.createElement("option");
+      option.value = valor;
+      option.textContent = texto;
+      select.appendChild(option);
+    }
+  }
 }
+
 
 function closeStatusModal() {
   document.getElementById("statusModal").style.display = "none";
 }
+
+async function cambiarEstado() {
+  const nuevoEstado = document.getElementById("statusSelect").value;
+  const tareaID = window.tareaID;
+
+  if (!nuevoEstado || !tareaID) {
+    alert("Error: datos incompletos.");
+    return;
+  }
+
+  console.log("Datos a enviar:", { nuevoEstado, tareaID });
+
+  try {
+    const response = await fetch(`https://java-backend-latest-rm0u.onrender.com/api/modificarestado/${nuevoEstado}/${tareaID}`, {
+      method: 'POST'
+    });
+
+    if (response.ok) {
+      alert("Estado modificado exitosamente.");
+      closeStatusModal();
+      location.reload(); // Opcional
+    } else {
+      alert("Error al modificar el estado.");
+    }
+  } catch (error) {
+    console.error("Error al modificar estado:", error);
+    alert("Ocurrió un error al intentar cambiar el estado.");
+  }
+}
+
 // Función para abrir el modal y guardar el ID de la tarea
 async function openAssignTaskModal(tareaIDSeleccionada) {
   assignTaskModal.style.display = 'block';
@@ -278,7 +333,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         <p><strong>Vencimiento:</strong> ${Vencimiento || "No definido"}</p>
         <div class="task-actions">
           <button onclick="openPriorityModal(${TareaID}, ${Prioridad})">Cambiar Prioridad</button>
-          <button onclick="openStatusModal()">Cambiar Estado</button>
+          <button onclick="openStatusModal(${TareaID}, ${Estado})">Cambiar Estado</button>
           <button onclick="openAssignTaskModal(${TareaID})">Asignar</button>
         </div>
       `;
