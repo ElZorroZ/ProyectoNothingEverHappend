@@ -101,7 +101,7 @@ public class Controller {
     public ResponseEntity<?> verTareas(@PathVariable int UsuarioID,  @PathVariable int ProyectoID) {
         Usuario usuario = new Usuario(UsuarioID);
 
-        List<Tarea> Tareas = usuario.verTareas(conexion, ProyectoID);
+        Map<String, Object>  Tareas = usuario.verTareas(conexion, ProyectoID);
 
         if (Tareas.isEmpty()) {
             return ResponseEntity.ok(Map.of(
