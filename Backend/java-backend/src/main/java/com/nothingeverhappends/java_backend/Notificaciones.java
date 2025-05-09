@@ -23,6 +23,7 @@ public class Notificaciones {
     private String Mensaje;
     
     private LocalDateTime Fecha;
+    private boolean Leido;
             
     public Notificaciones(int UsuarioID, int TareaID){
         this.UsuarioID=UsuarioID;
@@ -37,6 +38,7 @@ public class Notificaciones {
         this.Titulo=Titulo;
         this.Mensaje=Mensaje;
         this.Fecha=Fecha;
+        this.Leido=Leido;
     }
     
     public static Notificaciones NotificacionUsuarioTarea(ConexionBDD conexion, int UsuarioID, int TareaID){
@@ -54,7 +56,7 @@ public class Notificaciones {
             note.Titulo = rs.getString("Titulo");
             note.Mensaje = rs.getString("Mensaje");
             note.Fecha = rs.getTimestamp("Fecha").toLocalDateTime();
-            boolean leido = rs.getBoolean("Leido");
+            note.Leido = rs.getBoolean("Leido");
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -63,4 +65,12 @@ public class Notificaciones {
         }
         return note;
     }
+    
+    public int getNotificacionID() { return NotificacionID; }
+    public int getUsuarioID() { return UsuarioID; }
+    public int getTareaID() { return TareaID; }
+    public String getTitulo() { return Titulo; }
+    public String getMensaje() { return Mensaje; }
+    public LocalDateTime getFecha() { return Fecha; }
+    public boolean isLeido() { return Leido; }
 }

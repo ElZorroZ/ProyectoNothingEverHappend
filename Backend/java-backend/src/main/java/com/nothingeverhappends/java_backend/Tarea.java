@@ -156,8 +156,8 @@ public class Tarea {
                     String nombre = rs.getString("Nombre");
                     String coment = rs.getString("Comentario");
                     Date fecha = rs.getDate("Fecha");
-                    InputStream input = rs.getBinaryStream("archivo");
-                    Comentario com = new Comentario(id, apellido, nombre, coment, fecha, input);
+                    byte[] file = rs.getBytes("Archivo");
+                    Comentario com = new Comentario(id, apellido, nombre, coment, fecha, file);
                     comentarios.add(com);
                 }
             }
@@ -167,4 +167,13 @@ public class Tarea {
 
         return comentarios;
     }
+    
+    public int getTareaID() { return TareaID; }
+    public int getProyectoID() { return ProyectoID; }
+    public String getNombre() { return Nombre; }
+    public String getDescripcion() { return Descripcion; }
+    public int getPrioridad() { return Prioridad; }
+    public int getEstado() { return Estado; }
+    public Date getVencimiento() { return Vencimiento; }
+    public MultipartFile isLeido() { return archivoPDF; }
 }

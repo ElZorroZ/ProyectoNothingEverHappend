@@ -226,6 +226,17 @@ public class Controller {
         }
     }
 
+    @PostMapping("/comentar")
+    public ResponseEntity<String> guardarComentario(@RequestBody Comentario comentario) {
+        try {
+            comentario.comentarTarea(conexion);
+
+            return ResponseEntity.ok("Comentario con/sin archivo guardado.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Error al guardar comentario.");
+        }
+    }
     
     @GetMapping("/comentarios/{tareaID}")
     public ResponseEntity<?> getComentarios(@PathVariable int tareaID) {

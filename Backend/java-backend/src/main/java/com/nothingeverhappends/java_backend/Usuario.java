@@ -256,6 +256,7 @@ public class Usuario {
                 }
             }
         } catch (SQLException e) {
+            System.out.println(e);
             e.printStackTrace();
         } finally { conexion.Desconectar(); }
 
