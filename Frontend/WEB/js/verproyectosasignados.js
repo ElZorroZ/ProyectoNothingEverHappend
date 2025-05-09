@@ -3,12 +3,15 @@ const panel = document.getElementById('notificationPanel');
 const idUsuario = localStorage.getItem('usuarioId');
 const cardsContainer = document.querySelector('.project-cards');
 const proyectoSelect = document.getElementById('proyecto');
-const rolSelect = document.getElementById('rol'); // nuevo select de rol
+const rolSelect = document.getElementById('rol');
 let proyectosGlobal = [];
+let nuevasNotificaciones = false;
 
 // Abrir/cerrar panel de notificaciones
 notifBtn.addEventListener('click', () => {
   panel.classList.toggle('open');
+  nuevasNotificaciones = false; // Limpiar notificaciones nuevas al abrir
+  actualizarCampana(); // Actualizar campana después de abrir
 });
 
 // Cerrar panel si se hace clic fuera
@@ -18,30 +21,101 @@ document.addEventListener('click', (e) => {
   }
 });
 
+// Actualizar el ícono de la campana si hay notificaciones no leídas
+function actualizarCampana() {
+  const indicador = document.querySelector('.notificacion-indicador');
+  if (nuevasNotificaciones) {
+    notifBtn.classList.add('tiene-notificacion');
+    if (indicador) indicador.style.display = 'inline-block'; // Mostrar el punto rojo
+  } else {
+    notifBtn.classList.remove('tiene-notificacion');
+    if (indicador) indicador.style.display = 'none'; // Ocultar el punto rojo
+  }
+}
+
 function guardarProyectoYRedirigir(proyectoID) {
   localStorage.setItem('proyectoSeleccionadoID', proyectoID);
   window.location.href = '../AgregarTareaWEB/AgregarTarea.html';
 }
 
+
+function mostrarNotificacion(titulo, mensaje) {
+  const panel = document.getElementById('notificationPanel');
+  const lista = panel.querySelector("ul");
+
+  // Crear el elemento de la notificación
+  const li = document.createElement("li");
+  li.className = 'notificacion'; // Ya no usamos 'tipo'
+
+  // Crear el título en negrita y oscuro
+  const tituloElemento = document.createElement("h4");
+  tituloElemento.textContent = titulo;
+  tituloElemento.style.fontWeight = "bold";
+  tituloElemento.style.color = "#333"; // Color oscuro
+
+  // Crear el mensaje debajo del título
+  const mensajeElemento = document.createElement("p");
+  mensajeElemento.textContent = mensaje;
+  mensajeElemento.style.margin = "5px 0 0 0"; // Espacio entre título y mensaje
+
+  // Crear el botón de cierre dentro de la notificación
+  const botonCerrar = document.createElement('button');
+  botonCerrar.innerHTML = '<i class="fas fa-trash"></i>';
+  botonCerrar.className = 'cerrar-notificacion';
+  botonCerrar.onclick = () => {
+    li.remove();
+    if (lista.children.length === 0) {
+      lista.innerHTML = "<li>No tenés nuevas notificaciones.</li>";
+    }
+  };
+
+  // Añadir el título, el mensaje y el botón al elemento de la notificación
+  li.appendChild(tituloElemento);
+  li.appendChild(mensajeElemento);
+  li.appendChild(botonCerrar);
+
+  // Limpiar el mensaje de "sin notificaciones" si ya hay notificaciones
+  if (lista.querySelector('li')?.textContent === 'No tenés nuevas notificaciones.') {
+    lista.innerHTML = '';
+  }
+
+  lista.appendChild(li);
+  panel.classList.add('open');
+
+  // Marcar como nuevas notificaciones
+  nuevasNotificaciones = true;
+  actualizarCampana();
+}
+
+
+
+
+
 // Modal
-function openModal() {
-  // Primero, limpiamos las opciones del select de proyectos
+function openModal(proyectoID) {
+  localStorage.setItem('proyectoSeleccionadoID', proyectoID); // ← Guarda el ID temporalmente
   proyectoSelect.innerHTML = '';
 
-  // Luego, agregamos las opciones correspondientes a los proyectos
   proyectosGlobal.forEach(proyecto => {
     const option = document.createElement('option');
-    option.value = proyecto.idProyecto;  // ID del proyecto
-    option.textContent = proyecto.nombre;  // Nombre del proyecto
+    option.value = proyecto.proyectoID;
+    option.textContent = proyecto.nombre;
     proyectoSelect.appendChild(option);
   });
 
-  // Finalmente, mostramos el modal
+  // Seleccionamos automáticamente el proyecto actual
+  proyectoSelect.value = proyectoID;
+
   document.getElementById("addUserModal").style.display = "block";
 }
+
 function closeModal() {
   document.getElementById("addUserModal").style.display = "none";
+  localStorage.removeItem('proyectoSeleccionadoID');
 }
+
+
+
 
 window.onclick = function(event) {
   const modal = document.getElementById("addUserModal");
@@ -99,18 +173,16 @@ document.addEventListener("DOMContentLoaded", function () {
       console.log('Lista de Proyectos:', proyectosGlobal); // Muestra el array de proyectos
 
       // Obtener el nombre del proyecto seleccionado desde el combobox
-      const nombreProyectoSeleccionado = proyectoSelect.options[proyectoSelect.selectedIndex].textContent;
-      console.log('Nombre del Proyecto seleccionado:', nombreProyectoSeleccionado); // Verifica el nombre seleccionado
+      const proyectoIDSeleccionado = localStorage.getItem('proyectoSeleccionadoID');
+      const proyectoEncontrado = proyectosGlobal.find(proyecto => proyecto.proyectoID == proyectoIDSeleccionado);
 
-      // Verificar si se seleccionó un proyecto
-      if (!nombreProyectoSeleccionado) {
-        alert('Error: No se ha seleccionado un proyecto.');
+      if (!proyectoEncontrado) {
+        alert('Error: Proyecto no encontrado.');
         return;
       }
 
-      // Encontrar el proyecto que coincida con el nombre seleccionado
-      const proyectoEncontrado = proyectosGlobal.find(proyecto => proyecto.nombre === nombreProyectoSeleccionado);
       console.log('Proyecto Encontrado:', proyectoEncontrado);
+
 
       // Verificar si se encontró el proyecto
       if (!proyectoEncontrado) {
@@ -125,7 +197,8 @@ document.addEventListener("DOMContentLoaded", function () {
       const requestData = {
         OtroID: proyectoEncontrado.proyectoID,  // Asignamos el proyectoID al OtroID
         email: document.getElementById("email").value,
-        permiso: rolSelect.value === 'Administrador' ? 1 : 0
+        permiso: rolSelect.value === 'Administrador' ? true : false,
+        UsuarioID: 0
       };
 
       console.log('Datos que se enviarán al fetch:', requestData);
@@ -193,7 +266,8 @@ document.addEventListener("DOMContentLoaded", function () {
             <div class="button-group">
              <button class="view-project-btn" onclick="guardarProyectoYEntrar(${proyectoID})">Entrar</button>
               <button class="add-task-btn" onclick="guardarProyectoYRedirigir(${proyectoID})">Agregar Tarea</button>
-              <button class="add-user-btn" onclick="openModal()">Agregar Usuario</button>
+              <button class="add-user-btn" onclick="openModal(${proyectoID})">Agregar Usuario</button>
+
             </div>
           `;
 

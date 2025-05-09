@@ -20,5 +20,6 @@ public class NotificationService {
     public void notificar(int usuarioId, Notificaciones notificacion) {
         //Enviar por WebSocket
         messagingTemplate.convertAndSend("/topic/notificaciones/" + usuarioId, notificacion);
+        System.out.println(notificacion+ " para ID "+usuarioId);
     }
 }

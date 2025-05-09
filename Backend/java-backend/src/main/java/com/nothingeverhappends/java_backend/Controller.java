@@ -101,7 +101,7 @@ public class Controller {
     public ResponseEntity<?> verTareas(@PathVariable int UsuarioID,  @PathVariable int ProyectoID) {
         Usuario usuario = new Usuario(UsuarioID);
 
-        List<Tarea> Tareas = usuario.verTareas(conexion, ProyectoID);
+        Map<String, Object>  Tareas = usuario.verTareas(conexion, ProyectoID);
 
         if (Tareas.isEmpty()) {
             return ResponseEntity.ok(Map.of(
@@ -154,12 +154,13 @@ public class Controller {
     @PostMapping("/agregarrolusuario")
     public ResponseEntity<String> AgregarRolUsuario(@RequestBody AgregarUsuarios agregarusuarios) {
         try {
+            int UsuarioID = agregarusuarios.getUsuarioID();
             String Email = agregarusuarios.getEmail();
             int ProyectoID = agregarusuarios.getOtroID(); // Usar OtroID del objeto recibido
             boolean Permiso = agregarusuarios.isPermiso(); // Usar permiso del objeto recibido
 
             // Llama a la función con los valores correctos
-            agregarusuarios.AgregarRolUsuario(conexion, Email, ProyectoID, Permiso);
+            agregarusuarios.AgregarRolUsuario(conexion, UsuarioID, Email, ProyectoID, Permiso);
 
             // Si todo está bien, devolver una respuesta exitosa
             return ResponseEntity.ok("Usuario agregado exitosamente");
@@ -225,6 +226,17 @@ public class Controller {
         }
     }
 
+    @PostMapping("/comentar")
+    public ResponseEntity<String> guardarComentario(@RequestBody Comentario comentario) {
+        try {
+            comentario.comentarTarea(conexion);
+
+            return ResponseEntity.ok("Comentario con/sin archivo guardado.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Error al guardar comentario.");
+        }
+    }
     
     @GetMapping("/comentarios/{tareaID}")
     public ResponseEntity<?> getComentarios(@PathVariable int tareaID) {

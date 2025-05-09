@@ -368,3 +368,141 @@ body {
 .modal-content button:hover {
   background-color: #4e0783;
 }
+
+#notificationPanel .notificacion {
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+#notificationPanel .error {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+#notificationPanel .info {
+  background-color: #d1ecf1;
+  color: #0c5460;
+}
+
+#notificationPanel .success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+/* Indicador en la campana */
+.notif-btn {
+  position: relative;
+}
+
+.notif-btn.tiene-notificacion .notificacion-indicador {
+  display: inline-block;
+}
+
+.notificacion-indicador {
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  background-color: red;
+  border-radius: 50%;
+}
+
+/* Estilo de la notificación */
+.notificacion {
+  position: relative;
+  background-color: #b57fdb;
+  padding: 20px;
+  margin: 5px 0;
+  border-radius: 5px;
+  color: white;
+  height: 180px;
+  overflow: hidden; /* Evita que el contenido se desborde */
+  word-wrap: break-word; /* Fuerza el salto de línea cuando el texto es largo */
+  white-space: normal; /* Permite que el texto se divida */
+  
+}
+
+.notificacion h4 {
+  margin: 0;
+  font-weight: bold;
+}
+
+.notificacion p {
+  margin: 5px 0;
+}
+
+.notificacion.error {
+  background-color: #e74c3c;
+}
+
+.notificacion.success {
+  background-color: #2ecc71;
+}
+
+.notificacion.info {
+  background-color: #3498db;
+}
+
+
+.cerrar-notificacion:hover {
+  color: #e74c3c; /* Color rojo al pasar el cursor */
+}
+
+/* Indicador en la campana */
+.notif-btn {
+  position: relative;
+}
+
+.notif-btn.tiene-notificacion .notificacion-indicador {
+  display: inline-block;
+}
+
+.notificacion-indicador {
+  display: none;
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  width: 12px;
+  height: 12px;
+  background-color: red;
+  border-radius: 50%;
+  border: 2px solid white; /* Para que resalte en el fondo azul */
+}
+.notification-panel .close-btn {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.notificacion h4 {
+  font-weight: bold;
+  color: #333; /* Oscuro */
+  margin: 0; /* Sin margen adicional */
+}
+
+.notificacion p {
+  margin: 5px 0 0 0;
+  color: #555; /* Color un poco más claro que el título */
+}
+
+.cerrar-notificacion {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  color: #555;
+}
+
+
+.cerrar-notificacion:hover {
+  color: #000;
+}

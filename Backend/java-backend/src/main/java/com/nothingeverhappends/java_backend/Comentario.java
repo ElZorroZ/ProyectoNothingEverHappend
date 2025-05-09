@@ -5,6 +5,9 @@
 package com.nothingeverhappends.java_backend;
 
 import java.io.InputStream;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.Base64;
 import java.util.Date;
 
 /**
@@ -19,9 +22,9 @@ public class Comentario {
     private String ApellidoUsuario;
     private String Contenido;
     private Date Fecha;
-    private InputStream Archivo;
+    private byte[] Archivo;
     
-    public Comentario(int comentID, String nombre, String ape, String coment, Date fecha, InputStream file){
+    public Comentario(int comentID, String nombre, String ape, String coment, Date fecha, byte[] file){
         this.ComentarioID=comentID;
         this.NombreUsuario=nombre;
         this.ApellidoUsuario=ape;
@@ -29,11 +32,28 @@ public class Comentario {
         this.Fecha=fecha;
         this.Archivo=file;
     }
-    public Comentario(int tareaID, int usuID, String coment, InputStream file){
+    public Comentario(int tareaID, int usuID, String coment, String file){
         this.TareaID=tareaID;
         this.UsuarioID=usuID;
         this.Contenido=coment;
-        this.Archivo=file;
+        this.Archivo = (file != null) ? Base64.getDecoder().decode(file) : null;
+    }
+    
+    public void comentarTarea(ConexionBDD conexion){
+        try{
+            String consulta = "CALL `railway`.`InsertarComentario`(?,?,?,?)";
+            
+            PreparedStatement ps = conexion.Conectar().prepareStatement(consulta);
+            ps.setString(1, Contenido);
+            ps.setInt(2, TareaID);
+            ps.setInt(3, UsuarioID);
+            ps.setBytes(4, Archivo);
+            ResultSet rs = ps.executeQuery();
+        }catch(Exception e){
+            e.printStackTrace();
+        }finally{
+            conexion.Desconectar();
+        }
     }
     
     public void setID(int id){
@@ -54,7 +74,7 @@ public class Comentario {
     public Date getFecha(){
         return Fecha;
     }
-    public InputStream getArchivo(){
+    public byte[] getArchivo(){
         return Archivo;
     }
 }

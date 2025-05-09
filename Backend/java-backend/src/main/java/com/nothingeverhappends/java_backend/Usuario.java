@@ -13,6 +13,8 @@ import java.io.ByteArrayOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -175,36 +177,60 @@ public class Usuario {
     }
     
     // --- Ver Tareas asignadar a un usuario --- // 
-    public List<Tarea> verTareas(ConexionBDD conexion, int ProyectoID) {
+    public Map<String, Object> verTareas(ConexionBDD conexion, int ProyectoID) {
         List<Tarea> Tareas = new ArrayList<>();
+        double porcentaje = 0.0; // Variable para almacenar el porcentaje
         String sql = "CALL `railway`.`obtener_tareas_usuario_proyecto`(?, ?);";
 
+        Map<String, Object> resultado = new HashMap<>(); // Usamos un Map para devolver ambos datos
 
         try (PreparedStatement stmt = conexion.Conectar().prepareStatement(sql)) {
             stmt.setInt(1, this.ID);
             stmt.setInt(2, ProyectoID);
 
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    int tareaid = rs.getInt("TareaID");
-                    int proyectoid = rs.getInt("ProyectoID");
-                    String nombreTarea = rs.getString("Nombre");
-                    String descripcion = rs.getString("Descripcion");
-                    int prioridad = rs.getInt("Prioridad");
-                    int estado = rs.getInt("Estado");
-                    Date vencimiento = rs.getDate("Vencimiento");
-     
-                    System.out.println(tareaid +"-"+proyectoid +"-"+nombreTarea+"-"+descripcion+"-"+prioridad+"-"+estado+"-"+vencimiento);
-                    
-                    Tarea tarea = new Tarea(tareaid, proyectoid, nombreTarea, descripcion, prioridad, estado, vencimiento);
-                    Tareas.add(tarea);
+            boolean hasResults = stmt.execute();
+            int paso = 0;
+
+            while (hasResults) {
+                try (ResultSet rs = stmt.getResultSet()) {
+                    if (paso == 0) {
+                        // Primer SELECT: obtener las tareas
+                        while (rs.next()) {
+                            int tareaid = rs.getInt("TareaID");
+                            int proyectoid = rs.getInt("ProyectoID");
+                            String nombreTarea = rs.getString("Nombre");
+                            String descripcion = rs.getString("Descripcion");
+                            int prioridad = rs.getInt("Prioridad");
+                            int estado = rs.getInt("Estado");
+                            Date vencimiento = rs.getDate("Vencimiento");
+
+                            // Creamos el objeto Tarea
+                            Tarea tarea = new Tarea(tareaid, proyectoid, nombreTarea, descripcion, prioridad, estado, vencimiento);
+                            Tareas.add(tarea); // Guardamos la tarea en la lista
+                        }
+                    } else if (paso == 1) {
+                        // Segundo SELECT: obtener el porcentaje
+                        while (rs.next()) {
+                            porcentaje = rs.getDouble("Porcentaje"); // Obtenemos el porcentaje
+                        }
+                    }
                 }
+                // Ir a la siguiente consulta
+                hasResults = stmt.getMoreResults();
+                paso++;
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally { conexion.Desconectar(); }
+        } finally {
+            conexion.Desconectar();
+        }
 
-        return Tareas;
+        // Almacenamos los resultados en el Map
+        resultado.put("tareas", Tareas);  // La lista de tareas
+        resultado.put("porcentaje", porcentaje);  // El porcentaje
+
+        return resultado; // Devolvemos el Map con las tareas y el porcentaje
     }
     
     public List<Notificaciones> verNotificaciones(ConexionBDD conexion) {
@@ -230,6 +256,7 @@ public class Usuario {
                 }
             }
         } catch (SQLException e) {
+            System.out.println(e);
             e.printStackTrace();
         } finally { conexion.Desconectar(); }
 

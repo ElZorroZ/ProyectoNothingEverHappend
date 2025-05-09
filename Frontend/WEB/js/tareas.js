@@ -7,10 +7,173 @@ const panel = document.getElementById('notificationPanel');
 const assignTaskModal = document.getElementById('assignTaskModal');
 const assignTaskForm = document.getElementById('assignTaskForm');
 
-// Función para abrir el modal
-function openAssignTaskModal() {
-  assignTaskModal.style.display = 'block';
+function openPriorityModal(tareaID, prioridadActual) {
+  const modal = document.getElementById("priorityModal");
+  const select = document.getElementById("prioritySelect");
+
+  modal.style.display = "block";
+  window.tareaID = tareaID;
+
+  // Limpiar opciones anteriores
+  select.innerHTML = "";
+
+  // Definir las prioridades posibles
+  const prioridades = {
+    1: "Baja",
+    2: "Media",
+    3: "Alta"
+  };
+
+  // Excluir la prioridad actual
+  for (const [valor, texto] of Object.entries(prioridades)) {
+    if (parseInt(valor, 10) !== parseInt(prioridadActual, 10)) {
+      const option = document.createElement("option");
+      option.value = valor;
+      option.textContent = texto;
+      select.appendChild(option);
+    }
+  }
 }
+
+
+async function cambiarPrioridad() {
+  const nuevaPrioridad = document.getElementById("prioritySelect").value;
+  const tareaID = window.tareaID;
+
+  if (!nuevaPrioridad || !tareaID) {
+    alert("Error: datos incompletos.");
+    return;
+  }
+
+  // Mostrar los datos que se enviarán
+  console.log("Datos a enviar:", { nuevaPrioridad, tareaID });
+
+  try {
+    const response = await fetch(`https://java-backend-latest-rm0u.onrender.com/api/modificarprioridad/${nuevaPrioridad}/${tareaID}`, {
+      method: 'POST'
+    });
+
+    if (response.ok) {
+      alert("Prioridad modificada exitosamente.");
+      closePriorityModal();
+      location.reload(); // Opcional: recargar para reflejar cambios
+    } else {
+      alert("Error al modificar la prioridad.");
+    }
+  } catch (error) {
+    console.error("Error al modificar prioridad:", error);
+    alert("Ocurrió un error al intentar cambiar la prioridad.");
+  }
+}
+
+
+
+function closePriorityModal() {
+  document.getElementById("priorityModal").style.display = "none";
+}
+
+function openStatusModal(tareaID, estadoActual) {
+  const modal = document.getElementById("statusModal");
+  const select = document.getElementById("statusSelect");
+
+  modal.style.display = "block";
+  window.tareaID = tareaID;
+
+  // Limpiar opciones anteriores
+  select.innerHTML = "";
+
+  // Definir los estados posibles
+  const estados = {
+    1: "Pendiente",
+    2: "En proceso",
+    3: "Completada"
+  };
+
+  // Excluir el estado actual
+  for (const [valor, texto] of Object.entries(estados)) {
+    if (parseInt(valor, 10) !== parseInt(estadoActual, 10)) {
+      const option = document.createElement("option");
+      option.value = valor;
+      option.textContent = texto;
+      select.appendChild(option);
+    }
+  }
+}
+
+
+function closeStatusModal() {
+  document.getElementById("statusModal").style.display = "none";
+}
+
+async function cambiarEstado() {
+  const nuevoEstado = document.getElementById("statusSelect").value;
+  const tareaID = window.tareaID;
+
+  if (!nuevoEstado || !tareaID) {
+    alert("Error: datos incompletos.");
+    return;
+  }
+
+  console.log("Datos a enviar:", { nuevoEstado, tareaID });
+
+  try {
+    const response = await fetch(`https://java-backend-latest-rm0u.onrender.com/api/modificarestado/${nuevoEstado}/${tareaID}`, {
+      method: 'POST'
+    });
+
+    if (response.ok) {
+      alert("Estado modificado exitosamente.");
+      closeStatusModal();
+      location.reload(); // Opcional
+    } else {
+      alert("Error al modificar el estado.");
+    }
+  } catch (error) {
+    console.error("Error al modificar estado:", error);
+    alert("Ocurrió un error al intentar cambiar el estado.");
+  }
+}
+
+// Función para abrir el modal y guardar el ID de la tarea
+async function openAssignTaskModal(tareaIDSeleccionada) {
+  assignTaskModal.style.display = 'block';
+  window.tareaID = tareaIDSeleccionada; // Guardamos la tarea seleccionada en variable global
+
+  const select = document.getElementById("userSelect");
+  select.innerHTML = `<option value="">Cargando usuarios...</option>`;
+
+  const ProyectoID = localStorage.getItem("proyectoSeleccionadoID");
+  try {
+    const response = await fetch(`https://java-backend-latest-rm0u.onrender.com/api/usuariosProyectoTarea/${ProyectoID}/${window.tareaID}`);
+    const data = await response.json();
+
+    // Imprimir lo que devuelve el backend
+    console.log('Respuesta del backend:', data);
+
+    // Verificar si la respuesta contiene el array de usuarios
+    if (data.usuarios && Array.isArray(data.usuarios)) {
+      // Vaciar y llenar select con los usuarios
+      select.innerHTML = '<option value="">Selecciona un usuario</option>';
+      data.usuarios.forEach(usuario => {
+        const option = document.createElement("option");
+        option.value = usuario.id; // Asegúrate de que el backend devuelve ID
+        
+        // Crear el texto de la opción con nombre y apellido
+        const userText = `${usuario.nombre || 'Nombre no disponible'} ${usuario.apellido || 'Apellido no disponible'}`;
+        
+        option.textContent = userText; // Mostrar el texto del usuario
+        select.appendChild(option);
+      });
+    } else {
+      console.error('La propiedad "usuarios" no es un array:', data);
+      select.innerHTML = '<option value="">Error: No se encontraron usuarios.</option>';
+    }
+  } catch (error) {
+    console.error("Error al cargar usuarios:", error);
+    select.innerHTML = '<option value="">Error al cargar</option>';
+  }
+}
+
 
 // Función para cerrar el modal
 function closeModal() {
@@ -35,36 +198,18 @@ document.addEventListener('click', (e) => {
     panel.classList.remove('open');
   }
 });
-async function openAssignTaskModal(tareaIDSeleccionada) {
-  assignTaskModal.style.display = 'block';
-  window.tareaID = tareaIDSeleccionada; // Guardamos la tarea seleccionada en variable global
 
-  const select = document.getElementById("userSelect");
-  select.innerHTML = `<option value="">Cargando usuarios...</option>`;
-
-  const ProyectoID = localStorage.getItem("proyectoSeleccionadoID");
-  try {
-    const response = await fetch(`https://java-backend-latest-rm0u.onrender.com/api/usuariosProyectoTarea/${ProyectoID}/${TareaID}`);
-    const data = await response.json();
-
-    // Vaciar y llenar select
-    select.innerHTML = '<option value="">Selecciona un usuario</option>';
-    data.forEach(usuario => {
-      const option = document.createElement("option");
-      option.value = usuario.id; // asegurate que el backend devuelve ID
-      option.textContent = usuario.email;
-      select.appendChild(option);
-    });
-  } catch (error) {
-    console.error("Error al cargar usuarios:", error);
-    select.innerHTML = '<option value="">Error al cargar</option>';
-  }
-}
-
+// Manejo del formulario de asignación de tarea
 assignTaskForm.addEventListener('submit', async function(event) {
   event.preventDefault();
 
   const usuarioSeleccionadoID = document.getElementById('userSelect').value;
+
+  // Verificar que se haya seleccionado un usuario
+  if (!usuarioSeleccionadoID) {
+    alert('Por favor, selecciona un usuario.');
+    return;
+  }
 
   try {
     const response = await fetch('https://java-backend-latest-rm0u.onrender.com/api/agregartareausuario', {
@@ -72,7 +217,7 @@ assignTaskForm.addEventListener('submit', async function(event) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         UsuarioID: usuarioSeleccionadoID,
-        OtroID: window.tareaID
+        OtroID: window.tareaID // Enviar el ID de la tarea
       }),
     });
 
@@ -92,6 +237,7 @@ assignTaskForm.addEventListener('submit', async function(event) {
     alert('Ocurrió un error al intentar asignar la tarea');
   }
 });
+
 
 
 
@@ -157,32 +303,45 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     let total = tareas.length;
     let completadas = 0;
-
+    const prioridadMap = {
+      1: "Baja",
+      2: "Media",
+      3: "Alta"
+    };
+    
     tareas.forEach(tarea => {
-      const { Nombre, Descripcion, Estado, Prioridad, Vencimiento, Archivo } = tarea;
+      const { TareaID, Nombre, Descripcion, Estado, Prioridad, Vencimiento, Archivo } = tarea;
       const nombre = Nombre;
       const descripcion = Descripcion;
       const estado = Estado;
       const prioridad = Prioridad;
       const vencimiento = Vencimiento;
       const archivo = Archivo;
-    
+      
       if (estado === 3) completadas++;
+    
+      const contenedor = document.getElementById(estadoMap[Estado].id);
 
       const tareaCard = document.createElement("div");
-      tareaCard.classList.add("task-card");
-      tareaCard.setAttribute("data-status", estadoMap[estado].label.toLowerCase());
+      tareaCard.className = "task-card";
+      tareaCard.setAttribute("data-status", estadoMap[Estado].id);
 
       tareaCard.innerHTML = `
-        <h3>${nombre}</h3>
+        <h4>${nombre}</h4>
         <p>${descripcion}</p>
-        <p>Fecha límite: ${vencimiento}</p>
-        <span class="status ${estadoMap[estado].class}">${estadoMap[estado].label}</span>
-        <button class="assign-task-btn" onclick="openAssignTaskModal(${tareaID})">Asignar Tarea a Usuario</button>
+        <p><strong>Prioridad:</strong> ${prioridadMap[Prioridad] || "Desconocida"}</p>
+        <p><strong>Vencimiento:</strong> ${Vencimiento || "No definido"}</p>
+        <div class="task-actions">
+          <button onclick="openPriorityModal(${TareaID}, ${Prioridad})">Cambiar Prioridad</button>
+          <button onclick="openStatusModal(${TareaID}, ${Estado})">Cambiar Estado</button>
+          <button onclick="openAssignTaskModal(${TareaID})">Asignar</button>
+        </div>
       `;
 
-      document.getElementById(estadoMap[estado].id).appendChild(tareaCard);
+
+      contenedor.appendChild(tareaCard);
     });
+    
 
     const porcentaje = total > 0 ? Math.round((completadas / total) * 100) : 0;
     const fill = document.getElementById("progressFill");
