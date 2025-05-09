@@ -112,11 +112,11 @@ public class Tarea {
     
     public void ModificarPrioridad(ConexionBDD conexion,int Prioridad,int TareaId){
         try{
-            String consulta = " CALL `Cambiar_Estado`(?,?);";   
+            String consulta = " CALL Cambiar_Prioridad(?,?);";   
             PreparedStatement ps = conexion.Conectar().prepareStatement(consulta);
             ps.setInt(1, Prioridad);
             ps.setInt(2, TareaId);
-            ResultSet rs = ps.executeQuery();
+            ps.executeQuery();
         }catch(Exception e){
             e.printStackTrace();
         }finally{
