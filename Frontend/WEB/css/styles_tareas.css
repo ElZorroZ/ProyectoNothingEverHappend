@@ -356,3 +356,18 @@ background-color: #4e0783;
   transition: width 0.5s ease-in-out;
   font-weight: bold;
 }
+
+.task-actions button {
+  margin: 5px;
+  padding: 8px 12px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.task-actions button:hover {
+  background-color: #2980b9;
+}
