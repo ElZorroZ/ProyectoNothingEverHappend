@@ -7,6 +7,14 @@ const panel = document.getElementById('notificationPanel');
 const assignTaskModal = document.getElementById('assignTaskModal');
 const assignTaskForm = document.getElementById('assignTaskForm');
 
+
+
+
+function abrirComentarios(tareaID) {
+  // Redirecciona a la página de comentarios, por ejemplo
+  window.location.href = `../ComentariosWEB/comentarios.html?tarea=${tareaID}`;
+}
+
 function openPriorityModal(tareaID, prioridadActual) {
   const modal = document.getElementById("priorityModal");
   const select = document.getElementById("prioritySelect");
@@ -331,8 +339,11 @@ document.addEventListener("DOMContentLoaded", async () => {
           <button onclick="openPriorityModal(${TareaID}, ${Prioridad})">Cambiar Prioridad</button>
           <button onclick="openStatusModal(${TareaID}, ${Estado})">Cambiar Estado</button>
           <button onclick="openAssignTaskModal(${TareaID})">Asignar</button>
+          <button onclick="abrirComentarios(${TareaID})">Comentarios</button>
+          <button onclick="descargarArchivo('${archivo}')">Descargar archivo</button>
         </div>
       `;
+
 
 
       contenedor.appendChild(tareaCard);

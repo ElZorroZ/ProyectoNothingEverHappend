@@ -1,3 +1,9 @@
+const filterButtons = document.querySelectorAll('.filter-btn');
+const taskCards = document.querySelectorAll('.task-card');
+const notifBtn = document.querySelector('.notif-btn');
+const panel = document.getElementById('notificationPanel');
+
+
 function addComment() {
   const commentText = document.getElementById("commentText").value;
   if (commentText.trim() === "") return;
@@ -40,3 +46,16 @@ function addComment() {
   // Limpiar el textarea
   document.getElementById("commentText").value = "";
 }
+
+
+// Botón de notificaciones
+notifBtn.addEventListener('click', () => {
+  panel.classList.toggle('open');
+});
+
+// Cierra panel de notificaciones si se hace clic afuera
+document.addEventListener('click', (e) => {
+  if (!panel.contains(e.target) && !notifBtn.contains(e.target)) {
+    panel.classList.remove('open');
+  }
+});
