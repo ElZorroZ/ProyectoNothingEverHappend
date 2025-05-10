@@ -17,6 +17,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import org.springframework.mock.web.MockMultipartFile;
 /**
  *
  * @author PC
@@ -45,6 +46,11 @@ public class Tarea {
     
     public Tarea(int TareaID){
         this.TareaID=TareaID;
+    }
+    
+    public Tarea(int TareaID, MultipartFile archivoPDF){
+        this.TareaID=TareaID;
+        this.archivoPDF=archivoPDF;
     }
     
     public Tarea(int TareaID,int ProyectoID, String Nombre, String Descripcion, int Prioridad, int Estado, Date Vencimiento){
@@ -234,6 +240,36 @@ public class Tarea {
         } finally { conexion.Desconectar(); }
 
         return comentarios;
+    }
+    
+    public List<Object> ConseguirArchivo(ConexionBDD conexion,int tareaID ){
+        List<Object> archivos = new ArrayList<>();
+        try{
+            String consulta = " CALL `ObtenerArchivoTarea`(?);";   
+            PreparedStatement ps = conexion.Conectar().prepareStatement(consulta);
+            ps.setInt(1, tareaID);
+            ResultSet rs = ps.executeQuery();
+            Object[][] matriz;
+            
+            while (rs.next()) {
+                    int id = rs.getInt("TareaID");
+                    byte[] file = rs.getBytes("Archivo");
+                    MultipartFile archivo=new MockMultipartFile(
+            "file",                
+            "file" + "-" + id,         
+            "application/pdf",         
+            file              
+        );
+                    
+                    
+                    archivos.add(new Tarea(id,archivo));
+                   
+                }
+        }catch(SQLException e) {
+            e.printStackTrace();
+        } finally { conexion.Desconectar(); }
+        return archivos;
+        
     }
     
     public int getTareaID() { return TareaID; }

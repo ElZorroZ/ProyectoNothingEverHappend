@@ -114,7 +114,26 @@ public class Controller {
             ));
         }
     }
-
+    
+    @GetMapping("/tareas/archivo/{TareaID}")
+    public ResponseEntity<?> verArchivosTarea(@PathVariable int TareaID) {
+        Tarea tar = new Tarea(TareaID);
+        
+        List<Object> archivos =tar.ConseguirArchivo(conexion, TareaID);
+        
+        if (archivos.isEmpty()) {
+            return ResponseEntity.ok(Map.of(
+                "mensaje", "No hay archivos en la tarea con id de"+TareaID
+            ));
+        } else {
+            return ResponseEntity.ok(Map.of(
+                "mensaje", "Si hay archivos en la tarea con id de"+TareaID,
+                "Archivo",archivos
+            ));
+        }
+        
+    }
+    
     @GetMapping("/usuariosProyectoTarea/{ProyectoID}/{TareaID}")
     public ResponseEntity<?> verUsuarios(@PathVariable int ProyectoID, @PathVariable int TareaID) {
         Proyecto proyecto = new Proyecto(ProyectoID);
