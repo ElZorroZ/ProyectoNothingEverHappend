@@ -56,6 +56,17 @@ public class Tarea {
         this.Estado=Estado;
         this.Vencimiento=Vencimiento;
     }
+    public Tarea(int TareaID,int ProyectoID, String Nombre, String Descripcion, int Prioridad, int Estado, Date Vencimiento,MultipartFile archivoPDF){
+        this.TareaID=TareaID;
+        this.ProyectoID=ProyectoID;
+        this.Nombre=Nombre;
+        this.Descripcion=Descripcion;
+        this.Prioridad=Prioridad;
+        this.Estado=Estado;
+        this.Vencimiento=Vencimiento;
+        this.archivoPDF=archivoPDF;
+    }
+    
     
 
     
@@ -63,6 +74,7 @@ public class Tarea {
     public void Crear(ConexionBDD conexion){
         
         PreparedStatement ps;
+        if (archivoPDF==null){
             try{
                 String consulta = " CALL `railway`.`CrearTarea`(?,?,?,?,?,?);";
 
@@ -103,6 +115,62 @@ public class Tarea {
             finally{
                 conexion.Desconectar();
             }
+            
+            
+        }else{
+            try{
+                String consulta = " CALL `railway`.`CrearTarea`(?,?,?,?,?,?);";
+
+                ps = conexion.Conectar().prepareStatement(consulta);
+                ps.setInt(1, ProyectoID);
+                ps.setString(2, Nombre);
+                ps.setString(3, Descripcion);
+                ps.setInt(4, Prioridad);
+                ps.setInt(5, Estado);
+                java.sql.Date Vencimientosql = new java.sql.Date(Vencimiento.getTime());
+                ps.setDate(6, Vencimientosql);
+                ResultSet rs = ps.executeQuery();
+                
+                if (rs.next()) {
+                    TareaID = rs.getInt(1);  // el resultado del SELECT LAST_INSERT_ID()
+                }
+
+                rs.close();
+                ps.close();
+                
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+            try{
+                String consulta = " CALL `railway`.`CrearVencimientoTarea`(?,?,?);";
+
+                ps = conexion.Conectar().prepareStatement(consulta);
+                ps.setString(1, Nombre);
+                ps.setInt(2, TareaID);
+                java.sql.Date Vencimientosql = new java.sql.Date(Vencimiento.getTime());
+                ps.setDate(3, Vencimientosql);
+
+                ResultSet rs = ps.executeQuery();
+                
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+            try{
+                byte[] pdfBytes = archivoPDF.getBytes();
+                String consulta = " CALL `railway`.`IngresarPDFTarea`(?,?);";
+                ps = conexion.Conectar().prepareStatement(consulta);
+                
+                ps.setInt(1,TareaID);
+                ps.setBytes(2,pdfBytes);
+                ResultSet rs = ps.executeQuery();
+                
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+            finally{
+                conexion.Desconectar();
+            }
+        }
             
             
    
