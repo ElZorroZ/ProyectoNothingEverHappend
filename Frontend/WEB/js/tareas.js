@@ -296,13 +296,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   try {
     const response = await fetch(`https://java-backend-latest-rm0u.onrender.com/api/tareas/${UsuarioID}/${ProyectoID}`);
     const data = await response.json();
-    const tareas = data.Tareas || [];
-
+    console.log("Respuesta del backend:", data);
+    const { tareas = [], porcentaje = 0 } = data.Tareas || {};
     // Mostrar el array de tareas en la consola
     console.log(tareas);
 
-    let total = tareas.length;
-    let completadas = 0;
     const prioridadMap = {
       1: "Baja",
       2: "Media",
@@ -318,8 +316,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       const vencimiento = Vencimiento;
       const archivo = Archivo;
       
-      if (estado === 3) completadas++;
-    
       const contenedor = document.getElementById(estadoMap[Estado].id);
 
       const tareaCard = document.createElement("div");
@@ -342,8 +338,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       contenedor.appendChild(tareaCard);
     });
     
-
-    const porcentaje = total > 0 ? Math.round((completadas / total) * 100) : 0;
     const fill = document.getElementById("progressFill");
     fill.style.width = porcentaje + "%";
     fill.textContent = porcentaje + "%";
