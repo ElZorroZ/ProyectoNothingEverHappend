@@ -35,6 +35,11 @@ body {
   color: white;
 }
 
+.logo {
+  font-size: 1.6rem;
+  font-weight: bold;
+}
+
 .dashboard-actions .back-btn {
   background-color: #e74c3c;
   padding: 0.5rem 1.5rem;
@@ -157,9 +162,26 @@ body {
   color: black;
 }
 
+.footer-right {
+  display: flex;
+  align-items: center;
+  gap: 30px; 
+  flex-wrap: wrap;
+  font-family: 'Georgia', serif;
+  font-size: 0.9rem;
+}
+
+.footer-logo {
+  height: 40px;
+  width: auto;
+}
+
 .footer-info a {
   color: #000000;
   text-decoration: none;
+  font-weight: normal;
+  letter-spacing: 1px;
+  line-height: 1.5;
   margin: 0 10px;
 }
 
