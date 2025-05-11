@@ -2,10 +2,11 @@ const notifBtn = document.querySelector('.notif-btn');
 const panel = document.getElementById('notificationPanel');
 const idUsuario = localStorage.getItem('usuarioId');
 const cardsContainer = document.querySelector('.project-cards');
-const proyectoSelect = document.getElementById('proyecto');
 const rolSelect = document.getElementById('rol');
 let proyectosGlobal = [];
 let nuevasNotificaciones = false;
+let proyectoIDSeleccionadoGlobal = null; // Guardamos el proyecto seleccionado
+let proyectoSelect = null; // Ya no lo usamos
 
 // Abrir/cerrar panel de notificaciones
 notifBtn.addEventListener('click', () => {
@@ -35,9 +36,8 @@ function actualizarCampana() {
 
 function guardarProyectoYRedirigir(proyectoID) {
   localStorage.setItem('proyectoSeleccionadoID', proyectoID);
-  window.location.href = '../AgregarTareaWEB/AgregarTarea.html';
+  //window.location.href = '../AgregarTareaWEB/AgregarTarea.html';
 }
-
 
 function mostrarNotificacion(titulo, mensaje) {
   const panel = document.getElementById('notificationPanel');
@@ -87,25 +87,10 @@ function mostrarNotificacion(titulo, mensaje) {
   actualizarCampana();
 }
 
-
-
-
-
 // Modal
 function openModal(proyectoID) {
-  localStorage.setItem('proyectoSeleccionadoID', proyectoID); // ← Guarda el ID temporalmente
-  proyectoSelect.innerHTML = '';
-
-  proyectosGlobal.forEach(proyecto => {
-    const option = document.createElement('option');
-    option.value = proyecto.proyectoID;
-    option.textContent = proyecto.nombre;
-    proyectoSelect.appendChild(option);
-  });
-
-  // Seleccionamos automáticamente el proyecto actual
-  proyectoSelect.value = proyectoID;
-
+  console.log("Proyecto seleccionado: ", proyectoID); // Log para verificar el ID del proyecto
+  proyectoIDSeleccionadoGlobal = proyectoID; 
   document.getElementById("addUserModal").style.display = "block";
 }
 
@@ -114,125 +99,21 @@ function closeModal() {
   localStorage.removeItem('proyectoSeleccionadoID');
 }
 
-
-
-
 window.onclick = function(event) {
   const modal = document.getElementById("addUserModal");
   if (event.target == modal) {
     modal.style.display = "none";
   }
 };
+
 function guardarProyectoYEntrar(proyectoID) {
+  console.log("Proyecto seleccionado para entrar: ", proyectoID); // Log para verificar el ID del proyecto
   localStorage.setItem('proyectoSeleccionadoID', proyectoID);
   window.location.href = '../TareasWEB/tareas.html';
 }
 
-// Función que se llama cuando se selecciona un proyecto
-proyectoSelect.addEventListener('change', () => {
-  const proyectoIDSeleccionado = proyectoSelect.value;
-
-  // Verificar si el valor seleccionado es válido
-  if (!proyectoIDSeleccionado || proyectoIDSeleccionado === 'undefined') {
-    console.error('Error: No se ha seleccionado un proyecto válido');
-    alert('Por favor, selecciona un proyecto válido');
-    return; // Evita que se ejecute el siguiente código, como la redirección
-  }
-
-  // Actualizar el proyecto seleccionado en localStorage
-  localStorage.setItem('proyectoSeleccionadoID', proyectoIDSeleccionado);  // Guardamos el proyecto seleccionado
-  console.log('Proyecto seleccionado guardado en localStorage:', proyectoIDSeleccionado);
-
-  // Redirigir a la página correspondiente si el proyecto es válido
-  window.location.href = '../AgregarTareaWEB/AgregarTarea.html';
-});
-
-
-// Cuando se carga la página, revisar si ya existe un proyecto seleccionado en localStorage
+// Llenar tarjetas de proyectos al cargar la página
 document.addEventListener("DOMContentLoaded", function () {
-  const proyectoSeleccionado = localStorage.getItem('proyectoSeleccionadoID');
-  
-  // Si hay un proyecto seleccionado en localStorage, establecerlo como seleccionado en el <select>
-  if (proyectoSeleccionado) {
-    proyectoSelect.value = proyectoSeleccionado;
-    console.log('Proyecto previamente seleccionado:', proyectoSeleccionado);
-  } else {
-    console.log('No se encontró un proyecto previamente seleccionado');
-  }
-});
-
-// Llenar el select de proyectos (esto ya debería estar hecho antes)
-document.addEventListener("DOMContentLoaded", function () {
-  const form = document.getElementById("userForm");
-
-  if (form) {
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-
-      // Primero, mostramos el array global de proyectos para verificar su contenido
-      console.log('Lista de Proyectos:', proyectosGlobal); // Muestra el array de proyectos
-
-      // Obtener el nombre del proyecto seleccionado desde el combobox
-      const proyectoIDSeleccionado = localStorage.getItem('proyectoSeleccionadoID');
-      const proyectoEncontrado = proyectosGlobal.find(proyecto => proyecto.proyectoID == proyectoIDSeleccionado);
-
-      if (!proyectoEncontrado) {
-        alert('Error: Proyecto no encontrado.');
-        return;
-      }
-
-      console.log('Proyecto Encontrado:', proyectoEncontrado);
-
-
-      // Verificar si se encontró el proyecto
-      if (!proyectoEncontrado) {
-        alert('Error: Proyecto no encontrado.');
-        return;
-      }
-
-      // Mostrar el ID del proyecto encontrado
-      console.log('ID del Proyecto encontrado:', proyectoEncontrado.proyectoID);
-
-      // Preparar los datos que se enviarán al backend
-      const requestData = {
-        OtroID: proyectoEncontrado.proyectoID,  // Asignamos el proyectoID al OtroID
-        email: document.getElementById("email").value,
-        permiso: rolSelect.value === 'Administrador' ? true : false,
-        UsuarioID: 0
-      };
-
-      console.log('Datos que se enviarán al fetch:', requestData);
-
-      fetch('https://java-backend-latest-rm0u.onrender.com/api/agregarrolusuario', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestData)
-      })
-      .then(response => {
-        if (!response.ok) {
-            console.error(`Error en la respuesta: ${response.status} - ${response.statusText}`);
-            throw new Error(`Error al agregar usuario. Estado: ${response.status}`);
-        }
-        return response.text(); // Obtén la respuesta como texto
-    })
-    .then(data => {
-        console.log('Respuesta del servidor:', data); // Verifica si la respuesta realmente contiene algo
-        // No es necesario hacer JSON.parse si la respuesta es texto plano
-        if (data === "Usuario agregado exitosamente") {
-            alert('Usuario agregado exitosamente!');
-        } else {
-            alert('Hubo un problema al agregar el usuario');
-        }
-        form.reset();
-        closeModal();
-    })    
-    
-    });
-  }
-
-  // Llenar el select de proyectos (esto ya debería estar hecho antes)
   if (cardsContainer && idUsuario) {
     cardsContainer.innerHTML = '';
 
@@ -267,19 +148,9 @@ document.addEventListener("DOMContentLoaded", function () {
              <button class="view-project-btn" onclick="guardarProyectoYEntrar(${proyectoID})">Entrar</button>
               <button class="add-task-btn" onclick="guardarProyectoYRedirigir(${proyectoID})">Agregar Tarea</button>
               <button class="add-user-btn" onclick="openModal(${proyectoID})">Agregar Usuario</button>
-
             </div>
           `;
-
           cardsContainer.appendChild(card);
-        });
-
-        // Llenar el select de proyectos
-        proyectos.forEach(proyecto => {
-          const option = document.createElement('option');
-          option.value = proyecto.proyectoID; // Usamos 'proyectoID' ahora
-          option.textContent = proyecto.nombre;
-          proyectoSelect.appendChild(option);
         });
       })
       .catch(error => {
@@ -298,3 +169,66 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
+// Cuando se carga la página, revisar si ya existe un proyecto seleccionado en localStorage
+document.addEventListener("DOMContentLoaded", function () {
+  const proyectoSeleccionado = localStorage.getItem('proyectoSeleccionadoID');
+  
+  if (proyectoSeleccionado) {
+    console.log('Proyecto previamente seleccionado:', proyectoSeleccionado);
+  } else {
+    console.log('No se encontró un proyecto previamente seleccionado');
+  }
+});
+
+// Agregar usuario (cuando se manda el email)
+function agregarUsuarioAProyecto(event) {
+  // Prevenir la acción predeterminada del formulario (que causa el refresco de la página)
+  event.preventDefault(); // Esto evita el envío del formulario
+
+  // Verificamos qué usuario y proyecto estamos agregando
+  const proyectoID = proyectoIDSeleccionadoGlobal;
+  const usuarioID = idUsuario;  // Asegúrate de que idUsuario esté correctamente seteado
+
+  // Obtener el valor del email ingresado en el input
+  const email = document.getElementById('email').value;
+
+  // Validar si el email no está vacío
+  if (!email) {
+    alert('Por favor, ingresa un email válido.');
+    return;
+  }
+
+  console.log("Enviando email para agregar usuario al proyecto", proyectoID, "con usuario", usuarioID);
+
+  fetch(`https://java-backend-latest-rm0u.onrender.com/api/agregarrolusuario`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      OtroID: proyectoID,
+      email: email,  // Aquí pasamos el email
+    }),
+  })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Respuesta del servidor:', data);
+      // Si la respuesta es exitosa, podemos cerrar el modal
+      if (data.success) {
+        alert('Usuario agregado correctamente al proyecto.');
+        closeModal();
+
+        // Añadir un pequeño retraso antes de redirigir para dar tiempo a los logs
+        setTimeout(() => {
+          console.log('Redirigiendo a la página de tareas...');
+          window.location.href = '../TareasWEB/tareas.html';  // Redirigir después de 1 segundo
+        }, 1000); // Esperar 1 segundo antes de redirigir
+      } else {
+        alert('Hubo un error al agregar el usuario.');
+      }
+    })
+    .catch(error => {
+      console.error('Error al agregar el usuario:', error);
+      alert('Hubo un error al intentar agregar al usuario.');
+    });
+}

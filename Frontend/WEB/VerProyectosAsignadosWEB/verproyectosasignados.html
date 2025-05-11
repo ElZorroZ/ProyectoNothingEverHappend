@@ -33,13 +33,6 @@
         <h2>Agregar Usuario al Proyecto</h2>
         <form id="userForm" style="display: flex; flex-direction: column; gap: 10px;">
           <div style="display: flex; flex-direction: column;">
-            <label for="proyecto">Proyecto:</label>
-            <select id="proyecto" name="proyecto" required>
-              <option value="">Seleccioná un proyecto</option>
-            </select>
-          </div>
-
-          <div style="display: flex; flex-direction: column;">
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" required />
           </div>
@@ -51,7 +44,7 @@
             </select>
           </div>
 
-          <button type="submit">Agregar</button>
+          <button onclick="agregarUsuarioAProyecto(event)">Agregar</button>
         </form>
       </div>
     </div>
