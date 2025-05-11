@@ -42,6 +42,8 @@ public class Tarea {
     int TareaID;
     byte[] file_archivo;
 
+
+    
     public Tarea(){
     }
     
@@ -278,4 +280,22 @@ public class Tarea {
     public int getEstado() { return Estado; }
     public Date getVencimiento() { return Vencimiento; }
     public MultipartFile isLeido() { return archivoPDF; }
+    
+    public MultipartFile getArchivoPDF() {
+        return archivoPDF;
+    }
+
+    public void setArchivoPDF(MultipartFile archivoPDF) {
+        this.archivoPDF = archivoPDF;
+    }
+
+    public byte[] getFile_archivo() {
+        return file_archivo;
+    }
+
+    public void setFile_archivo(byte[] file_archivo) {
+        this.file_archivo = file_archivo;
+    }
+
+    
 }

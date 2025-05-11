@@ -10,10 +10,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
-import com.nothingeverhappends.java_backend.Tarea;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.MediaType;
+import org.springframework.http.ContentDisposition;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 
 @RestController
 @RequestMapping("/api")
@@ -124,11 +125,10 @@ public class Controller {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         } else {
             // Suponiendo que hay solo un archivo por tarea
-            byte[] archivo = ((Tarea) archivos.get(1)).getArchivo();
+            byte[] archivo = ((Tarea) archivos.get(1)).getFile_archivo();
 
-            // Establecer los encabezados adecuados para descargar el archivo como PDF
             HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATIONPDF);
+            headers.setContentType(MediaType.APPLICATION_PDF);
             headers.setContentDisposition(ContentDisposition.attachment()
                 .filename("tarea" + TareaID + ".pdf").build());
 
