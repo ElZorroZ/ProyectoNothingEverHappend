@@ -56,7 +56,7 @@ public class Tarea {
 
     public Tarea(int TareaID, byte[] file_archivo){
         this.TareaID=TareaID;
-        this.archivoPDF=archivoPDF;
+        this.file_archivo=file_archivo;
     }
     
     public Tarea(int TareaID,int ProyectoID, String Nombre, String Descripcion, int Prioridad, int Estado, Date Vencimiento){
