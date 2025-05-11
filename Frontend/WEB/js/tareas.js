@@ -230,16 +230,20 @@ assignTaskForm.addEventListener('submit', async function(event) {
     });
 
     if (response.ok) {
-      const data = await response.json();
+      const contentType = response.headers.get("content-type");
+      let data = {};
+      if (contentType && contentType.includes("application/json")) {
+        data = await response.json();
+      }
+
       if (data.success) {
         alert('Tarea asignada exitosamente');
         closeModal();
       } else {
         alert('Error al asignar tarea: ' + (data.message || 'desconocido'));
       }
-    } else {
-      alert('Error de conexión con el servidor');
     }
+
   } catch (error) {
     console.error('Error al asignar tarea:', error);
     alert('Ocurrió un error al intentar asignar la tarea');
@@ -358,6 +362,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 async function descargarArchivo(tareaID) {
   try {
     const response = await fetch(`https://java-backend-latest-rm0u.onrender.com/api/tareas/archivo/${tareaID}`);
+    
+    if (response.status === 404) {
+      throw new Error("El archivo para esta tarea no existe.");
+    }
+    
     if (!response.ok) {
       throw new Error("No se pudo descargar el archivo.");
     }
