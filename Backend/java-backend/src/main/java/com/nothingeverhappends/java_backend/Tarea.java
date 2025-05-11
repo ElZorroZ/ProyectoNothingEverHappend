@@ -260,7 +260,7 @@ public class Tarea {
                     int id = rs.getInt("TareaID");
                     byte[] file = rs.getBytes("Archivo");          
                     
-                    archivos.add(new Tarea(id,archivo));
+                    archivos.add(new Tarea(id,file));
                    
                 }
         }catch(SQLException e) {
