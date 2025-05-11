@@ -125,7 +125,7 @@ public class Controller {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         } else {
             // Suponiendo que hay solo un archivo por tarea
-            byte[] archivo = ((Tarea) archivos.get(1)).getFile_archivo();
+            byte[] archivo = ((Tarea) archivos.get(0)).getFile_archivo();
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PDF);
