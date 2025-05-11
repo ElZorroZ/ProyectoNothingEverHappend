@@ -298,31 +298,23 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const UsuarioID = localStorage.getItem('usuarioId');
   const ProyectoID = localStorage.getItem('proyectoSeleccionadoID');
-  console.log(UsuarioID)
-  console.log(ProyectoID)
+  console.log(UsuarioID);
+  console.log(ProyectoID);
 
   try {
     const response = await fetch(`https://java-backend-latest-rm0u.onrender.com/api/tareas/${UsuarioID}/${ProyectoID}`);
     const data = await response.json();
     console.log("Respuesta del backend:", data);
     const { tareas = [], porcentaje = 0 } = data.Tareas || {};
-    // Mostrar el array de tareas en la consola
-    console.log(tareas);
 
     const prioridadMap = {
       1: "Baja",
       2: "Media",
       3: "Alta"
     };
-    
+
     tareas.forEach(tarea => {
-      const { TareaID, Nombre, Descripcion, Estado, Prioridad, Vencimiento, Archivo } = tarea;
-      const nombre = Nombre;
-      const descripcion = Descripcion;
-      const estado = Estado;
-      const prioridad = Prioridad;
-      const vencimiento = Vencimiento;
-      const archivo = Archivo;
+      const { TareaID, Nombre, Descripcion, Estado, Prioridad, Vencimiento } = tarea;
       
       const contenedor = document.getElementById(estadoMap[Estado].id);
 
@@ -331,8 +323,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       tareaCard.setAttribute("data-status", estadoMap[Estado].id);
 
       tareaCard.innerHTML = `
-        <h4>${nombre}</h4>
-        <p>${descripcion}</p>
+        <h4>${Nombre}</h4>
+        <p>${Descripcion}</p>
         <p><strong>Prioridad:</strong> ${prioridadMap[Prioridad] || "Desconocida"}</p>
         <p><strong>Vencimiento:</strong> ${Vencimiento || "No definido"}</p>
         <div class="task-actions">
@@ -340,15 +332,21 @@ document.addEventListener("DOMContentLoaded", async () => {
           <button onclick="openStatusModal(${TareaID}, ${Estado})">Cambiar Estado</button>
           <button onclick="openAssignTaskModal(${TareaID})">Asignar</button>
           <button onclick="abrirComentarios(${TareaID})">Comentarios</button>
-          <button onclick="descargarArchivo('${archivo}')">Descargar archivo</button>
+          <button class="btn-descargar" data-id="${TareaID}">Descargar archivo</button>
         </div>
       `;
 
-
-
       contenedor.appendChild(tareaCard);
     });
-    
+
+    // ✅ Agregamos los eventos de descarga **después de crear los botones**
+    document.querySelectorAll(".btn-descargar").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const tareaID = btn.getAttribute("data-id");
+        descargarArchivo(tareaID);
+      });
+    });
+
     const fill = document.getElementById("progressFill");
     fill.style.width = porcentaje + "%";
     fill.textContent = porcentaje + "%";
@@ -357,3 +355,35 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
+async function descargarArchivo(tareaID) {
+  try {
+    const response = await fetch(`https://java-backend-latest-rm0u.onrender.com/api/tareas/archivo/${tareaID}`);
+    if (!response.ok) {
+      throw new Error("No se pudo descargar el archivo.");
+    }
+
+    const blob = await response.blob();
+
+    const contentType = response.headers.get("Content-Type");
+    const texto = await blob.text();
+
+    // Mostrar el contenido del archivo en la consola
+    console.log("Contenido del archivo recibido:");
+    console.log(texto);
+
+    if (blob.size < 100 || !contentType.includes("pdf") || !texto.includes("%PDF")) {
+      throw new Error("La tarea no tiene un archivo PDF válido adjunto.");
+    }
+
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `tarea_${tareaID}.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  } catch (error) {
+    alert("Error al descargar archivo: " + error.message);
+  }
+}
