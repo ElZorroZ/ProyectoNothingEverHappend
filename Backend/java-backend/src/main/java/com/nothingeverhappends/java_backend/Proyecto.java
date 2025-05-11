@@ -16,6 +16,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 public class Proyecto {
     private int ProyectoID;
@@ -120,6 +122,35 @@ public class Proyecto {
         } finally { conexion.Desconectar(); }
 
         return Usuarios;
+    }
+    
+    public List<Object> ConseguirArchivo(ConexionBDD conexion,int proyectoID ){
+        List<Object> archivos = new ArrayList<>();
+        try{
+            String consulta = " CALL `ObtenerArchivoTarea`(?);";   
+            PreparedStatement ps = conexion.Conectar().prepareStatement(consulta);
+            ps.setInt(1, proyectoID);
+            ResultSet rs = ps.executeQuery();
+            
+            while (rs.next()) {
+                    int id = rs.getInt("TareaID");
+                    byte[] file = rs.getBytes("Archivo");
+                    MultipartFile archivo=new MockMultipartFile(
+            "file",                
+            "file" + "-" + id,         
+            "application/pdf",         
+            file              
+        );
+                    
+                    
+                    archivos.add(new Tarea(id,archivo));
+                   
+                }
+        }catch(SQLException e) {
+            e.printStackTrace();
+        } finally { conexion.Desconectar(); }
+        return archivos;
+        
     }
 
     // Getters y setters

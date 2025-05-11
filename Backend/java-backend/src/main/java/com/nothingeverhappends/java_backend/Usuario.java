@@ -233,6 +233,8 @@ public class Usuario {
         return resultado; // Devolvemos el Map con las tareas y el porcentaje
     }
     
+
+    
     public List<Notificaciones> verNotificaciones(ConexionBDD conexion) {
         List<Notificaciones> notificaciones = new ArrayList<>();
         String sql = "SELECT NotificacionID, TareaID, Titulo, Mensaje, Fecha, Leido " +
