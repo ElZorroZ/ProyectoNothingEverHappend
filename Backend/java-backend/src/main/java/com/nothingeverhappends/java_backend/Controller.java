@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ContentDisposition;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,6 +23,9 @@ import org.springframework.http.MediaType;
 public class Controller {
 
     private ConexionBDD conexion = new ConexionBDD();
+    
+    @Autowired
+    private NotificationService notificationService;
 
     @PostMapping("/registro")
     public ResponseEntity<?> registrarUsuario(@RequestBody Usuario usuario) {
@@ -181,6 +185,7 @@ public class Controller {
 
             // Llama a la función con los valores correctos
             agregarusuarios.AgregarRolUsuario(conexion, UsuarioID, Email, ProyectoID, Permiso);
+            notificationService.notificar(UsuarioID, Notificaciones.NotificacionUsuarioRol(conexion, UsuarioID, ProyectoID, Permiso));
 
             // Si todo está bien, devolver una respuesta exitosa
             return ResponseEntity.ok("Usuario agregado exitosamente");
@@ -196,7 +201,11 @@ public class Controller {
     @PostMapping("/agregartareausuario")
     public void AgregarTareaUsuario(@RequestBody AgregarUsuarios agregarusuarios ){
         try {
+            int UsuarioID = agregarusuarios.getUsuarioID();
+            int TareaID = agregarusuarios.getOtroID();
+            
             agregarusuarios.AgregarTareaUsuario(conexion);
+            notificationService.notificar(UsuarioID, Notificaciones.NotificacionUsuarioTarea(conexion,  UsuarioID,  TareaID));
         } catch (Exception e) {
             e.printStackTrace(); // <-- ¡Para ver si falla!
             System.out.println("Ocurrió un error en el controlador.");

@@ -51,12 +51,14 @@ public class Notificaciones {
             ps.setInt(2, UsuarioID);
             ps.setBoolean(3, permiso);
             ResultSet rs = ps.executeQuery();
-
-            note.NotificacionID = rs.getInt("NotificacionID");
-            note.Titulo = rs.getString("Titulo");
-            note.Mensaje = rs.getString("Mensaje");
-            note.Fecha = rs.getTimestamp("Fecha").toLocalDateTime();
-            note.Leido = rs.getBoolean("Leido");
+            
+            if (rs.next()) {
+                note.NotificacionID = rs.getInt("NotificacionID");
+                note.Titulo = rs.getString("Titulo");
+                note.Mensaje = rs.getString("Mensaje");
+                note.Fecha = rs.getTimestamp("Fecha").toLocalDateTime();
+                note.Leido = rs.getBoolean("Leido");
+            }
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -77,11 +79,13 @@ public class Notificaciones {
             ps.setInt(2, UsuarioID);
             ResultSet rs = ps.executeQuery();
 
-            note.NotificacionID = rs.getInt("NotificacionID");
-            note.Titulo = rs.getString("Titulo");
-            note.Mensaje = rs.getString("Mensaje");
-            note.Fecha = rs.getTimestamp("Fecha").toLocalDateTime();
-            note.Leido = rs.getBoolean("Leido");
+            if (rs.next()) {
+                note.NotificacionID = rs.getInt("NotificacionID");
+                note.Titulo = rs.getString("Titulo");
+                note.Mensaje = rs.getString("Mensaje");
+                note.Fecha = rs.getTimestamp("Fecha").toLocalDateTime();
+                note.Leido = rs.getBoolean("Leido");
+            }
             
         } catch (Exception e) {
             e.printStackTrace();

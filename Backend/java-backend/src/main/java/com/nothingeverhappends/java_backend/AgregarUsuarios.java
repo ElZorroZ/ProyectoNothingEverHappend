@@ -10,8 +10,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -26,9 +24,6 @@ public class AgregarUsuarios {
     boolean permiso;
     @JsonProperty("email")
     String Email;
-    
-    @Autowired
-    private NotificationService notificationService;
         
     public AgregarUsuarios(int usuarioID, int tareaID){
         this.UsuarioID=usuarioID;
@@ -66,7 +61,6 @@ public class AgregarUsuarios {
             ps.setInt(2, UsuarioID);    
             ps.setBoolean(3, permiso); 
             ps.execute();
-            notificationService.notificar(UsuarioID, Notificaciones.NotificacionUsuarioRol(conexion, UsuarioID, ProyectoID, permiso));
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -82,8 +76,8 @@ public class AgregarUsuarios {
             ps.setInt(1, UsuarioID);
             ps.setInt(2, OtroID);
             ResultSet rs = ps.executeQuery();
-            notificationService.notificar(UsuarioID, Notificaciones.NotificacionUsuarioTarea(conexion,  UsuarioID,  OtroID));
         }catch(Exception e){
+            System.out.println(e);
             e.printStackTrace();
         }finally{
             conexion.Desconectar();
