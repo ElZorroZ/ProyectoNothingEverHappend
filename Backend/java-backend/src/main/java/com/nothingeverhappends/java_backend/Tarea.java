@@ -40,7 +40,8 @@ public class Tarea {
     MultipartFile archivoPDF=null;
     @JsonProperty("TareaID")
     int TareaID;
-    
+    byte[] file_archivo;
+
     public Tarea(){
     }
     
@@ -49,6 +50,11 @@ public class Tarea {
     }
     
     public Tarea(int TareaID, MultipartFile archivoPDF){
+        this.TareaID=TareaID;
+        this.archivoPDF=archivoPDF;
+    }
+
+    public Tarea(int TareaID, byte[] file_archivo){
         this.TareaID=TareaID;
         this.archivoPDF=archivoPDF;
     }
@@ -249,18 +255,10 @@ public class Tarea {
             PreparedStatement ps = conexion.Conectar().prepareStatement(consulta);
             ps.setInt(1, tareaID);
             ResultSet rs = ps.executeQuery();
-            Object[][] matriz;
             
             while (rs.next()) {
                     int id = rs.getInt("TareaID");
-                    byte[] file = rs.getBytes("Archivo");
-                    MultipartFile archivo=new MockMultipartFile(
-            "file",                
-            "file" + "-" + id,         
-            "application/pdf",         
-            file              
-        );
-                    
+                    byte[] file = rs.getBytes("Archivo");          
                     
                     archivos.add(new Tarea(id,archivo));
                    
