@@ -66,6 +66,7 @@ public class AgregarUsuarios {
             ps.setInt(2, UsuarioID);    
             ps.setBoolean(3, permiso); 
             ps.execute();
+            notificationService.notificar(UsuarioID, Notificaciones.NotificacionUsuarioRol(conexion, UsuarioID, ProyectoID, permiso));
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

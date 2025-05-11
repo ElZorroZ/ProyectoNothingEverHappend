@@ -29,7 +29,6 @@ public class Notificaciones {
         this.UsuarioID=UsuarioID;
         this.TareaID=TareaID;
     }
-    
 
     public Notificaciones(int NotificacionID, int UsuarioID, int TareaID, String Titulo, String Mensaje, LocalDateTime Fecha, boolean Leido){
         this.NotificacionID=NotificacionID;
@@ -39,6 +38,32 @@ public class Notificaciones {
         this.Mensaje=Mensaje;
         this.Fecha=Fecha;
         this.Leido=Leido;
+    }
+    
+    public static Notificaciones NotificacionUsuarioRol(ConexionBDD conexion, int UsuarioID, int ProyectoID, boolean permiso){
+        Notificaciones note = new Notificaciones(UsuarioID, ProyectoID);
+        try {
+            Connection conn = conexion.Conectar();
+            // Llamar al stored procedure correctamente
+            String consulta = "CALL `railway`.`NotificacionUsuarioRol`(?,?,?)";
+            PreparedStatement ps = conn.prepareStatement(consulta);
+            ps.setInt(1, ProyectoID);   
+            ps.setInt(2, UsuarioID);
+            ps.setBoolean(3, permiso);
+            ResultSet rs = ps.executeQuery();
+
+            note.NotificacionID = rs.getInt("NotificacionID");
+            note.Titulo = rs.getString("Titulo");
+            note.Mensaje = rs.getString("Mensaje");
+            note.Fecha = rs.getTimestamp("Fecha").toLocalDateTime();
+            note.Leido = rs.getBoolean("Leido");
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            conexion.Desconectar();
+        }
+        return note;
     }
     
     public static Notificaciones NotificacionUsuarioTarea(ConexionBDD conexion, int UsuarioID, int TareaID){
