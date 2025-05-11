@@ -116,24 +116,25 @@ public class Controller {
     }
     
     @GetMapping("/tareas/archivo/{TareaID}")
-    public ResponseEntity<?> verArchivosTarea(@PathVariable int TareaID) {
+    public ResponseEntity<byte[]> verArchivosTarea(@PathVariable int TareaID) {
         Tarea tar = new Tarea(TareaID);
-        
-        List<Object> archivos =tar.ConseguirArchivo(conexion, TareaID);
-        
+        List<Object> archivos = tar.ConseguirArchivo(conexion, TareaID);
+
         if (archivos.isEmpty()) {
-            return ResponseEntity.ok(Map.of(
-                "mensaje", "No hay archivos en la tarea con id de"+TareaID
-            ));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         } else {
-            return ResponseEntity.ok(Map.of(
-                "mensaje", "Si hay archivos en la tarea con id de"+TareaID,
-                "Archivo",archivos
-            ));
+            // Suponiendo que hay solo un archivo por tarea
+            byte[] archivo = ((Tarea) archivos.get(1)).getArchivo();
+
+            // Establecer los encabezados adecuados para descargar el archivo como PDF
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATIONPDF);
+            headers.setContentDisposition(ContentDisposition.attachment()
+                .filename("tarea" + TareaID + ".pdf").build());
+
+            return new ResponseEntity<>(archivo, headers, HttpStatus.OK);
         }
-        
-    }
-    
+    }    
     @GetMapping("/usuariosProyectoTarea/{ProyectoID}/{TareaID}")
     public ResponseEntity<?> verUsuarios(@PathVariable int ProyectoID, @PathVariable int TareaID) {
         Proyecto proyecto = new Proyecto(ProyectoID);
