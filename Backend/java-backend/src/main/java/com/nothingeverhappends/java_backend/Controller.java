@@ -115,19 +115,19 @@ public class Controller {
         }
     }
     
-    @GetMapping("/tareas/archivo/{ProyectoID}")
-    public ResponseEntity<?> verArchivosTarea(@PathVariable int ProyectoID) {
-        Proyecto tar = new Proyecto(ProyectoID);
+    @GetMapping("/tareas/archivo/{TareaID}")
+    public ResponseEntity<?> verArchivosTarea(@PathVariable int TareaID) {
+        Tarea tar = new Tarea(TareaID);
         
-        List<Object> archivos =tar.ConseguirArchivo(conexion, ProyectoID);
+        List<Object> archivos =tar.ConseguirArchivo(conexion, TareaID);
         
         if (archivos.isEmpty()) {
             return ResponseEntity.ok(Map.of(
-                "mensaje", "No hay archivos en el proyecto con id="+ProyectoID
+                "mensaje", "No hay archivos en la tarea con id de"+TareaID
             ));
         } else {
             return ResponseEntity.ok(Map.of(
-                "mensaje", "Si hay archivos en el proyecto con id="+ProyectoID,
+                "mensaje", "Si hay archivos en la tarea con id de"+TareaID,
                 "Archivo",archivos
             ));
         }
