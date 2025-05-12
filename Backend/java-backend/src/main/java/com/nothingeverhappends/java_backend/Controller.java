@@ -199,18 +199,22 @@ public class Controller {
     }
 
     @PostMapping("/agregartareausuario")
-    public void AgregarTareaUsuario(@RequestBody AgregarUsuarios agregarusuarios ){
+    public ResponseEntity<?> AgregarTareaUsuario(@RequestBody AgregarUsuarios agregarusuarios) {
         try {
             int UsuarioID = agregarusuarios.getUsuarioID();
             int TareaID = agregarusuarios.getOtroID();
-            
+
             agregarusuarios.AgregarTareaUsuario(conexion);
-            notificationService.notificar(UsuarioID, Notificaciones.NotificacionUsuarioTarea(conexion,  UsuarioID,  TareaID));
+            notificationService.notificar(UsuarioID, Notificaciones.NotificacionUsuarioTarea(conexion, UsuarioID, TareaID));
+
+            return ResponseEntity.ok("Tarea asignada correctamente.");
         } catch (Exception e) {
-            e.printStackTrace(); // <-- ¡Para ver si falla!
+            e.printStackTrace();
             System.out.println("Ocurrió un error en el controlador.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al asignar la tarea: " + e.getMessage());
         }
     }
+
     @PostMapping("/modificarprioridad/{Prioridad}/{TareaId}")
     public void Modificar_Prioridad(@PathVariable int Prioridad,@PathVariable int TareaId){
         try {

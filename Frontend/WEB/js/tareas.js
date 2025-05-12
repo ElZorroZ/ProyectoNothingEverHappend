@@ -207,7 +207,6 @@ document.addEventListener('click', (e) => {
   }
 });
 
-// Manejo del formulario de asignación de tarea
 assignTaskForm.addEventListener('submit', async function(event) {
   event.preventDefault();
 
@@ -229,24 +228,26 @@ assignTaskForm.addEventListener('submit', async function(event) {
       }),
     });
 
-    if (response.ok) {
-      const contentType = response.headers.get("content-type");
-      let data = {};
-      if (contentType && contentType.includes("application/json")) {
-        data = await response.json();
-      }
+    const contentType = response.headers.get("content-type");
 
-      if (data.success) {
-        alert('Tarea asignada exitosamente');
-        closeModal();
-      } else {
-        alert('Error al asignar tarea: ' + (data.message || 'desconocido'));
-      }
+    let message = '';
+    if (contentType && contentType.includes("application/json")) {
+      const data = await response.json();
+      message = data.message || JSON.stringify(data);
+    } else {
+      message = await response.text();
+    }
+
+    if (response.ok) {
+      alert(message);
+      closeModal();
+    } else {
+      alert('Error al asignar tarea: ' + message);
     }
 
   } catch (error) {
     console.error('Error al asignar tarea:', error);
-    alert('Ocurrió un error al intentar asignar la tarea');
+    alert('Ocurrió un error al intentar asignar la tarea: ' + error.message);
   }
 });
 
