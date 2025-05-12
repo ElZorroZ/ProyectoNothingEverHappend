@@ -397,3 +397,29 @@ async function descargarArchivo(tareaID) {
     alert("Error al descargar archivo: " + error.message);
   }
 }
+document.addEventListener("DOMContentLoaded", () => {
+  const filterButtons = document.querySelectorAll(".filter-btn");
+
+  filterButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const filter = btn.dataset.filter;
+      
+      // Cambiar clase activa
+      filterButtons.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+
+      // Mostrar/ocultar columnas según el filtro
+      const columns = document.querySelectorAll(".kanban-column");
+
+      columns.forEach(col => {
+        const status = col.dataset.status;
+
+        if (filter === "todas" || filter === status) {
+          col.style.display = "block";
+        } else {
+          col.style.display = "none";
+        }
+      });
+    });
+  });
+});
