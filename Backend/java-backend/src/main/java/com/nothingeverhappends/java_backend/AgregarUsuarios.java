@@ -37,7 +37,7 @@ public class AgregarUsuarios {
         this.permiso=permiso;
         this.Email=Email;
     }
-    public void AgregarRolUsuario(ConexionBDD conexion, int UsuarioID, String Email, int ProyectoID, boolean permiso) {
+    public void AgregarRolUsuario(ConexionBDD conexion, String Email, int ProyectoID, boolean permiso) {
         Connection conn = null;
         try {
             conn = conexion.Conectar();

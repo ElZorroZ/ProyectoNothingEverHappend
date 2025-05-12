@@ -178,13 +178,14 @@ public class Controller {
     @PostMapping("/agregarrolusuario")
     public ResponseEntity<String> AgregarRolUsuario(@RequestBody AgregarUsuarios agregarusuarios) {
         try {
-            int UsuarioID = agregarusuarios.getUsuarioID();
             String Email = agregarusuarios.getEmail();
             int ProyectoID = agregarusuarios.getOtroID(); // Usar OtroID del objeto recibido
             boolean Permiso = agregarusuarios.isPermiso(); // Usar permiso del objeto recibido
 
             // Llama a la función con los valores correctos
-            agregarusuarios.AgregarRolUsuario(conexion, UsuarioID, Email, ProyectoID, Permiso);
+            agregarusuarios.AgregarRolUsuario(conexion, Email, ProyectoID, Permiso);
+            
+            int UsuarioID = agregarusuarios.getUsuarioID();
             notificationService.notificar(UsuarioID, Notificaciones.NotificacionUsuarioRol(conexion, UsuarioID, ProyectoID, Permiso));
 
             // Si todo está bien, devolver una respuesta exitosa
