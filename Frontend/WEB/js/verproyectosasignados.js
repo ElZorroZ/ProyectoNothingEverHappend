@@ -36,7 +36,7 @@ function actualizarCampana() {
 
 function guardarProyectoYRedirigir(proyectoID) {
   localStorage.setItem('proyectoSeleccionadoID', proyectoID);
-  //window.location.href = '../AgregarTareaWEB/AgregarTarea.html';
+  window.location.href = '../AgregarTareaWEB/AgregarTarea.html';
 }
 
 function mostrarNotificacion(titulo, mensaje) {
@@ -201,34 +201,36 @@ function agregarUsuarioAProyecto(event) {
   console.log("Enviando email para agregar usuario al proyecto", proyectoID, "con usuario", usuarioID);
 
   fetch(`https://java-backend-latest-rm0u.onrender.com/api/agregarrolusuario`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      OtroID: proyectoID,
-      email: email,  // Aquí pasamos el email
-    }),
-  })
-    .then(response => response.json())
-    .then(data => {
-      console.log('Respuesta del servidor:', data);
-      // Si la respuesta es exitosa, podemos cerrar el modal
-      if (data.success) {
-        alert('Usuario agregado correctamente al proyecto.');
-        closeModal();
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    OtroID: proyectoID,
+    email: email,
+  }),
+})
+  .then(async response => {
+    const contentType = response.headers.get("content-type");
+    let data = {};
+    let message = '';
 
-        // Añadir un pequeño retraso antes de redirigir para dar tiempo a los logs
-        setTimeout(() => {
-          console.log('Redirigiendo a la página de tareas...');
-          window.location.href = '../TareasWEB/tareas.html';  // Redirigir después de 1 segundo
-        }, 1000); // Esperar 1 segundo antes de redirigir
-      } else {
-        alert('Hubo un error al agregar el usuario.');
-      }
-    })
-    .catch(error => {
-      console.error('Error al agregar el usuario:', error);
-      alert('Hubo un error al intentar agregar al usuario.');
-    });
+    if (contentType && contentType.includes("application/json")) {
+      data = await response.json();
+      message = data.message || 'Usuario agregado correctamente al proyecto.';
+    } else {
+      message = await response.text();
+    }
+
+    if (response.ok) {
+      alert(message);
+      closeModal();
+    } else {
+      alert('Error: ' + message);
+    }
+  })
+  .catch(error => {
+    console.error('Error al agregar el usuario:', error);
+    alert('Hubo un error al intentar agregar al usuario.');
+  });
 }
