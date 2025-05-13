@@ -107,11 +107,13 @@ window.onclick = function(event) {
 };
 
 function guardarProyectoYEntrar(proyectoID) {
-  console.log("Proyecto seleccionado para entrar: ", proyectoID); // Log para verificar el ID del proyecto
   localStorage.setItem('proyectoSeleccionadoID', proyectoID);
   window.location.href = '../TareasWEB/tareas.html';
 }
-
+function modificarProyectoYEntrar(proyectoID) {
+  localStorage.setItem('proyectoSeleccionadoID', proyectoID);
+  window.location.href = '../ProyectoWEB/modificar_proyecto.html';
+}
 // Llenar tarjetas de proyectos al cargar la página
 document.addEventListener("DOMContentLoaded", function () {
   if (cardsContainer && idUsuario) {
@@ -145,9 +147,11 @@ document.addEventListener("DOMContentLoaded", function () {
             <h3>${nombre}</h3>
             <p>${descripcion}</p>
             <div class="button-group">
-             <button class="view-project-btn" onclick="guardarProyectoYEntrar(${proyectoID})">Entrar</button>
+              <button class="view-project-btn" onclick="guardarProyectoYEntrar(${proyectoID})">Entrar</button>
               <button class="add-task-btn" onclick="guardarProyectoYRedirigir(${proyectoID})">Agregar Tarea</button>
               <button class="add-user-btn" onclick="openModal(${proyectoID})">Agregar Usuario</button>
+              <button class="add-user-btn" onclick="modificarProyectoYEntrar(${proyectoID})">Modificar Proyecto</button>
+              <button class="delete-project-btn" onclick="confirmarYEliminarProyecto(${proyectoID})">Eliminar Proyecto</button>
             </div>
           `;
           cardsContainer.appendChild(card);
@@ -168,6 +172,28 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 });
+
+function confirmarYEliminarProyecto(proyectoID) {
+  const confirmacion = confirm("¿Estás seguro de que querés eliminar este proyecto? Esta acción no se puede deshacer.");
+  
+  if (confirmacion) {
+    fetch(`https://java-backend-latest-rm0u.onrender.com/api/proyectos/${proyectoID}`, {
+      method: "DELETE",
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error("Error al eliminar el proyecto");
+      }
+      alert("Proyecto eliminado correctamente");
+      // Recargá la lista o eliminá la tarjeta del DOM
+      location.reload(); // o podés remover la tarjeta manualmente
+    })
+    .catch(error => {
+      console.error("Error al eliminar proyecto:", error);
+      alert("No se pudo eliminar el proyecto");
+    });
+  }
+}
 
 // Cuando se carga la página, revisar si ya existe un proyecto seleccionado en localStorage
 document.addEventListener("DOMContentLoaded", function () {

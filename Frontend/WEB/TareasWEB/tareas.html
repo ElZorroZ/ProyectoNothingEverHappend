@@ -33,6 +33,7 @@
           <button class="filter-btn" data-filter="pendiente">Pendientes</button>
           <button class="filter-btn" data-filter="en-progreso">En Progreso</button>
           <button class="filter-btn" data-filter="completada">Completadas</button>
+          <button class="filter-btn" data-filter="fuera-limite">Fuera de Límite</button>
         </div>
 
         <!-- Columnas Kanban -->
@@ -56,6 +57,11 @@
           </div>
         </div>
         
+        <div class="kanban-column" data-status="fuera-limite">
+          <h3>Fuera de Límite</h3>
+          <div class="kanban-tasks" id="fueralimite-tasks"></div>
+        </div>
+
       </section>
     </main>
     <div id="assignTaskModal" class="modal" style="display:none;">

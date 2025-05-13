@@ -296,6 +296,23 @@ body {
 .add-task-btn:hover {
   background-color: #1e874b;
 }
+.delete-project-btn {
+  margin-top: 1rem;
+  background-color: #e74c3c;
+  color: white;
+  padding: 0.5rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.delete-project-btn:hover {
+  background-color: #c0392b;
+}
+
 .add-user-btn {
   margin-top: 1rem;
   background-color: #2980b9;
@@ -312,7 +329,6 @@ body {
 .add-user-btn:hover {
   background-color: #21618c;
 }
-
 .modal {
   display: none;
   position: fixed;
