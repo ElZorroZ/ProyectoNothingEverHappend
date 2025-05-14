@@ -94,6 +94,24 @@ public class Proyecto {
         conexion.Desconectar();
     }
     
+    // ELIMINAR PROYECTO
+    
+    public void Eliminar(ConexionBDD conexion) {
+        Connection conn = conexion.Conectar();
+
+        try (CallableStatement pst = conn.prepareCall("{ call Eliminar_Proyecto(?) }")) {
+            pst.setInt(1, ProyectoID);
+            pst.execute();
+            System.out.println("Proyecto eliminado correctamente");
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            System.out.println("Error al eliminar el proyecto");
+        }
+
+        conexion.Desconectar();
+    }
+    
+    
     public List<Usuario> verUsuarios(ConexionBDD conexion, int TareaID) {
         List<Usuario> Usuarios = new ArrayList<>();
         String sql = "CALL `railway`.`obtener_usuarios_proyecto`(?,?);";

@@ -84,6 +84,23 @@ public class Controller {
         }
     }
     
+    @PostMapping("/eliminarproyecto")
+    public void eliminarProyecto(@RequestBody Proyecto proyecto) {
+        try {
+            System.out.println("Nombre: " + proyecto.getNombre());
+            System.out.println("FechaInicio: " + proyecto.getFechaInicio());
+            System.out.println("FechaFinal: " + proyecto.getFechaFinal());
+            System.out.println("Descripcion: " + proyecto.getDescripcion());
+            System.out.println("id de usuario: " + proyecto.getId());
+            System.out.println("el que lee esto se come el pitooo");
+
+            proyecto.Eliminar(conexion);
+        } catch (Exception e) {
+            e.printStackTrace(); // <-- ¡Para ver si falla!
+            System.out.println("Ocurrió un error en el controlador.");
+        }
+    }    
+    
     @GetMapping("/proyectos/{id}")
     public ResponseEntity<?> verProyectos(@PathVariable int id) {
         Usuario usuario = new Usuario(id);
