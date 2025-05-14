@@ -111,6 +111,35 @@ public class Proyecto {
         conexion.Desconectar();
     }
     
+    // MODIFICAR PROYECTO
+    
+    public void Modificar(ConexionBDD conexion) {
+        Connection conn = conexion.Conectar();
+
+        try (CallableStatement pst = conn.prepareCall("{ call Modificar_Proyecto(?, ?, ?, ?, ?) }")) {
+
+            pst.setInt(1, ProyectoID);
+            pst.setString(2, Nombre);
+            pst.setString(3, Descripcion);
+
+            java.sql.Date FechaIniciosql = new java.sql.Date(FechaInicio.getTime());
+            java.sql.Date FechaFinsql = new java.sql.Date(FechaFinal.getTime());
+
+            pst.setDate(4, FechaIniciosql);
+            pst.setDate(5, FechaFinsql);
+
+            pst.execute();
+
+            System.out.println("Proyecto modificado");
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            System.out.println("Error al modificar el proyecto");
+        }
+
+        conexion.Desconectar();
+    }    
+    
     
     public List<Usuario> verUsuarios(ConexionBDD conexion, int TareaID) {
         List<Usuario> Usuarios = new ArrayList<>();

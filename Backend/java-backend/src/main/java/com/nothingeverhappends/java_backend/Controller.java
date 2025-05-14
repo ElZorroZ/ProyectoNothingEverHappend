@@ -101,6 +101,22 @@ public class Controller {
         }
     }    
     
+    @PostMapping("/modificarproyecto")
+    public void modificarProyecto(@RequestBody Proyecto proyecto) {
+        try {
+            System.out.println("Nombre: " + proyecto.getNombre());
+            System.out.println("FechaInicio: " + proyecto.getFechaInicio());
+            System.out.println("FechaFinal: " + proyecto.getFechaFinal());
+            System.out.println("Descripcion: " + proyecto.getDescripcion());
+            System.out.println("id de usuario: " + proyecto.getId());
+
+            proyecto.Modificar(conexion);
+        } catch (Exception e) {
+            e.printStackTrace(); // <-- ¡Para ver si falla!
+            System.out.println("Ocurrió un error en el controlador.");
+        }
+    }        
+    
     @GetMapping("/proyectos/{id}")
     public ResponseEntity<?> verProyectos(@PathVariable int id) {
         Usuario usuario = new Usuario(id);
