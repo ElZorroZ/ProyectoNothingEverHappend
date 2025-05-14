@@ -84,7 +84,7 @@ public class Controller {
         }
     }
     
-    @PostMapping("/eliminarproyecto")
+    @DeleteMapping("/eliminarproyecto")
     public void eliminarProyecto(@RequestBody Proyecto proyecto) {
         try {
             System.out.println("Nombre: " + proyecto.getNombre());
@@ -101,7 +101,7 @@ public class Controller {
         }
     }    
     
-    @PostMapping("/modificarproyecto")
+    @PutMapping("/modificarproyecto")
     public void modificarProyecto(@RequestBody Proyecto proyecto) {
         try {
             System.out.println("Nombre: " + proyecto.getNombre());
@@ -291,6 +291,25 @@ public class Controller {
             tarea.Crear(conexion);
         } catch (Exception e) {
             e.printStackTrace();
+            System.out.println("Ocurrió un error en el controlador.");
+        }
+    }
+    @DeleteMapping("/eliminartarea")
+    public void eliminarTarea(@RequestBody Tarea tarea) {
+        try {
+            tarea.Eliminar(conexion);
+        } catch (Exception e) {
+            e.printStackTrace(); // <-- ¡Para ver si falla!
+            System.out.println("Ocurrió un error en el controlador.");
+        }
+    }    
+    
+    @PutMapping("/modificartarea")
+    public void modificarTarea(@RequestBody Tarea tarea) {
+        try {
+            tarea.Modificar(conexion);
+        } catch (Exception e) {
+            e.printStackTrace(); // <-- ¡Para ver si falla!
             System.out.println("Ocurrió un error en el controlador.");
         }
     }

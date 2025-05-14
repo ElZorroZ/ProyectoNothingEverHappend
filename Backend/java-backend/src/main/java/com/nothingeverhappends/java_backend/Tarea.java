@@ -191,7 +191,40 @@ public class Tarea {
            
         }
 
-    
+       public void Modificar(ConexionBDD conexion){
+        try{
+            String consulta = "CALL `railway`.`Modificar_Tarea`(?,?,?,?,?,?);";   
+            PreparedStatement ps = conexion.Conectar().prepareStatement(consulta);
+            ps.setInt(1, TareaID);
+            //ps.setInt(2, ProyectoID);
+            ps.setString(2, Nombre);
+            ps.setString(3, Descripcion);
+            ps.setInt(4, Prioridad);
+            ps.setInt(5, Estado);
+            java.sql.Date Vencimientosql = new java.sql.Date(Vencimiento.getTime());
+            ps.setDate(6, Vencimientosql);
+            ps.executeQuery();
+        }catch(Exception e){
+            e.printStackTrace();
+        }finally{
+            conexion.Desconectar();
+        }
+    }
+       
+       public void Eliminar(ConexionBDD conexion){
+        try{
+            String consulta = "CALL `railway`.`Borrar_Tarea`(?);";   
+            PreparedStatement ps = conexion.Conectar().prepareStatement(consulta);
+            ps.setInt(1, TareaID);
+            
+            ps.executeQuery();
+        }catch(Exception e){
+            e.printStackTrace();
+        }finally{
+            conexion.Desconectar();
+        }
+    }
+       
     public void ModificarPrioridad(ConexionBDD conexion,int Prioridad,int TareaId){
         try{
             String consulta = " CALL Cambiar_Prioridad(?,?);";   
