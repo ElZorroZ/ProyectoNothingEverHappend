@@ -177,16 +177,21 @@ function confirmarYEliminarProyecto(proyectoID) {
   const confirmacion = confirm("¿Estás seguro de que querés eliminar este proyecto? Esta acción no se puede deshacer.");
   
   if (confirmacion) {
-    fetch(`https://java-backend-latest-rm0u.onrender.com/api/proyectos/${proyectoID}`, {
+    const data = { proyectoID };
+
+    fetch("https://java-backend-latest-rm0u.onrender.com/api/eliminarproyecto", {
       method: "DELETE",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
     })
     .then(response => {
       if (!response.ok) {
         throw new Error("Error al eliminar el proyecto");
       }
       alert("Proyecto eliminado correctamente");
-      // Recargá la lista o eliminá la tarjeta del DOM
-      location.reload(); // o podés remover la tarjeta manualmente
+      location.reload();
     })
     .catch(error => {
       console.error("Error al eliminar proyecto:", error);

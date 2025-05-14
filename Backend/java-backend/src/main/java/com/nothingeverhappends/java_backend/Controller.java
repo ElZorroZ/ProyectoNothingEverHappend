@@ -92,7 +92,6 @@ public class Controller {
             System.out.println("FechaFinal: " + proyecto.getFechaFinal());
             System.out.println("Descripcion: " + proyecto.getDescripcion());
             System.out.println("id de usuario: " + proyecto.getId());
-            System.out.println("el que lee esto es gay");
 
             proyecto.Eliminar(conexion);
         } catch (Exception e) {

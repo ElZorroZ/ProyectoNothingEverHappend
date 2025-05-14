@@ -1,36 +1,50 @@
-const ProyectoID = localStorage.getItem("proyectoSeleccionadoID");
-const notifBtn = document.querySelector('.notif-btn');
-const panel = document.getElementById('notificationPanel');
 document.addEventListener("DOMContentLoaded", () => {
-  const ProyectoID = localStorage.getItem("proyectoSeleccionadoID");
-
+  const proyectoID = localStorage.getItem("proyectoSeleccionadoID");
+  const notifBtn = document.querySelector('.notif-btn');
+  const panel = document.getElementById('notificationPanel');
+  const fechaInicioInput = document.getElementById('fechaInicio');
+  const fechaFinInput = document.getElementById('fechaFin');
   const form = document.getElementById("modificarProyectoForm");
+  const idUsuario = localStorage.getItem('usuarioId');
+
+
+  if (!fechaInicioInput || !fechaFinInput || !form) {
+    console.error("Elementos del formulario no encontrados en el DOM.");
+    return;
+  }
+
+  // Actualizar mínimo permitido en la fecha de fin cuando cambia la fecha de inicio
+  fechaInicioInput.addEventListener('change', () => {
+    fechaFinInput.min = fechaInicioInput.value;
+  });
 
   form.addEventListener("submit", async (e) => {
-    e.preventDefault(); // Evitar recarga de página
+    e.preventDefault();
 
-    // Tomar los datos del formulario
-    const nombre = document.getElementById("nombre").value;
-    const descripcion = document.getElementById("descripcion").value;
-    const fechaInicio = document.getElementById("fechaInicio").value;
-    const fechaFin = document.getElementById("fechaFin").value;
+    const fechaInicio = new Date(fechaInicioInput.value);
+    const fechaFin = new Date(fechaFinInput.value);
 
-    // Armar el objeto del proyecto
-    const proyectoModificado = {
-      id: ProyectoID,
-      nombre,
-      descripcion,
-      fechaInicio,
-      fechaFin
+    if (fechaFin < fechaInicio) {
+      alert('La fecha de finalización no puede ser anterior a la fecha de inicio.');
+      return;
+    }
+
+    const proyectoData = {
+      proyectoID,
+      nombre: form.nombre.value,
+      descripcion: form.descripcion.value,
+      fechaInicio: fechaInicioInput.value,
+      fechaFinal: fechaFinInput.value,
+      id: idUsuario // Asegurate de que esta variable esté definida
     };
 
     try {
-      const response = await fetch("https://tu-servidor.com/proyectos/modificar", {
+      const response = await fetch("https://java-backend-latest-rm0u.onrender.com/api/modificarproyecto", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(proyectoModificado)
+        body: JSON.stringify(proyectoData)
       });
 
       if (response.ok) {
