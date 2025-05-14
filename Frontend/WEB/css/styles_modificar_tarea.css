@@ -1,0 +1,193 @@
+/* Estilo base para que el footer quede al fondo */
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(to bottom, #6a0dad 0%, #b266ff 100%);
+  color: white;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #2c3e50;
+  padding: 1rem 2rem;
+  color: white;
+}
+
+.logo {
+  font-size: 1.6rem;
+  font-weight: bold;
+}
+
+.dashboard-actions {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.logout-btn {
+  background-color: #e74c3c;
+  border: none;
+  padding: 0.5rem 1.5rem;
+  color: white;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+/* Botón notificación */
+.notif-btn {
+  background-color: #3498db;
+  font-size: 1.2rem;
+  padding: 0.5rem 1.5rem;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: bold;
+  color: white;
+}
+
+.notif-btn:hover {
+  opacity: 0.8;
+}
+
+/* Panel de notificaciones */
+.notification-panel {
+  position: fixed;
+  top: 0;
+  right: -300px;
+  width: 300px;
+  height: 100%;
+  background-color: #ffffff;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2);
+  padding: 1.5rem;
+  transition: right 0.3s ease-in-out;
+  z-index: 1000;
+  visibility: hidden;
+  color: black;
+}
+
+.notification-panel.open {
+  right: 0;
+  visibility: visible;
+}
+
+.notification-panel h3 {
+  margin-bottom: 1rem;
+  color: #2c3e50;
+}
+
+.notification-panel ul {
+  list-style: none;
+  padding: 0;
+}
+
+.notification-panel ul li {
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+}
+
+/* Contenedor del formulario */
+.form-container {
+  flex: 1;
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  color: black;
+}
+
+.form-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.form-container label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+.form-container input,
+.form-container textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+.form-container button {
+  width: 100%;
+  padding: 12px;
+  background-color: #6A0DAD;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.form-container button:hover {
+  background-color: #530a91;
+}
+
+/* Footer */
+.footer-info {
+  background-color: #f4f4f4;
+  border-top: 4px solid black;
+  padding: 20px 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: black;
+}
+
+.footer-right {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  flex-wrap: wrap;
+  font-family: 'Georgia', serif;
+  font-size: 0.9rem;
+}
+
+.footer-logo {
+  height: 40px;
+  width: auto;
+}
+
+.footer-info a {
+  color: black;
+  text-decoration: none;
+  font-weight: normal;
+  letter-spacing: 1px;
+  line-height: 1.5;
+  margin: 0 10px;
+}
+
+.footer-info a:hover {
+  text-decoration: underline;
+}
+
+.logo {
+  font-size: 1.5rem;
+  text-decoration: none;
+  color: white;
+}

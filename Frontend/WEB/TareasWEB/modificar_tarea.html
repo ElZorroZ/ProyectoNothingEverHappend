@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modificar Tarea</title>
+  <link rel="stylesheet" href="../css/styles_modificar_tarea.css">
+</head>
+<body>
+  <header class="dashboard-header">
+    <a href="../DashboardWEB/dashboard.html" class="logo">NothingEverHappens</a>
+    <div class="dashboard-actions">
+      <button class="notif-btn">🔔</button>
+      <button class="logout-btn" onclick="window.location.href='../TareasWEB/tareas.html'">Volver</button>
+    </div>
+  </header>
+
+  <div class="form-container">
+    <h2>Modificar Tarea</h2>
+    <form id="modificar_tarea">
+      <label for="nombre">Nombre de la Tarea</label>
+      <input type="text" id="nombre" name="nombre" required>
+
+      <label for="descripcion">Descripción</label>
+      <textarea id="descripcion" name="descripcion" rows="4" required></textarea>
+
+      <label for="fechaVencimiento">Fecha de Vencimiento</label>
+      <input type="date" id="fechaVencimiento" name="fechaVencimiento" required>
+
+      <label for="archivoPdf">Archivo PDF</label>
+      <input type="file" id="archivoPdf" name="archivoPdf" accept="application/pdf">
+
+      <button type="submit">Modificar Tarea</button>
+    </form>
+  </div>
+
+  <div class="notification-panel" id="notificationPanel">
+      <h3>Notificaciones</h3>
+      <ul>
+        <li>No tenés nuevas notificaciones.</li>
+      </ul>
+    </div>
+
+  <div class="footer-info">
+    <div class="footer-right">
+      <img src="../images/Logo.png" alt="Logo" class="footer-logo">
+      <span>© 2025 NothingEverHappens, Inc.</span>
+      <a href="#">Términos</a>
+      <a href="#">Privacidad</a>
+      <a href="#">Seguridad</a>
+      <a href="#">Contacto</a>
+    </div>
+  </div>
+
+  <script src="../js/modificar_tarea.js"></script>
+</body>
+</html>

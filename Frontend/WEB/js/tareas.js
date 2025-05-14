@@ -8,6 +8,32 @@ const assignTaskModal = document.getElementById('assignTaskModal');
 const assignTaskForm = document.getElementById('assignTaskForm');
 
 
+function ModificarTarea(tareaID) {
+  // Redirecciona a la página de comentarios, por ejemplo
+  window.location.href = `../TareasWEB/modificar_tarea.html?tarea=${tareaID}`;
+}
+
+function confirmarYEliminarTarea(tareaID) {
+  const confirmacion = confirm("¿Estás seguro de que querés eliminar esta tarea? Esta acción no se puede deshacer.");
+  
+  if (confirmacion) {
+    fetch(`https://java-backend-latest-rm0u.onrender.com/api/tareas/${tareaID}`, {
+      method: "DELETE",
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error("Error al eliminar la tarea");
+      }
+      alert("Tarea eliminada correctamente");
+      // Recargá la lista o eliminá la tarjeta del DOM
+      location.reload(); // o podés remover la tarjeta manualmente
+    })
+    .catch(error => {
+      console.error("Error al eliminar tarea:", error);
+      alert("No se pudo eliminar la tarea");
+    });
+  }
+}
 
 
 function abrirComentarios(tareaID) {
@@ -338,6 +364,8 @@ document.addEventListener("DOMContentLoaded", async () => {
           <button onclick="openAssignTaskModal(${TareaID})">Asignar</button>
           <button onclick="abrirComentarios(${TareaID})">Comentarios</button>
           <button class="btn-descargar" data-id="${TareaID}">Descargar archivo</button>
+          <button class="task-btn modify-btn" onclick="ModificarTarea(${TareaID})">Modificar Tarea</button>
+          <button class="delete-task-btn" onclick="confirmarYEliminarTarea(${TareaID})">Eliminar Tarea</button>
         </div>
       `;
 
