@@ -13,10 +13,28 @@ document.addEventListener('click', (e) => {
     panel.classList.remove('open');
   }
 });
+console.log("modificar_tarea.js cargado");
+
 document.addEventListener("DOMContentLoaded", () => {
-  const tareaID = localStorage.getItem("tareaSeleccionadaID");
+  // Obtener parámetro tarea de la URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const tareaID = urlParams.get("tarea");
+
+  console.log("tareaID desde URL:", tareaID);
+
+  if (!tareaID) {
+    alert("No se encontró el ID de la tarea a modificar en la URL.");
+    return;
+  }
 
   const form = document.getElementById("modificar_tarea");
+  if (!form) {
+    console.error("No se encontró el formulario con id 'modificar_tarea'");
+    return;
+  }
+
+  // Opcional: si quieres que los campos se llenen con datos existentes,
+  // aquí podrías hacer fetch para traer la tarea y llenar inputs
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -24,12 +42,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const confirmacion = confirm("¿Estás seguro de realizar las modificaciones?");
     if (!confirmacion) return;
 
-    // Obtener los datos que sí quieres modificar
     const nombre = document.getElementById("nombre").value;
     const descripcion = document.getElementById("descripcion").value;
     const fechaVencimiento = document.getElementById("fechaVencimiento").value;
 
-    // Crear objeto con solo esos campos
     const tarea = {
       TareaID: parseInt(tareaID),
       Nombre: nombre,
@@ -40,9 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const response = await fetch("https://java-backend-latest-rm0u.onrender.com/api/modificartarea", {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(tarea),
       });
 
@@ -51,11 +65,9 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = "../TareasWEB/tareas.html";
       } else {
         const error = await response.text();
-        console.error("Error en respuesta:", response.status, error);
         alert("Error al modificar la tarea: " + error);
       }
     } catch (error) {
-      console.error("Error en la petición:", error);
       alert("Error de red o del servidor.");
     }
   });
