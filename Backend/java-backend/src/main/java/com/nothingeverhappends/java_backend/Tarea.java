@@ -193,16 +193,13 @@ public class Tarea {
 
        public void Modificar(ConexionBDD conexion){
         try{
-            String consulta = "CALL `railway`.`Modificar_Tarea`(?,?,?,?,?,?);";   
+            String consulta = "CALL `railway`.`Modificar_Tarea`(?,?,?,?);";   
             PreparedStatement ps = conexion.Conectar().prepareStatement(consulta);
             ps.setInt(1, TareaID);
-            //ps.setInt(2, ProyectoID);
             ps.setString(2, Nombre);
             ps.setString(3, Descripcion);
-            ps.setInt(4, Prioridad);
-            ps.setInt(5, Estado);
             java.sql.Date Vencimientosql = new java.sql.Date(Vencimiento.getTime());
-            ps.setDate(6, Vencimientosql);
+            ps.setDate(4, Vencimientosql);
             ps.executeQuery();
         }catch(Exception e){
             e.printStackTrace();
