@@ -2,11 +2,94 @@ const filterButtons = document.querySelectorAll('.filter-btn');
 const taskCards = document.querySelectorAll('.task-card');
 const notifBtn = document.querySelector('.notif-btn');
 const panel = document.getElementById('notificationPanel');
+let nuevasNotificaciones = false;
+
+// Conexión al servidor WebSocket usando SockJS y STOMP
+const socket = new SockJS("https://java-backend-latest-rm0u.onrender.com/endpoint");
+const stompClient = Stomp.over(socket);
+const usuarioId = localStorage.getItem('usuarioId'); // Obtener el ID del usuario almacenado
+
+
 
 // Modal de Asignar Tarea
 const assignTaskModal = document.getElementById('assignTaskModal');
 const assignTaskForm = document.getElementById('assignTaskForm');
 
+
+// Verificar si el usuario está autenticado
+if (!usuarioId) {
+    console.log("⚠️ Usuario no autenticado.");
+    window.location.href = "../index.html";
+}
+
+// Establecer la conexión con WebSocket
+stompClient.connect({}, () => {
+    console.log("✅ Conexión WebSocket establecida...");
+    
+    // Suscribirse al canal de notificaciones del usuario
+    stompClient.subscribe(`/topic/notificaciones/${usuarioId}`, (message) => {
+        const notificacion = JSON.parse(message.body);
+        mostrarNotificacion(notificacion.titulo, notificacion.mensaje);
+    });
+});
+
+// Actualizar la campana de notificaciones
+function actualizarCampana() {
+    const campana = document.querySelector('.notif-btn');
+    const lista = document.getElementById('notificationPanel').querySelector("ul");
+
+    // Mostrar el punto rojo si hay notificaciones
+    if (lista.children.length > 0 && lista.children[0].textContent !== 'No tenés nuevas notificaciones.') {
+        campana.classList.add('nueva-notificacion');
+    } else {
+        campana.classList.remove('nueva-notificacion');
+    }
+}
+
+// Mostrar notificación en el DOM
+function mostrarNotificacion(titulo, mensaje) {
+    const panel = document.getElementById('notificationPanel');
+    const lista = panel.querySelector("ul");
+
+    // Crear el elemento de la notificación
+    const li = document.createElement("li");
+    li.className = 'notificacion';
+
+    // Crear el título
+    const tituloElemento = document.createElement("h4");
+    tituloElemento.textContent = titulo;
+
+    // Crear el mensaje
+    const mensajeElemento = document.createElement("p");
+    mensajeElemento.textContent = mensaje;
+
+    // Crear el botón de cierre (icono de basura)
+    const botonCerrar = document.createElement('button');
+    botonCerrar.innerHTML = '<i class="fas fa-trash"></i>';
+    botonCerrar.className = 'cerrar-notificacion';
+    botonCerrar.onclick = () => {
+        li.remove();
+        if (lista.children.length === 0) {
+            lista.innerHTML = "<li>No tenés nuevas notificaciones.</li>";
+        }
+        actualizarCampana();
+    };
+
+    // Añadir el botón y el contenido a la notificación
+    li.appendChild(botonCerrar);
+    li.appendChild(tituloElemento);
+    li.appendChild(mensajeElemento);
+
+    // Verificar si la lista está vacía
+    if (lista.querySelector('li')?.textContent === 'No tenés nuevas notificaciones.') {
+        lista.innerHTML = '';
+    }
+
+    lista.appendChild(li);
+    panel.classList.add('open');
+    nuevasNotificaciones = true;
+    actualizarCampana();
+}
 
 function ModificarTarea(tareaID) {
   // Redirecciona a la página de comentarios, por ejemplo
@@ -15,22 +98,28 @@ function ModificarTarea(tareaID) {
 
 function confirmarYEliminarTarea(tareaID) {
   const confirmacion = confirm("¿Estás seguro de que querés eliminar esta tarea? Esta acción no se puede deshacer.");
-  
+
   if (confirmacion) {
-    fetch(`https://java-backend-latest-rm0u.onrender.com/api/tareas/${tareaID}`, {
+    fetch("https://java-backend-latest-rm0u.onrender.com/api/eliminartarea", {
       method: "DELETE",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ TareaID: tareaID })  // Formato correcto
     })
     .then(response => {
       if (!response.ok) {
-        throw new Error("Error al eliminar la tarea");
+        return response.json().then(err => {
+          console.error("Error en respuesta:", response.status, err);
+          throw new Error("Error al eliminar la tarea: " + JSON.stringify(err));
+        });
       }
       alert("Tarea eliminada correctamente");
-      // Recargá la lista o eliminá la tarjeta del DOM
-      location.reload(); // o podés remover la tarjeta manualmente
+      location.reload();
     })
     .catch(error => {
       console.error("Error al eliminar tarea:", error);
-      alert("No se pudo eliminar la tarea");
+      alert("No se pudo eliminar la tarea: " + error.message);
     });
   }
 }
@@ -224,6 +313,8 @@ window.onclick = function(event) {
 // Botón de notificaciones
 notifBtn.addEventListener('click', () => {
   panel.classList.toggle('open');
+  nuevasNotificaciones = false;
+    actualizarCampana(); // Actualiza la campana al abrir el panel
 });
 
 // Cierra panel de notificaciones si se hace clic afuera
