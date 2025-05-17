@@ -81,6 +81,13 @@ public class Tarea {
         this.archivoPDF=archivoPDF;
     }
     
+    public Tarea(int TareaID, String Nombre, String Descripcion, Date Vencimiento){
+        this.TareaID=TareaID;
+        this.Nombre=Nombre;
+        this.Descripcion=Descripcion;
+        this.Vencimiento=Vencimiento;
+    }
+    
     
 
     
