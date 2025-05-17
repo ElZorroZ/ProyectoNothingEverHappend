@@ -8,6 +8,86 @@ let nuevasNotificaciones = false;
 let proyectoIDSeleccionadoGlobal = null; // Guardamos el proyecto seleccionado
 let proyectoSelect = null; // Ya no lo usamos
 
+// Conexión al servidor WebSocket usando SockJS y STOMP
+const socket = new SockJS("https://java-backend-latest-rm0u.onrender.com/endpoint");
+const stompClient = Stomp.over(socket);
+const usuarioId = localStorage.getItem('usuarioId'); // Obtener el ID del usuario almacenado
+
+// Verificar si el usuario está autenticado
+if (!usuarioId) {
+    console.log("⚠️ Usuario no autenticado.");
+    window.location.href = "../index.html";
+}
+
+// Establecer la conexión con WebSocket
+stompClient.connect({}, () => {
+    console.log("✅ Conexión WebSocket establecida...");
+    
+    // Suscribirse al canal de notificaciones del usuario
+    stompClient.subscribe(`/topic/notificaciones/${usuarioId}`, (message) => {
+        const notificacion = JSON.parse(message.body);
+        mostrarNotificacion(notificacion.titulo, notificacion.mensaje);
+    });
+});
+
+// Actualizar la campana de notificaciones
+function actualizarCampana() {
+    const campana = document.querySelector('.notif-btn');
+    const lista = document.getElementById('notificationPanel').querySelector("ul");
+
+    // Mostrar el punto rojo si hay notificaciones
+    if (lista.children.length > 0 && lista.children[0].textContent !== 'No tenés nuevas notificaciones.') {
+        campana.classList.add('nueva-notificacion');
+    } else {
+        campana.classList.remove('nueva-notificacion');
+    }
+}
+
+// Mostrar notificación en el DOM
+function mostrarNotificacion(titulo, mensaje) {
+    const panel = document.getElementById('notificationPanel');
+    const lista = panel.querySelector("ul");
+
+    // Crear el elemento de la notificación
+    const li = document.createElement("li");
+    li.className = 'notificacion';
+
+    // Crear el título
+    const tituloElemento = document.createElement("h4");
+    tituloElemento.textContent = titulo;
+
+    // Crear el mensaje
+    const mensajeElemento = document.createElement("p");
+    mensajeElemento.textContent = mensaje;
+
+    // Crear el botón de cierre (icono de basura)
+    const botonCerrar = document.createElement('button');
+    botonCerrar.innerHTML = '<i class="fas fa-trash"></i>';
+    botonCerrar.className = 'cerrar-notificacion';
+    botonCerrar.onclick = () => {
+        li.remove();
+        if (lista.children.length === 0) {
+            lista.innerHTML = "<li>No tenés nuevas notificaciones.</li>";
+        }
+        actualizarCampana();
+    };
+
+    // Añadir el botón y el contenido a la notificación
+    li.appendChild(botonCerrar);
+    li.appendChild(tituloElemento);
+    li.appendChild(mensajeElemento);
+
+    // Verificar si la lista está vacía
+    if (lista.querySelector('li')?.textContent === 'No tenés nuevas notificaciones.') {
+        lista.innerHTML = '';
+    }
+
+    lista.appendChild(li);
+    panel.classList.add('open');
+    nuevasNotificaciones = true;
+    actualizarCampana();
+}
+
 // Abrir/cerrar panel de notificaciones
 notifBtn.addEventListener('click', () => {
   panel.classList.toggle('open');
@@ -22,70 +102,13 @@ document.addEventListener('click', (e) => {
   }
 });
 
-// Actualizar el ícono de la campana si hay notificaciones no leídas
-function actualizarCampana() {
-  const indicador = document.querySelector('.notificacion-indicador');
-  if (nuevasNotificaciones) {
-    notifBtn.classList.add('tiene-notificacion');
-    if (indicador) indicador.style.display = 'inline-block'; // Mostrar el punto rojo
-  } else {
-    notifBtn.classList.remove('tiene-notificacion');
-    if (indicador) indicador.style.display = 'none'; // Ocultar el punto rojo
-  }
-}
+
 
 function guardarProyectoYRedirigir(proyectoID) {
   localStorage.setItem('proyectoSeleccionadoID', proyectoID);
   window.location.href = '../AgregarTareaWEB/AgregarTarea.html';
 }
 
-function mostrarNotificacion(titulo, mensaje) {
-  const panel = document.getElementById('notificationPanel');
-  const lista = panel.querySelector("ul");
-
-  // Crear el elemento de la notificación
-  const li = document.createElement("li");
-  li.className = 'notificacion'; // Ya no usamos 'tipo'
-
-  // Crear el título en negrita y oscuro
-  const tituloElemento = document.createElement("h4");
-  tituloElemento.textContent = titulo;
-  tituloElemento.style.fontWeight = "bold";
-  tituloElemento.style.color = "#333"; // Color oscuro
-
-  // Crear el mensaje debajo del título
-  const mensajeElemento = document.createElement("p");
-  mensajeElemento.textContent = mensaje;
-  mensajeElemento.style.margin = "5px 0 0 0"; // Espacio entre título y mensaje
-
-  // Crear el botón de cierre dentro de la notificación
-  const botonCerrar = document.createElement('button');
-  botonCerrar.innerHTML = '<i class="fas fa-trash"></i>';
-  botonCerrar.className = 'cerrar-notificacion';
-  botonCerrar.onclick = () => {
-    li.remove();
-    if (lista.children.length === 0) {
-      lista.innerHTML = "<li>No tenés nuevas notificaciones.</li>";
-    }
-  };
-
-  // Añadir el título, el mensaje y el botón al elemento de la notificación
-  li.appendChild(tituloElemento);
-  li.appendChild(mensajeElemento);
-  li.appendChild(botonCerrar);
-
-  // Limpiar el mensaje de "sin notificaciones" si ya hay notificaciones
-  if (lista.querySelector('li')?.textContent === 'No tenés nuevas notificaciones.') {
-    lista.innerHTML = '';
-  }
-
-  lista.appendChild(li);
-  panel.classList.add('open');
-
-  // Marcar como nuevas notificaciones
-  nuevasNotificaciones = true;
-  actualizarCampana();
-}
 
 // Modal
 function openModal(proyectoID) {

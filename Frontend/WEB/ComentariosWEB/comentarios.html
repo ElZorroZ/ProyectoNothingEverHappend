@@ -5,14 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Comentarios</title>
   <link rel="stylesheet" href="../css/styles_comentarios.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> <!-- notificacion -->
 </head>
 <body>
   <div class="page-container">
     <header class="dashboard-header">
       <a href="../DashboardWEB/dashboard.html" class="logo">NothingEverHappens</a>
       <div class="dashboard-actions">
-        <button class="notif-btn">🔔</button>
+        <button class="notif-btn">🔔<span class="notificacion-indicador"></span></button> <!-- notificacion -->
         <button class="back-btn" onclick="window.location.href='../TareasWEB/tareas.html'">Volver</button>
 
       </div>
@@ -35,6 +35,7 @@
         </div>
       </section>
     </main>
+    <!-- Panel de Notificaciones -->
     <div class="notification-panel" id="notificationPanel">
       <h3>Notificaciones</h3>
       <ul>
@@ -53,6 +54,11 @@
       </div>
     </footer>
   </div>
+  <!-- SockJS -->
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+
+<!-- STOMP -->
+<script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
 
   <script src="../js/comentarios.js"></script>
 </body>

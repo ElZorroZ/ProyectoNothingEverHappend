@@ -522,3 +522,25 @@ body {
 .cerrar-notificacion:hover {
   color: #000;
 }
+
+/* Indicador en la campana */
+.notif-btn {
+    position: relative;
+}
+
+.notificacion-indicador {
+    display: none;
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 12px;
+    height: 12px;
+    background-color: red;
+    border-radius: 50%;
+    border: 2px solid white; /* Borde blanco para contraste */
+}
+
+.notif-btn.nueva-notificacion .notificacion-indicador {
+    display: inline-block;
+}
+

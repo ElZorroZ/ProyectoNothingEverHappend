@@ -6,12 +6,79 @@ document.addEventListener('DOMContentLoaded', () => {
   const fechaInicioInput = document.getElementById('fechaInicio');
   const fechaFinInput = document.getElementById('fechaFin');
   const idUsuario = localStorage.getItem('usuarioId'); // esto es un string
+  let nuevasNotificaciones = false;
+
+  const socket = new SockJS("https://java-backend-latest-rm0u.onrender.com/endpoint");
+  const stompClient = Stomp.over(socket);
+  const usuarioId = localStorage.getItem('usuarioId');
+
+  if (!usuarioId) {
+    console.log("⚠️ Usuario no autenticado.");
+    window.location.href = "../index.html";
+  }
+
+  stompClient.connect({}, () => {
+    console.log("✅ Conexión WebSocket establecida...");
+    stompClient.subscribe(`/topic/notificaciones/${usuarioId}`, (message) => {
+      const notificacion = JSON.parse(message.body);
+      mostrarNotificacion(notificacion.titulo, notificacion.mensaje);
+    });
+  });
+
+  function actualizarCampana() {
+    if (!notifBtn) return;
+    const lista = panel.querySelector("ul");
+    if (lista.children.length > 0 && lista.children[0].textContent !== 'No tenés nuevas notificaciones.') {
+      notifBtn.classList.add('nueva-notificacion');
+    } else {
+      notifBtn.classList.remove('nueva-notificacion');
+    }
+  }
+
+  function mostrarNotificacion(titulo, mensaje) {
+    const lista = panel.querySelector("ul");
+    const li = document.createElement("li");
+    li.className = 'notificacion';
+
+    const tituloElemento = document.createElement("h4");
+    tituloElemento.textContent = titulo;
+
+    const mensajeElemento = document.createElement("p");
+    mensajeElemento.textContent = mensaje;
+
+    const botonCerrar = document.createElement('button');
+    botonCerrar.innerHTML = '<i class="fas fa-trash"></i>';
+    botonCerrar.className = 'cerrar-notificacion';
+    botonCerrar.onclick = () => {
+      li.remove();
+      if (lista.children.length === 0) {
+        lista.innerHTML = "<li>No tenés nuevas notificaciones.</li>";
+      }
+      actualizarCampana();
+    };
+
+    li.appendChild(botonCerrar);
+    li.appendChild(tituloElemento);
+    li.appendChild(mensajeElemento);
+
+    if (lista.querySelector('li')?.textContent === 'No tenés nuevas notificaciones.') {
+      lista.innerHTML = '';
+    }
+
+    lista.appendChild(li);
+    panel.classList.add('open');
+    nuevasNotificaciones = true;
+    actualizarCampana();
+  }
 
   // Abrir/cerrar panel de notificaciones
   notifBtn.addEventListener('click', (e) => {
     e.stopPropagation();
     panel.classList.toggle('open');
+    nuevasNotificaciones = false;
+    actualizarCampana();
   });
+
 
   // Cerrar panel si se hace clic fuera
   document.addEventListener('click', (e) => {

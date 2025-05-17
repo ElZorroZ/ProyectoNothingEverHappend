@@ -5,19 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Crear Proyecto</title>
   <link rel="stylesheet" href="../css/styles_crear_proyecto.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> <!-- notificacion -->
 </head>
 <body>
   <header class="dashboard-header">
     <a href="../DashboardWEB/dashboard.html" class="logo">NothingEverHappens</a>
     <div class="dashboard-actions">
-      <button class="notif-btn">🔔</button>
+      <button class="notif-btn">🔔<span class="notificacion-indicador"></span></button> <!-- notificacion -->
       <button class="logout-btn" onclick="window.location.href='../DashboardWEB/dashboard.html'">Volver</button>
     </div>
     <!-- Panel de Notificaciones -->
-    <div id="notificationPanel" class="notification-panel">
+    <div class="notification-panel" id="notificationPanel">
       <h3>Notificaciones</h3>
       <ul>
-        <li>No hay notificaciones nuevas</li>
+        <li>No tenés nuevas notificaciones.</li>
       </ul>
     </div>
   </header>
@@ -51,6 +52,11 @@
       <a href="#">Contacto</a>
     </div>
   </div>
+  <!-- SockJS -->
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+
+<!-- STOMP -->
+<script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
 
   <script src="../js/crear_proyecto.js"></script>
 </body>
