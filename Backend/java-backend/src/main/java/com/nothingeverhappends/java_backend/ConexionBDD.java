@@ -18,9 +18,12 @@ public class ConexionBDD {
     
     public Connection Conectar() {
         try {
-            String url = "jdbc:mysql://root:LgILZCXwllGpscTUGiNQjqfRbGuPbIpE@gondola.proxy.rlwy.net:22412/railway";
+            //String url = "jdbc:mysql://root:LgILZCXwllGpscTUGiNQjqfRbGuPbIpE@gondola.proxy.rlwy.net:22412/railway";
+            //String user = "root";
+            //String password = "LgILZCXwllGpscTUGiNQjqfRbGuPbIpE";
+            String url = "jdbc:mysql://root:IIzdaIiXQYqTjpsiZXDNWAbpVtWLQcYp@nozomi.proxy.rlwy.net:47016/railway";
             String user = "root";
-            String password = "LgILZCXwllGpscTUGiNQjqfRbGuPbIpE";
+            String password = "IIzdaIiXQYqTjpsiZXDNWAbpVtWLQcYp";
             conexion = DriverManager.getConnection(url, user, password);
 
             if (conexion != null) {
