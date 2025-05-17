@@ -203,8 +203,6 @@ public class Tarea {
             ps.executeQuery();
         }catch(Exception e){
             e.printStackTrace();
-        }finally{
-            conexion.Desconectar();
         }
         try{
             String consulta = "CALL `railway`.`Modificar_Archivo`(?, ?);";   
