@@ -33,9 +33,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  // Opcional: si quieres que los campos se llenen con datos existentes,
-  // aquí podrías hacer fetch para traer la tarea y llenar inputs
-
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -46,18 +43,30 @@ document.addEventListener("DOMContentLoaded", () => {
     const descripcion = document.getElementById("descripcion").value;
     const fechaVencimiento = document.getElementById("fechaVencimiento").value;
 
-    const tarea = {
-      TareaID: parseInt(tareaID),
-      Nombre: nombre,
-      Descripcion: descripcion,
-      Vencimiento: fechaVencimiento,
-    };
+    // Obtener el archivo solo si el campo existe
+    const archivoInput = document.getElementById("archivoPDF");
+    let archivo = null;
+    if (archivoInput && archivoInput.files.length > 0) {
+      archivo = archivoInput.files[0];
+    } else {
+      console.warn("Campo de archivo no presente o ningún archivo seleccionado.");
+    }
+
+    const formData = new FormData();
+    formData.append("TareaID", parseInt(tareaID));
+    formData.append("Nombre", nombre);
+    formData.append("Descripcion", descripcion);
+    formData.append("Vencimiento", fechaVencimiento);
+
+    // Solo añadir el archivo si existe
+    if (archivo) {
+      formData.append("Archivo", archivo);
+    }
 
     try {
       const response = await fetch("https://java-backend-latest-rm0u.onrender.com/api/modificartarea", {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(tarea),
+        body: formData,
       });
 
       if (response.ok) {
@@ -72,5 +81,3 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
-
-
