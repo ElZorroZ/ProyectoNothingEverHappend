@@ -293,6 +293,8 @@ public class Controller {
             System.out.println("Ocurrió un error en el controlador.");
         }
     }
+    
+    
     @DeleteMapping("/eliminartarea")
     public void eliminarTarea(@RequestBody Tarea tarea) {
         try {
@@ -304,8 +306,18 @@ public class Controller {
     }    
     
     @PutMapping("/modificartarea")
-    public void modificarTarea(@RequestBody Tarea tarea) {
+    public void modificarTarea( 
+        @RequestParam("TareaID") int TareID,
+        @RequestParam("ProyectoID") int ProyectoID,
+        @RequestParam("Nombre") String Nombre,
+        @RequestParam("Descripcion") String Descripcion,
+        @RequestParam("Prioridad") int Prioridad,
+        @RequestParam("Estado") int Estado,
+        @RequestParam("Vencimiento") @DateTimeFormat(pattern = "yyyy-MM-dd") Date Vencimiento,
+        @RequestParam(value = "Archivo", required = false) MultipartFile archivoPDF)
+    {
         try {
+            Tarea tarea = new Tarea(TareID,ProyectoID, Nombre, Descripcion, Prioridad, Estado, Vencimiento,archivoPDF);
             tarea.Modificar(conexion);
         } catch (Exception e) {
             e.printStackTrace(); // <-- ¡Para ver si falla!
