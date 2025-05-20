@@ -273,7 +273,7 @@ public class Tarea {
         List<Comentario> comentarios = new ArrayList<>();
         String sql = "SELECT c.ComentarioID, c.TareaID, u.Apellido, u.Nombre, c.Comentario, c.Fecha, a.Archivo, a.Nombre AS NombreArchivo " +
                      "FROM Comentario c JOIN Usuario u ON c.UsuarioID = u.UsuarioID " +
-                     "JOIN Archivo a ON c.ComentarioID = a.ComentarioID " +
+                     "LEFT JOIN Archivo a ON c.ComentarioID = a.ComentarioID " +
                      "WHERE c.TareaID = ?";
 
         try (PreparedStatement stmt = conexion.Conectar().prepareStatement(sql)) {
