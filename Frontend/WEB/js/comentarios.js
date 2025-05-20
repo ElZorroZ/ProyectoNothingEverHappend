@@ -103,6 +103,9 @@ document.addEventListener("DOMContentLoaded", () => {
       panel.classList.remove('open');
   });
 
+  // 3) Conectar WebSocket _una sola vez_
+  connectWebSocket();
+
   // 4) Cargar comentarios iniciales vía HTTP
   loadComments();
 
@@ -111,14 +114,21 @@ document.addEventListener("DOMContentLoaded", () => {
           .addEventListener('click', addComment);
 });
 
+let socketConnected = false;
+
 function connectWebSocket() {
+  if (socketConnected) {
+    console.warn("⚠️ WebSocket ya conectado");
+    return;
+  }
+  socketConnected = true;
+
   const socket = new SockJS("https://java-backend-latest-rm0u.onrender.com/endpoint");
   stompClient  = Stomp.over(socket);
 
   stompClient.connect({}, () => {
     console.log("✅ WebSocket conectado");
 
-    // Suscribirse a notificaciones
     stompClient.subscribe(
       `/topic/notificaciones/${usuarioID}`,
       msg => {
@@ -127,7 +137,6 @@ function connectWebSocket() {
       }
     );
 
-    // Suscribirse a comentarios de esta tarea
     stompClient.subscribe(
       `/topic/comentarios/${tareaID}`,
       msg => {
@@ -137,6 +146,7 @@ function connectWebSocket() {
     );
   }, err => console.error("WebSocket error:", err));
 }
+
 
 async function loadComments() {
   const GET_COMS = `${API_BASE}/comentarios/${tareaID}`;
