@@ -172,13 +172,10 @@ document.addEventListener("DOMContentLoaded", () => {
       panel.classList.remove('open');
   });
 
-  // 3) Conectar WebSocket y suscribirse
-  connectWebSocket();
-
-  // 4) Cargar comentarios iniciales
+  // 3) Cargar comentarios iniciales
   loadComments();
 
-  // 5) Asociar envío de comentario
+  // 4) Asociar envío de comentario
   document.querySelector('.comment-submit-btn')
           .addEventListener('click', addComment);
 });
