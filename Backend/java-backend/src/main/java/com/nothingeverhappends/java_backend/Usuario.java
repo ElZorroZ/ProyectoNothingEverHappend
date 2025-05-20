@@ -233,11 +233,11 @@ public class Usuario {
         return resultado; // Devolvemos el Map con las tareas y el porcentaje
     }
     
-    public List<Notificaciones> verNotificaciones(ConexionBDD conexion) {
+    public List<Notificaciones> verNotificacionesNoLeidas(ConexionBDD conexion) {
         List<Notificaciones> notificaciones = new ArrayList<>();
-        String sql = "SELECT NotificacionID, TareaID, Titulo, Mensaje, Fecha, Leido " +
+        String sql = "SELECT NotificacionID, TareaID, Titulo, Mensaje, Fecha " +
                      "FROM Notificacion " +
-                     "WHERE UsuarioID = ?";
+                     "WHERE UsuarioID = ? AND NOT Leido";
 
         try (PreparedStatement stmt = conexion.Conectar().prepareStatement(sql)) {
             stmt.setInt(1, this.ID);
@@ -249,9 +249,8 @@ public class Usuario {
                     String titulo = rs.getString("Titulo");
                     String mensaje = rs.getString("Mensaje");
                     LocalDateTime fecha = rs.getTimestamp("Fecha").toLocalDateTime();
-                    boolean leido = rs.getBoolean("Leido");
 
-                    Notificaciones not = new Notificaciones(id, ID, tarea, titulo, mensaje, fecha, leido);
+                    Notificaciones not = new Notificaciones(id, ID, tarea, titulo, mensaje, fecha);
                     notificaciones.add(not);
                 }
             }

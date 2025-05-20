@@ -4,12 +4,14 @@
  */
 package com.nothingeverhappends.java_backend;
 
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaTypeFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ContentDisposition;
@@ -193,7 +195,7 @@ public class Controller {
     public ResponseEntity<?> verNotificaciones(@PathVariable int id) {
         Usuario usuario = new Usuario(id);
 
-        List<Notificaciones> nots = usuario.verNotificaciones(conexion);
+        List<Notificaciones> nots = usuario.verNotificacionesNoLeidas(conexion);
 
         if (nots.isEmpty()) {
             return ResponseEntity.ok(Map.of(
@@ -205,6 +207,12 @@ public class Controller {
                 "notificaciones", nots
             ));
         }
+    }
+    
+    @GetMapping("/notificacionleida/{id}")
+    public ResponseEntity<?> marcarNotificacionLeida(@PathVariable int id) {
+        Notificaciones.marcarComoLeida(conexion, id);
+        return ResponseEntity.ok().build();
     }
     
     @PostMapping("/agregarrolusuario")
@@ -322,23 +330,48 @@ public class Controller {
         }
     }
 
-    @PostMapping("/comentar")
-    public ResponseEntity<String> guardarComentario(@RequestBody Comentario comentario) {
+    @PostMapping(value = "/comentar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public void comentarTarea(
+        @RequestParam("TareaID") int tareaID,
+        @RequestParam("UsuarioID") int autor,
+        @RequestParam("Contenido") String contenido,
+        @RequestParam(value = "Archivo", required = false) MultipartFile archivo,
+        @RequestParam("NombreArchivo") String nombre
+    ) {
         try {
-            comentario.comentarTarea(conexion);
+            byte[] archivoBytes = null;
+            if (archivo != null && !archivo.isEmpty()) {
+                archivoBytes = archivo.getBytes();
+            }
 
-            return ResponseEntity.ok("Comentario con/sin archivo guardado.");
+            Comentario comentario = new Comentario(tareaID,autor,contenido,archivoBytes,nombre);
+
+            comentario.comentarTarea(conexion);
+            notificationService.sendComentario(comentario);
+
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(500).body("Error al guardar comentario.");
+            System.out.println("Ocurrió un error al comentar la tarea.");
         }
     }
     
     @GetMapping("/comentarios/{tareaID}")
-    public ResponseEntity<?> getComentarios(@PathVariable int tareaID) {
+    public ResponseEntity<?> obtenerComentarios(@PathVariable int tareaID) {
         Tarea tarea = new Tarea(tareaID);
         List<Comentario> comentarios =tarea.obtenerComentarios(conexion);
+        
+        for (Comentario c : comentarios) {
+            MediaType mediaType = MediaTypeFactory
+                        .getMediaType(c.getNombreArchivo())
+                        .orElse(MediaType.APPLICATION_OCTET_STREAM);
+            String mime = mediaType.toString();
 
+            // Mandar Base64 si es imagen o gif
+            if (mime.startsWith("image/")) {
+                String base64 = Base64.getEncoder().encodeToString(c.getArchivo());
+                c.setBase64("data:" + mime + ";base64," + base64);
+            }
+        }
         if (comentarios.isEmpty()) {
             return ResponseEntity.ok(Map.of(
                 "mensaje", "Esta tarea aún no tiene comentarios."
@@ -349,5 +382,26 @@ public class Controller {
                 "comentarios", comentarios
             ));
         }
+    }
+    
+    @GetMapping("/comentario/archivo/{comentarioID}")
+    public ResponseEntity<byte[]> obtenerArchivoComentario(@PathVariable int comentarioID) {
+        Comentario comentario = Comentario.conseguirArchivo(conexion, comentarioID);
+
+        byte[] archivo = comentario.getArchivo();
+        String nombreArchivo = comentario.getNombreArchivo();
+
+        if (archivo == null || nombreArchivo == null) {
+            return ResponseEntity.notFound().build();
+        }
+        MediaType mediaType = MediaTypeFactory
+            .getMediaType(nombreArchivo)
+            .orElse(MediaType.APPLICATION_OCTET_STREAM); // Por defecto si no lo reconoce
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(mediaType);
+        headers.setContentDisposition(ContentDisposition.inline().filename(nombreArchivo).build());
+
+        return ResponseEntity.ok().headers(headers).body(archivo);
     }
 }

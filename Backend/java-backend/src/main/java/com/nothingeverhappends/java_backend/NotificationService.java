@@ -22,4 +22,9 @@ public class NotificationService {
         messagingTemplate.convertAndSend("/topic/notificaciones/" + usuarioId, notificacion);
         System.out.println("Notificacion "+notificacion.getNotificacionID()+ " para Usuario "+usuarioId);
     }
+    
+    public void sendComentario(Comentario comentario) {
+        // Enviar el comentario al canal
+        messagingTemplate.convertAndSend("/topic/comentarios/" + comentario.getTareaID(), comentario);
+    }
 }

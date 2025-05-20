@@ -21,8 +21,29 @@ stompClient.connect({}, () => {
     // Suscribirse al canal de notificaciones del usuario
     stompClient.subscribe(`/topic/notificaciones/${usuarioId}`, (message) => {
         const notificacion = JSON.parse(message.body);
-        mostrarNotificacion(notificacion.titulo, notificacion.mensaje);
+        mostrarNotificacion(notificacion.titulo, notificacion.mensaje, notificacion.notificacionID,
+            notificacion.fecha);
     });
+
+    // Una vez conectado, pedimos las no leídas
+    fetch(`https://java-backend-latest-rm0u.onrender.com/api/notificaciones/${usuarioId}`)
+        .then(res => res.json())
+        .then(notificaciones => {
+            if (notificaciones.length === 0) {
+                const lista = document.getElementById('notificationPanel').querySelector("ul");
+                lista.innerHTML = "<li>No tenés nuevas notificaciones.</li>";
+            } else {
+                notificaciones.forEach(n => {
+                    mostrarNotificacion(
+                        n.titulo,
+                        n.mensaje,
+                        n.notificacionID,
+                        n.fecha
+                    );
+                });
+            }
+        })
+        .catch(err => console.error("❌ Error cargando notificaciones no leídas:", err));
 });
 
 // Actualizar la campana de notificaciones
@@ -39,13 +60,14 @@ function actualizarCampana() {
 }
 
 // Mostrar notificación en el DOM
-function mostrarNotificacion(titulo, mensaje) {
+function mostrarNotificacion(titulo, mensaje, id, fecha) {
     const panel = document.getElementById('notificationPanel');
     const lista = panel.querySelector("ul");
 
     // Crear el elemento de la notificación
     const li = document.createElement("li");
     li.className = 'notificacion';
+    li.dataset.id = id;
 
     // Crear el título
     const tituloElemento = document.createElement("h4");
@@ -54,6 +76,10 @@ function mostrarNotificacion(titulo, mensaje) {
     // Crear el mensaje
     const mensajeElemento = document.createElement("p");
     mensajeElemento.textContent = mensaje;
+
+    // Crear la fecha
+    const fechaElemento = document.createElement("small");
+    fechaElemento.textContent = new Date(fecha).toLocaleString();
 
     // Crear el botón de cierre (icono de basura)
     const botonCerrar = document.createElement('button');
@@ -65,6 +91,15 @@ function mostrarNotificacion(titulo, mensaje) {
             lista.innerHTML = "<li>No tenés nuevas notificaciones.</li>";
         }
         actualizarCampana();
+
+        // Marcar como leída en backend
+        try {
+            fetch(`https://java-backend-latest-rm0u.onrender.com/notificacionleida/${id}`, {
+                method: 'PUT'
+            });
+        } catch (error) {
+            console.error("Error al marcar como leída:", error);
+        }
     };
 
     // Añadir el botón y el contenido a la notificación
@@ -77,7 +112,11 @@ function mostrarNotificacion(titulo, mensaje) {
         lista.innerHTML = '';
     }
 
-    lista.appendChild(li);
+    lista.insertBefore(li, lista.firstChild);
+    // Limitar a 10 notificaciones
+    if (lista.children.length > 10) {
+        lista.removeChild(lista.lastChild);
+    }
     panel.classList.add('open');
     nuevasNotificaciones = true;
     actualizarCampana();

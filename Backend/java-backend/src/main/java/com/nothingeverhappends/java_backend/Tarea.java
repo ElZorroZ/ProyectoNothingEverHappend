@@ -81,11 +81,12 @@ public class Tarea {
         this.archivoPDF=archivoPDF;
     }
     
-    public Tarea(int TareaID, String Nombre, String Descripcion, Date Vencimiento){
+    public Tarea(int TareaID, String Nombre, String Descripcion, Date Vencimiento, MultipartFile archivoPDF){
         this.TareaID=TareaID;
         this.Nombre=Nombre;
         this.Descripcion=Descripcion;
         this.Vencimiento=Vencimiento;
+        this.archivoPDF=archivoPDF;
     }
     
     
@@ -270,7 +271,7 @@ public class Tarea {
     
     public List<Comentario> obtenerComentarios(ConexionBDD conexion){
         List<Comentario> comentarios = new ArrayList<>();
-        String sql = "SELECT c.ComentarioID, c.TareaID, u.Apellido, u.Nombre, c.Comentario, c.Fecha, a.Archivo " +
+        String sql = "SELECT c.ComentarioID, c.TareaID, u.Apellido, u.Nombre, c.Comentario, c.Fecha, a.Archivo, a.Nombre AS NombreArchivo " +
                      "FROM Comentario c JOIN Usuario u ON c.UsuarioID = u.UsuarioID " +
                      "JOIN Archivo a ON c.ComentarioID = a.ComentarioID " +
                      "WHERE c.TareaID = ?";
@@ -286,7 +287,8 @@ public class Tarea {
                     String coment = rs.getString("Comentario");
                     Date fecha = rs.getDate("Fecha");
                     byte[] file = rs.getBytes("Archivo");
-                    Comentario com = new Comentario(id, apellido, nombre, coment, fecha, file);
+                    String nomFile = rs.getString("NombreArchivo");
+                    Comentario com = new Comentario(id, apellido, nombre, coment, fecha, file, nomFile);
                     comentarios.add(com);
                 }
             }
@@ -316,7 +318,6 @@ public class Tarea {
             e.printStackTrace();
         } finally { conexion.Desconectar(); }
         return archivos;
-        
     }
     
     public int getTareaID() { return TareaID; }
