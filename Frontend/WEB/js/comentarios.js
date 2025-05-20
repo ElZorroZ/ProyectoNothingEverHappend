@@ -103,9 +103,6 @@ document.addEventListener("DOMContentLoaded", () => {
       panel.classList.remove('open');
   });
 
-  // 3) Conectar WebSocket _una sola vez_
-  connectWebSocket();
-
   // 4) Cargar comentarios iniciales vía HTTP
   loadComments();
 
