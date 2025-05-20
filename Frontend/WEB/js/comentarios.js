@@ -74,44 +74,27 @@ function mostrarNotificacion(titulo, mensaje) {
     actualizarCampana();
 }
 
+
 // Endpoints HTTP
 const API_BASE = "https://java-backend-latest-rm0u.onrender.com/api";
 const POST_COM = `${API_BASE}/comentar`;
 
-let tareaID;        // id de la tarea
-let usuarioID;      // id del usuario
+// Variables globales (se setean en DOMContentLoaded)
+let tareaID;
+let usuarioID;
+let stompClient;
 
 document.addEventListener("DOMContentLoaded", () => {
-    // Conexión al servidor WebSocket usando SockJS y STOMP
-  const socket = new SockJS("https://java-backend-latest-rm0u.onrender.com/endpoint");
-  const stompClient = Stomp.over(socket);
-  let stompConnected = false;
-
-  stompClient.connect({}, () => {
-    if (stompConnected) return;
-    stompConnected = true;
-
-    console.log("✅ Conexión WebSocket establecida...");
-    stompClient.subscribe(`/topic/notificaciones/${usuarioID}`, (message) => {
-      const notificacion = JSON.parse(message.body);
-      mostrarNotificacion(notificacion.titulo, notificacion.mensaje);
-    });
-
-    stompClient.subscribe(`/topic/comentarios/${tareaID}`, msg => {
-      const comentario = JSON.parse(msg.body);
-      renderComment(comentario);
-    });
-  });
-
   // 1) Obtener IDs
   tareaID   = new URLSearchParams(window.location.search).get("tarea");
-  usuarioID = localStorage.getItem("usuarioId");
+  usuarioID = localStorage.getItem("usuarioID") || localStorage.getItem("usuarioId");
+
   if (!usuarioID) {
     console.warn("Usuario no autenticado.");
     return window.location.href = "../index.html";
   }
 
-  // 2) Botón de notificaciones
+  // 2) Inicializar notificaciones (botón + panel)
   const notifBtn = document.querySelector('.notif-btn');
   const panel    = document.getElementById('notificationPanel');
   notifBtn.addEventListener('click', () => panel.classList.toggle('open'));
@@ -120,13 +103,43 @@ document.addEventListener("DOMContentLoaded", () => {
       panel.classList.remove('open');
   });
 
-  // 3) Cargar comentarios iniciales
+  // 3) Conectar WebSocket _una sola vez_
+  connectWebSocket();
+
+  // 4) Cargar comentarios iniciales vía HTTP
   loadComments();
 
-  // 4) Asociar envío de comentario
+  // 5) Asociar envío de comentario
   document.querySelector('.comment-submit-btn')
           .addEventListener('click', addComment);
 });
+
+function connectWebSocket() {
+  const socket = new SockJS("https://java-backend-latest-rm0u.onrender.com/endpoint");
+  stompClient  = Stomp.over(socket);
+
+  stompClient.connect({}, () => {
+    console.log("✅ WebSocket conectado");
+
+    // Suscribirse a notificaciones
+    stompClient.subscribe(
+      `/topic/notificaciones/${usuarioID}`,
+      msg => {
+        const n = JSON.parse(msg.body);
+        mostrarNotificacion(n.titulo, n.mensaje);
+      }
+    );
+
+    // Suscribirse a comentarios de esta tarea
+    stompClient.subscribe(
+      `/topic/comentarios/${tareaID}`,
+      msg => {
+        const comentario = JSON.parse(msg.body);
+        renderComment(comentario);
+      }
+    );
+  }, err => console.error("WebSocket error:", err));
+}
 
 async function loadComments() {
   const GET_COMS = `${API_BASE}/comentarios/${tareaID}`;
@@ -158,7 +171,9 @@ function renderComment(c) {
   const header = document.createElement("div");
   header.classList.add("comment-header");
   const fecha  = c.fecha ? new Date(c.fecha).toLocaleString() : "";
-  header.textContent = c.usuarioNombre ? `${c.usuarioNombre} · ${fecha}` : fecha;
+  header.textContent = c.usuarioNombre 
+                     ? `${c.usuarioNombre} · ${fecha}` 
+                     : fecha;
 
   // Texto
   const text = document.createElement("p");
@@ -190,7 +205,6 @@ async function addComment() {
     return errorDiv.textContent = "Debés escribir algo o adjuntar un archivo.";
   }
 
-  // Armar FormData
   const fd = new FormData();
   fd.append("TareaID",   tareaID);
   fd.append("UsuarioID", usuarioID);
@@ -210,7 +224,7 @@ async function addComment() {
     });
     if (!res.ok) throw new Error("HTTP " + res.status);
 
-    // Limpiar y esperar WS para render
+    // Limpiar, esperar al WS para renderizar el nuevo comentario
     document.getElementById("commentText").value = "";
     fileInput.value = "";
   } catch (e) {
@@ -218,4 +232,3 @@ async function addComment() {
     errorDiv.textContent = "No se pudo enviar el comentario.";
   }
 }
-
