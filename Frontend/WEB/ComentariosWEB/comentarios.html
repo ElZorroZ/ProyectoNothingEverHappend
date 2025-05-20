@@ -31,7 +31,10 @@
             <i class="fas fa-user-circle"></i> Tú
           </div>
           <textarea id="commentText" class="comment-input" placeholder="Escribe tu comentario..."></textarea>
+          <!-- input para subir archivo -->
+          <input type="file" id="commentFile" class="comment-file-input" />
           <button class="comment-submit-btn" onclick="addComment()">Enviar</button>
+          <div id="commentError" class="comment-error" style="color: red; margin-top: 8px;"></div>
         </div>
       </section>
     </main>
