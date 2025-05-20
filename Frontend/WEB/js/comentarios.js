@@ -145,6 +145,8 @@ async function loadComments() {
 }
 
 function renderComment(c) {
+  console.log("Comentario recibido:", c); // ← DEBUG
+  
   const list = document.getElementById("comments-list");
   const div  = document.createElement("div");
   div.classList.add("comment");
@@ -160,7 +162,7 @@ function renderComment(c) {
   // Texto
   const text = document.createElement("p");
   text.classList.add("comment-text");
-  text.textContent = c.contenido || "";
+  text.textContent = c.contenido || "(Sin texto)";
 
   div.append(header, text);
 
@@ -176,6 +178,7 @@ function renderComment(c) {
   list.appendChild(div);
   list.scrollTop = list.scrollHeight;  // auto-scroll
 }
+
 
 async function addComment() {
   const errorDiv  = document.getElementById("commentError");
