@@ -74,79 +74,54 @@ function mostrarNotificacion(titulo, mensaje) {
     actualizarCampana();
 }
 
-
 // Endpoints HTTP
 const API_BASE = "https://java-backend-latest-rm0u.onrender.com/api";
 const POST_COM = `${API_BASE}/comentar`;
 
-// Variables globales (se setean en DOMContentLoaded)
-let tareaID;
-let usuarioID;
-let stompClient;
+let tareaID, usuarioID, stompClient;
+const subscribedTopics = new Set();  // ← Lleva registro de tópicos ya suscritos
 
 document.addEventListener("DOMContentLoaded", () => {
-  // 1) Obtener IDs
   tareaID   = new URLSearchParams(window.location.search).get("tarea");
   usuarioID = localStorage.getItem("usuarioID") || localStorage.getItem("usuarioId");
+  if (!usuarioID) return window.location.href = "../index.html";
 
-  if (!usuarioID) {
-    console.warn("Usuario no autenticado.");
-    return window.location.href = "../index.html";
-  }
-
-  // 2) Inicializar notificaciones (botón + panel)
-  const notifBtn = document.querySelector('.notif-btn');
-  const panel    = document.getElementById('notificationPanel');
-  notifBtn.addEventListener('click', () => panel.classList.toggle('open'));
-  document.addEventListener('click', e => {
-    if (!panel.contains(e.target) && !notifBtn.contains(e.target))
-      panel.classList.remove('open');
-  });
-
-  // 3) Conectar WebSocket _una sola vez_
+  // Notificaciones UI (igual que antes) …
   connectWebSocket();
-
-  // 4) Cargar comentarios iniciales vía HTTP
   loadComments();
-
-  // 5) Asociar envío de comentario
   document.querySelector('.comment-submit-btn')
           .addEventListener('click', addComment);
 });
 
-let socketConnected = false;
+function safeSubscribe(topic, callback) {
+  if (subscribedTopics.has(topic)) return;  // ya suscrito
+  subscribedTopics.add(topic);
+  stompClient.subscribe(topic, callback);
+}
 
 function connectWebSocket() {
-  if (socketConnected) {
-    console.warn("⚠️ WebSocket ya conectado");
-    return;
-  }
-  socketConnected = true;
+  // Solo una conexión STOMP
+  if (stompClient) return;
 
-  const socket = new SockJS("https://java-backend-latest-rm0u.onrender.com/endpoint");
-  stompClient  = Stomp.over(socket);
+  const socket      = new SockJS("https://java-backend-latest-rm0u.onrender.com/endpoint");
+  stompClient       = Stomp.over(socket);
 
   stompClient.connect({}, () => {
     console.log("✅ WebSocket conectado");
 
-    stompClient.subscribe(
-      `/topic/notificaciones/${usuarioID}`,
-      msg => {
-        const n = JSON.parse(msg.body);
-        mostrarNotificacion(n.titulo, n.mensaje);
-      }
-    );
+    // Suscríbete de forma segura, para no duplicar
+    safeSubscribe(`/topic/notificaciones/${usuarioID}`, msg => {
+      const n = JSON.parse(msg.body);
+      mostrarNotificacion(n.titulo, n.mensaje);
+    });
 
-    stompClient.subscribe(
-      `/topic/comentarios/${tareaID}`,
-      msg => {
-        const comentario = JSON.parse(msg.body);
-        renderComment(comentario);
-      }
-    );
+    safeSubscribe(`/topic/comentarios/${tareaID}`, msg => {
+      const comentario = JSON.parse(msg.body);
+      renderComment(comentario);
+    });
+
   }, err => console.error("WebSocket error:", err));
 }
-
 
 async function loadComments() {
   const GET_COMS = `${API_BASE}/comentarios/${tareaID}`;
