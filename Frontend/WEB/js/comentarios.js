@@ -27,19 +27,21 @@ if (!usuarioId) {
     window.location.href = "../index.html";
 }
 
-// Establecer la conexión con WebSocket
+let stompConnected = false;
+
 stompClient.connect({}, () => {
+    if (stompConnected) return; // Evita múltiples conexiones
+    stompConnected = true;
+
     console.log("✅ Conexión WebSocket establecida...");
-    
-    // Suscribirse al canal de notificaciones del usuario
     stompClient.subscribe(`/topic/notificaciones/${usuarioId}`, (message) => {
         const notificacion = JSON.parse(message.body);
         mostrarNotificacion(notificacion.titulo, notificacion.mensaje);
     });
-        // Nuevos comentarios en tiempo real
+
     stompClient.subscribe(`/topic/comentarios/${tareaID}`, msg => {
-      const comentario = JSON.parse(msg.body);
-      renderComment(comentario);
+        const comentario = JSON.parse(msg.body);
+        renderComment(comentario);
     });
 });
 
