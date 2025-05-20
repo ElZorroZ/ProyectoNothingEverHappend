@@ -16,35 +16,6 @@ document.addEventListener('click', (e) => {
   }
 });
 
-// Conexión al servidor WebSocket usando SockJS y STOMP
-const socket = new SockJS("https://java-backend-latest-rm0u.onrender.com/endpoint");
-const stompClient = Stomp.over(socket);
-const usuarioId = localStorage.getItem('usuarioId'); // Obtener el ID del usuario almacenado
-
-// Verificar si el usuario está autenticado
-if (!usuarioId) {
-    console.log("⚠️ Usuario no autenticado.");
-    window.location.href = "../index.html";
-}
-
-let stompConnected = false;
-
-stompClient.connect({}, () => {
-    if (stompConnected) return; // Evita múltiples conexiones
-    stompConnected = true;
-
-    console.log("✅ Conexión WebSocket establecida...");
-    stompClient.subscribe(`/topic/notificaciones/${usuarioId}`, (message) => {
-        const notificacion = JSON.parse(message.body);
-        mostrarNotificacion(notificacion.titulo, notificacion.mensaje);
-    });
-
-    stompClient.subscribe(`/topic/comentarios/${tareaID}`, msg => {
-        const comentario = JSON.parse(msg.body);
-        renderComment(comentario);
-    });
-});
-
 // Actualizar la campana de notificaciones
 function actualizarCampana() {
     const campana = document.querySelector('.notif-btn');
@@ -111,6 +82,27 @@ let tareaID;        // id de la tarea
 let usuarioID;      // id del usuario
 
 document.addEventListener("DOMContentLoaded", () => {
+    // Conexión al servidor WebSocket usando SockJS y STOMP
+  const socket = new SockJS("https://java-backend-latest-rm0u.onrender.com/endpoint");
+  const stompClient = Stomp.over(socket);
+  let stompConnected = false;
+
+  stompClient.connect({}, () => {
+    if (stompConnected) return;
+    stompConnected = true;
+
+    console.log("✅ Conexión WebSocket establecida...");
+    stompClient.subscribe(`/topic/notificaciones/${usuarioID}`, (message) => {
+      const notificacion = JSON.parse(message.body);
+      mostrarNotificacion(notificacion.titulo, notificacion.mensaje);
+    });
+
+    stompClient.subscribe(`/topic/comentarios/${tareaID}`, msg => {
+      const comentario = JSON.parse(msg.body);
+      renderComment(comentario);
+    });
+  });
+
   // 1) Obtener IDs
   tareaID   = new URLSearchParams(window.location.search).get("tarea");
   usuarioID = localStorage.getItem("usuarioId");
