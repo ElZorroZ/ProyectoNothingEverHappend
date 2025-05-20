@@ -183,7 +183,7 @@ function connectWebSocket() {
 
 async function loadComments() {
   try {
-    const res  = await fetch(GET_COMS, { credentials: "include" });
+    const res  = await fetch(GET_COMS);
     const body = await res.json();
 
     const list = document.getElementById("comments-list");
