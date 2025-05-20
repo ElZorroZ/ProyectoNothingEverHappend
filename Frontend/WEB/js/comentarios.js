@@ -260,7 +260,6 @@ async function addComment() {
     const res = await fetch(POST_COM, {
       method:      "POST",
       body:        fd,
-      credentials: "include"
     });
 
     if (!res.ok) {
