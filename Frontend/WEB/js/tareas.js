@@ -100,7 +100,7 @@ function mostrarNotificacion(titulo, mensaje, id, fecha, abrir) {
 
     // Crear la fecha
     const fechaElemento = document.createElement("small");
-    fechaElemento.textContent = new Date(fecha).toLocaleDateString;
+    fechaElemento.textContent = new Date(fecha).toLocaleDateString();
 
     // Crear el botón de cierre (icono de basura)
     const botonCerrar = document.createElement('button');
@@ -108,7 +108,7 @@ function mostrarNotificacion(titulo, mensaje, id, fecha, abrir) {
     botonCerrar.className = 'cerrar-notificacion';
     botonCerrar.onclick = () => {
         // Marcar como leída en backend antes de cerrar
-        fetch(`https://java-backend-latest-rm0u.onrender.com/notificacionleida/${id}`)
+        fetch(`https://java-backend-latest-rm0u.onrender.com/api/notificacionleida/${usuarioId}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error("No se pudo marcar la notificación como leída.");
@@ -485,7 +485,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   console.log(ProyectoID);
 
   try {
-    const response = await fetch(`https://java-backend-latest-rm0u.onrender.com/api/tareas/${UsuarioID}/${ProyectoID}`);
+    const response = await fetch(`https://java-backend-latest-rm0u.onrender.com/api/tareas/${usuarioId}/${ProyectoID}`);
     const data = await response.json();
     console.log("Respuesta del backend:", data);
     const { tareas = [], porcentaje = 0 } = data.Tareas || {};

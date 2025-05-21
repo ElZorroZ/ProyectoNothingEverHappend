@@ -113,7 +113,7 @@ function mostrarNotificacion(titulo, mensaje, id, fecha, abrir) {
 
     // Crear la fecha
     const fechaElemento = document.createElement("small");
-    fechaElemento.textContent = new Date(fecha).toLocaleDateString;
+    fechaElemento.textContent = new Date(fecha).toLocaleDateString();
 
     // Crear el botón de cierre (icono de basura)
     const botonCerrar = document.createElement('button');

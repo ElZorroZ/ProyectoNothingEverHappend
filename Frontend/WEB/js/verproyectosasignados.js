@@ -66,7 +66,7 @@ function mostrarNotificacion(titulo, mensaje, id, fecha, abrir) {
 
     // Crear la fecha
     const fechaElemento = document.createElement("small");
-    fechaElemento.textContent = new Date(fecha).toLocaleDateString;
+    fechaElemento.textContent = new Date(fecha).toLocaleDateString();
 
     // Crear el botón de cierre (icono de basura)
     const botonCerrar = document.createElement('button');
@@ -74,7 +74,7 @@ function mostrarNotificacion(titulo, mensaje, id, fecha, abrir) {
     botonCerrar.className = 'cerrar-notificacion';
     botonCerrar.onclick = () => {
         // Marcar como leída en backend antes de cerrar
-        fetch(`https://java-backend-latest-rm0u.onrender.com/notificacionleida/${id}`)
+        fetch(`https://java-backend-latest-rm0u.onrender.com/notificacionleida/${idUsuario}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error("No se pudo marcar la notificación como leída.");
