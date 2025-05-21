@@ -14,37 +14,71 @@ if (!usuarioId) {
     window.location.href = "../index.html";
 }
 
-// Establecer la conexión con WebSocket
-stompClient.connect({}, () => {
-    console.log("✅ Conexión WebSocket establecida...");
-    
-    // Suscribirse al canal de notificaciones del usuario
-    stompClient.subscribe(`/topic/notificaciones/${usuarioId}`, (message) => {
-        const notificacion = JSON.parse(message.body);
-        mostrarNotificacion(notificacion.titulo, notificacion.mensaje, notificacion.notificacionID,
-            notificacion.fecha);
+
+document.addEventListener("DOMContentLoaded", () => {
+  const usuarioID = localStorage.getItem("usuarioID") || localStorage.getItem("usuarioId");
+
+  if (!usuarioID) return window.location.href = "../index.html";
+
+  // Cargar notificaciones no leídas
+  fetch(`https://java-backend-latest-rm0u.onrender.com/api/notificaciones/${usuarioID}`)
+    .then(res => res.ok ? res.json() : Promise.reject("Error al obtener notificaciones"))
+    .then(data => {
+      const lista = document.getElementById("notificationPanel")?.querySelector("ul");
+      if (!lista) return;
+
+      lista.innerHTML = "";
+      const notificaciones = data.notificaciones || [];
+
+      if (notificaciones.length === 0) {
+        lista.innerHTML = "<li>No tenés nuevas notificaciones.</li>";
+      } else {
+        notificaciones.forEach(n => {
+          mostrarNotificacion(n.titulo, n.mensaje, n.notificacionID, n.fecha, false);
+        });
+      }
+
+      // Luego de cargar notificaciones, conectar WebSocket
+      connectWebSocket(usuarioID);
+    })
+    .catch(err => {
+      console.error("❌ Error al cargar notificaciones:", err);
+      connectWebSocket(usuarioID); // Aun si falla, conectar WebSocket
     });
 
-    // Una vez conectado, pedimos las no leídas
-    fetch(`https://java-backend-latest-rm0u.onrender.com/api/notificaciones/${usuarioId}`)
-        .then(res => res.json())
-        .then(notificaciones => {
-            if (notificaciones.length === 0) {
-                const lista = document.getElementById('notificationPanel').querySelector("ul");
-                lista.innerHTML = "<li>No tenés nuevas notificaciones.</li>";
-            } else {
-                notificaciones.forEach(n => {
-                    mostrarNotificacion(
-                        n.titulo,
-                        n.mensaje,
-                        n.notificacionID,
-                        n.fecha
-                    );
-                });
-            }
-        })
-        .catch(err => console.error("❌ Error cargando notificaciones no leídas:", err));
+  // Agregar comentario nuevo
+  document.querySelector('.comment-submit-btn')?.addEventListener('click', addComment);
 });
+
+
+// Establecer la conexión con WebSocket
+function connectWebSocket(usuarioID) {
+  if (!usuarioID) {
+    console.warn("⚠️ No se puede conectar al WebSocket: usuarioID inválido.");
+    return;
+  }
+
+  const socket = new SockJS("https://java-backend-latest-rm0u.onrender.com/endpoint");
+  const stompClient = Stomp.over(socket);
+
+  stompClient.connect({}, () => {
+    console.log("✅ Conexión WebSocket establecida...");
+
+    stompClient.subscribe(`/topic/notificaciones/${usuarioID}`, (message) => {
+      const notificacion = JSON.parse(message.body);
+      mostrarNotificacion(
+        notificacion.titulo,
+        notificacion.mensaje,
+        notificacion.notificacionID,
+        notificacion.fecha,
+        true
+      );
+    });
+  }, (error) => {
+    console.error("❌ Error en la conexión WebSocket:", error);
+  });
+}
+
 
 // Actualizar la campana de notificaciones
 function actualizarCampana() {
@@ -60,7 +94,7 @@ function actualizarCampana() {
 }
 
 // Mostrar notificación en el DOM
-function mostrarNotificacion(titulo, mensaje, id, fecha) {
+function mostrarNotificacion(titulo, mensaje, id, fecha, abrir) {
     const panel = document.getElementById('notificationPanel');
     const lista = panel.querySelector("ul");
 
@@ -79,27 +113,31 @@ function mostrarNotificacion(titulo, mensaje, id, fecha) {
 
     // Crear la fecha
     const fechaElemento = document.createElement("small");
-    fechaElemento.textContent = new Date(fecha).toLocaleString();
+    fechaElemento.textContent = new Date(fecha).toLocaleDateString;
 
     // Crear el botón de cierre (icono de basura)
     const botonCerrar = document.createElement('button');
     botonCerrar.innerHTML = '<i class="fas fa-trash"></i>';
     botonCerrar.className = 'cerrar-notificacion';
     botonCerrar.onclick = () => {
-        li.remove();
-        if (lista.children.length === 0) {
-            lista.innerHTML = "<li>No tenés nuevas notificaciones.</li>";
-        }
-        actualizarCampana();
+        // Marcar como leída en backend antes de cerrar
+        fetch(`https://java-backend-latest-rm0u.onrender.com/api/notificacionleida/${id}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("No se pudo marcar la notificación como leída.");
+                }
 
-        // Marcar como leída en backend
-        try {
-            fetch(`https://java-backend-latest-rm0u.onrender.com/notificacionleida/${id}`, {
-                method: 'PUT'
+                // Quitar del DOM si el backend respondió bien
+                li.remove();
+                if (lista.children.length === 0) {
+                    lista.innerHTML = "<li>No tenés nuevas notificaciones.</li>";
+                }
+                actualizarCampana();
+            })
+            .catch(error => {
+                console.error("Error al marcar como leída:", error);
+                alert("Ocurrió un error al marcar la notificación como leída.");
             });
-        } catch (error) {
-            console.error("Error al marcar como leída:", error);
-        }
     };
 
     // Añadir el botón y el contenido a la notificación
@@ -117,9 +155,12 @@ function mostrarNotificacion(titulo, mensaje, id, fecha) {
     if (lista.children.length > 10) {
         lista.removeChild(lista.lastChild);
     }
-    panel.classList.add('open');
     nuevasNotificaciones = true;
     actualizarCampana();
+
+    if (abrir) {
+        panel.classList.add('open');
+    }
 }
 
 

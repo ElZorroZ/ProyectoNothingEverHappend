@@ -69,7 +69,7 @@ public class Comentario {
     public static Comentario conseguirArchivo(ConexionBDD conexion, int comentarioID){
         Comentario archivo = new Comentario(comentarioID);
         try{
-            String consulta = "SELECT Archivo, Nombre FROM Archivo WHERE ComentarioID=?";   
+            String consulta = "CALL 'ObtenerArchivoComentario'(?)";   
             PreparedStatement ps = conexion.Conectar().prepareStatement(consulta);
             ps.setInt(1, comentarioID);
             ResultSet rs = ps.executeQuery();

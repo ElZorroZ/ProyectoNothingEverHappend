@@ -365,6 +365,8 @@ public class Controller {
                         .getMediaType(c.getNombreArchivo())
                         .orElse(MediaType.APPLICATION_OCTET_STREAM);
             String mime = mediaType.toString();
+            System.out.println(c.getNombreUsuario()+c.getApellidoUsuario()+" dice "+c.getContenido()
+            +c.getNombreArchivo()+":"+c.getArchivo());
 
             // Mandar Base64 si es imagen o gif
             if (mime.startsWith("image/")) {

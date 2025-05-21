@@ -30,13 +30,14 @@ function actualizarCampana() {
 }
 
 // Mostrar notificación en el DOM
-function mostrarNotificacion(titulo, mensaje) {
+function mostrarNotificacion(titulo, mensaje, id, fecha, abrir) {
     const panel = document.getElementById('notificationPanel');
     const lista = panel.querySelector("ul");
 
     // Crear el elemento de la notificación
     const li = document.createElement("li");
     li.className = 'notificacion';
+    li.dataset.id = id;
 
     // Crear el título
     const tituloElemento = document.createElement("h4");
@@ -46,16 +47,33 @@ function mostrarNotificacion(titulo, mensaje) {
     const mensajeElemento = document.createElement("p");
     mensajeElemento.textContent = mensaje;
 
+    // Crear la fecha
+    const fechaElemento = document.createElement("small");
+    fechaElemento.textContent = new Date(fecha).toLocaleDateString;
+
     // Crear el botón de cierre (icono de basura)
     const botonCerrar = document.createElement('button');
     botonCerrar.innerHTML = '<i class="fas fa-trash"></i>';
     botonCerrar.className = 'cerrar-notificacion';
     botonCerrar.onclick = () => {
-        li.remove();
-        if (lista.children.length === 0) {
-            lista.innerHTML = "<li>No tenés nuevas notificaciones.</li>";
-        }
-        actualizarCampana();
+        // Marcar como leída en backend antes de cerrar
+        fetch(`https://java-backend-latest-rm0u.onrender.com/notificacionleida/${id}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("No se pudo marcar la notificación como leída.");
+                }
+
+                // Quitar del DOM si el backend respondió bien
+                li.remove();
+                if (lista.children.length === 0) {
+                    lista.innerHTML = "<li>No tenés nuevas notificaciones.</li>";
+                }
+                actualizarCampana();
+            })
+            .catch(error => {
+                console.error("Error al marcar como leída:", error);
+                alert("Ocurrió un error al marcar la notificación como leída.");
+            });
     };
 
     // Añadir el botón y el contenido a la notificación
@@ -68,10 +86,17 @@ function mostrarNotificacion(titulo, mensaje) {
         lista.innerHTML = '';
     }
 
-    lista.appendChild(li);
-    panel.classList.add('open');
+    lista.insertBefore(li, lista.firstChild);
+    // Limitar a 10 notificaciones
+    if (lista.children.length > 10) {
+        lista.removeChild(lista.lastChild);
+    }
     nuevasNotificaciones = true;
     actualizarCampana();
+
+    if (abrir) {
+        panel.classList.add('open');
+    }
 }
 
 // Endpoints HTTP
@@ -87,6 +112,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!usuarioID) return window.location.href = "../index.html";
 
   // Notificaciones UI (igual que antes) …
+  loadNotifications();
   connectWebSocket();
   loadComments();
   document.querySelector('.comment-submit-btn')
@@ -101,26 +127,49 @@ function safeSubscribe(topic, callback) {
 
 function connectWebSocket() {
   // Solo una conexión STOMP
-  if (stompClient) return;
-
-  const socket      = new SockJS("https://java-backend-latest-rm0u.onrender.com/endpoint");
-  stompClient       = Stomp.over(socket);
+  const socket = new SockJS("https://java-backend-latest-rm0u.onrender.com/endpoint");
+  const stompClient = Stomp.over(socket);
 
   stompClient.connect({}, () => {
-    console.log("✅ WebSocket conectado");
+    console.log("✅ Conexión WebSocket establecida...");
 
-    // Suscríbete de forma segura, para no duplicar
-    safeSubscribe(`/topic/notificaciones/${usuarioID}`, msg => {
-      const n = JSON.parse(msg.body);
-      mostrarNotificacion(n.titulo, n.mensaje);
+    stompClient.subscribe(`/topic/notificaciones/${usuarioID}`, (message) => {
+      const notificacion = JSON.parse(message.body);
+      mostrarNotificacion(
+        notificacion.titulo,
+        notificacion.mensaje,
+        notificacion.notificacionID,
+        notificacion.fecha,
+        true
+      );
     });
+  }, (error) => {
+    console.error("❌ Error en la conexión WebSocket:", error);
+  });
+}
 
-    safeSubscribe(`/topic/comentarios/${tareaID}`, msg => {
-      const comentario = JSON.parse(msg.body);
-      renderComment(comentario);
+async function loadNotifications(){
+  // Cargar notificaciones no leídas
+  fetch(`https://java-backend-latest-rm0u.onrender.com/api/notificaciones/${usuarioID}`)
+    .then(res => res.ok ? res.json() : Promise.reject("Error al obtener notificaciones"))
+    .then(data => {
+      const lista = document.getElementById("notificationPanel")?.querySelector("ul");
+      if (!lista) return;
+
+      lista.innerHTML = "";
+      const notificaciones = data.notificaciones || [];
+
+      if (notificaciones.length === 0) {
+        lista.innerHTML = "<li>No tenés nuevas notificaciones.</li>";
+      } else {
+        notificaciones.forEach(n => {
+          mostrarNotificacion(n.titulo, n.mensaje, n.notificacionID, n.fecha, false);
+        });
+      }
+    })
+    .catch(err => {
+      console.error("❌ Error al cargar notificaciones:", err);
     });
-
-  }, err => console.error("WebSocket error:", err));
 }
 
 async function loadComments() {
@@ -146,37 +195,78 @@ async function loadComments() {
 
 function renderComment(c) {
   console.log("Comentario recibido:", c); // ← DEBUG
-  
+
   const list = document.getElementById("comments-list");
-  const div  = document.createElement("div");
+  const div = document.createElement("div");
   div.classList.add("comment");
 
-  // Header con usuario y fecha
+  // Header con nombre y fecha
   const header = document.createElement("div");
   header.classList.add("comment-header");
-  const fecha  = c.fecha ? new Date(c.fecha).toLocaleString() : "";
-  header.textContent = c.usuarioNombre 
-                     ? `${c.usuarioNombre} · ${fecha}` 
-                     : fecha;
 
-  // Texto
+  const fecha = c.fecha ? new Date(c.fecha).toDateString : "";
+  const nombreCompleto = c.nombreUsuario && c.apellidoUsuario
+    ? `${c.nombreUsuario} ${c.apellidoUsuario}`
+    : "Usuario X";
+
+  header.textContent = `${nombreCompleto} · ${fecha}`;
+  div.appendChild(header);
+
+  // Texto del comentario
   const text = document.createElement("p");
   text.classList.add("comment-text");
   text.textContent = c.contenido || "(Sin texto)";
+  div.appendChild(text);
 
-  div.append(header, text);
-
-  // Imagen si viene Base64
+  // Si viene imagen (base64)
   if (c.base64) {
     const img = document.createElement("img");
-    img.src        = c.base64;
-    img.alt        = c.nombreArchivo || "Adjunto";
+    img.src = c.base64;
+    img.alt = c.nombreArchivo || "Adjunto";
     img.classList.add("comment-img");
     div.appendChild(img);
   }
 
+  // Si NO viene imagen pero sí nombreArchivo → botón de descarga
+  else if (c.nombreArchivo) {
+  const downloadBtn = document.createElement("button");
+  downloadBtn.textContent = `📎 Descargar: ${c.nombreArchivo}`;
+  downloadBtn.classList.add("comment-download-btn");
+  downloadBtn.addEventListener("click", () => {
+    descargarArchivoComentario(c.comentarioID, c.nombreArchivo);
+  });
+  div.appendChild(downloadBtn);
+}
+
   list.appendChild(div);
-  list.scrollTop = list.scrollHeight;  // auto-scroll
+  list.scrollTop = list.scrollHeight; // auto-scroll
+}
+
+async function descargarArchivoComentario(comentarioID, nombreArchivo) {
+  try {
+    const response = await fetch(`https://java-backend-latest-rm0u.onrender.com/api/comentario/archivo/${comentarioID}`);
+    
+    if (response.status === 404) {
+      throw new Error("El archivo adjunto no existe.");
+    }
+
+    if (!response.ok) {
+      throw new Error("No se pudo descargar el archivo.");
+    }
+
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = nombreArchivo || `comentario_${comentarioID}.dat`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  } catch (error) {
+    alert("❌ Error al descargar archivo: " + error.message);
+  }
 }
 
 
@@ -199,6 +289,7 @@ async function addComment() {
     fd.append("Archivo", file, file.name);
     fd.append("NombreArchivo", file.name);
   } else {
+    fd.append("Archivo");
     fd.append("NombreArchivo", "");
   }
 

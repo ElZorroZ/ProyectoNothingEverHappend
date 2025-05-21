@@ -271,10 +271,7 @@ public class Tarea {
     
     public List<Comentario> obtenerComentarios(ConexionBDD conexion){
         List<Comentario> comentarios = new ArrayList<>();
-        String sql = "SELECT c.ComentarioID, c.TareaID, u.Apellido, u.Nombre, c.Comentario, c.Fecha, a.Archivo, a.Nombre AS NombreArchivo " +
-                     "FROM Comentario c JOIN Usuario u ON c.UsuarioID = u.UsuarioID " +
-                     "LEFT JOIN Archivo a ON c.ComentarioID = a.ComentarioID " +
-                     "WHERE c.TareaID = ?";
+        String sql = "CALL `ObtenerComentarios`(?);";
 
         try (PreparedStatement stmt = conexion.Conectar().prepareStatement(sql)) {
             stmt.setInt(1, this.TareaID);

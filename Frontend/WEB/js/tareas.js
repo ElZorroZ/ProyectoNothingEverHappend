@@ -28,9 +28,17 @@ stompClient.connect({}, () => {
     
     // Suscribirse al canal de notificaciones del usuario
     stompClient.subscribe(`/topic/notificaciones/${usuarioId}`, (message) => {
-        const notificacion = JSON.parse(message.body);
-        mostrarNotificacion(notificacion.titulo, notificacion.mensaje);
+      const notificacion = JSON.parse(message.body);
+      mostrarNotificacion(
+        notificacion.titulo,
+        notificacion.mensaje,
+        notificacion.notificacionID,
+        notificacion.fecha,
+        true
+      );
     });
+  }, (error) => {
+    console.error("❌ Error en la conexión WebSocket:", error);
 });
 
 // Actualizar la campana de notificaciones
@@ -46,14 +54,41 @@ function actualizarCampana() {
     }
 }
 
+async function loadNotifications(){
+  // Cargar notificaciones no leídas
+  fetch(`https://java-backend-latest-rm0u.onrender.com/api/notificaciones/${usuarioId}`)
+    .then(res => res.ok ? res.json() : Promise.reject("Error al obtener notificaciones"))
+    .then(data => {
+      const lista = document.getElementById("notificationPanel")?.querySelector("ul");
+      if (!lista) return;
+
+      lista.innerHTML = "";
+      const notificaciones = data.notificaciones || [];
+
+      if (notificaciones.length === 0) {
+        lista.innerHTML = "<li>No tenés nuevas notificaciones.</li>";
+      } else {
+        notificaciones.forEach(n => {
+          mostrarNotificacion(n.titulo, n.mensaje, n.notificacionID, n.fecha, false);
+        });
+      }
+
+      // Luego de cargar notificaciones, conectar WebSocket
+    })
+    .catch(err => {
+      console.error("❌ Error al cargar notificaciones:", err);
+    });
+}
+
 // Mostrar notificación en el DOM
-function mostrarNotificacion(titulo, mensaje) {
+function mostrarNotificacion(titulo, mensaje, id, fecha, abrir) {
     const panel = document.getElementById('notificationPanel');
     const lista = panel.querySelector("ul");
 
     // Crear el elemento de la notificación
     const li = document.createElement("li");
     li.className = 'notificacion';
+    li.dataset.id = id;
 
     // Crear el título
     const tituloElemento = document.createElement("h4");
@@ -63,16 +98,33 @@ function mostrarNotificacion(titulo, mensaje) {
     const mensajeElemento = document.createElement("p");
     mensajeElemento.textContent = mensaje;
 
+    // Crear la fecha
+    const fechaElemento = document.createElement("small");
+    fechaElemento.textContent = new Date(fecha).toLocaleDateString;
+
     // Crear el botón de cierre (icono de basura)
     const botonCerrar = document.createElement('button');
     botonCerrar.innerHTML = '<i class="fas fa-trash"></i>';
     botonCerrar.className = 'cerrar-notificacion';
     botonCerrar.onclick = () => {
-        li.remove();
-        if (lista.children.length === 0) {
-            lista.innerHTML = "<li>No tenés nuevas notificaciones.</li>";
-        }
-        actualizarCampana();
+        // Marcar como leída en backend antes de cerrar
+        fetch(`https://java-backend-latest-rm0u.onrender.com/notificacionleida/${id}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("No se pudo marcar la notificación como leída.");
+                }
+
+                // Quitar del DOM si el backend respondió bien
+                li.remove();
+                if (lista.children.length === 0) {
+                    lista.innerHTML = "<li>No tenés nuevas notificaciones.</li>";
+                }
+                actualizarCampana();
+            })
+            .catch(error => {
+                console.error("Error al marcar como leída:", error);
+                alert("Ocurrió un error al marcar la notificación como leída.");
+            });
     };
 
     // Añadir el botón y el contenido a la notificación
@@ -85,10 +137,17 @@ function mostrarNotificacion(titulo, mensaje) {
         lista.innerHTML = '';
     }
 
-    lista.appendChild(li);
-    panel.classList.add('open');
+    lista.insertBefore(li, lista.firstChild);
+    // Limitar a 10 notificaciones
+    if (lista.children.length > 10) {
+        lista.removeChild(lista.lastChild);
+    }
     nuevasNotificaciones = true;
     actualizarCampana();
+
+    if (abrir) {
+        panel.classList.add('open');
+    }
 }
 
 function ModificarTarea(tareaID) {
@@ -394,6 +453,8 @@ filterButtons.forEach(button => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
+  loadNotifications();
+  
   const allTasks = document.querySelectorAll(".task-card");
   const completedTasks = document.querySelectorAll('.task-card[data-status="completada"]');
 

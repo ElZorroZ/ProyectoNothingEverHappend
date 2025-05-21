@@ -94,7 +94,7 @@ public class Notificaciones {
     
     public static void marcarComoLeida(ConexionBDD conexion, int NotificacionID){
         try{
-            String consulta = "UPDATE Notificacion SET Leido = 1 WHERE NotificacionID = ?;";
+            String consulta = "CALL `railway`.`NotificacionLeida`(?)";
             
             PreparedStatement ps = conexion.Conectar().prepareStatement(consulta);
             ps.setInt(1, NotificacionID);
